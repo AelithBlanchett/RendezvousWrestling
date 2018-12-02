@@ -295,24 +295,24 @@ public  Modifier[] = []    appliedModifiers {get; set;}
                             }
                         }
                         for (var mod of this.attacker.modifiers) {
-                            //update the bonus appliedModifiers length
+                            //upDateTime the bonus appliedModifiers length
                             if (mod.idParentActions && mod.idParentActions.indexOf(idOfFormerHold) != -1) {
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                             }
                         }
-                        this.fight.message.addSpecial(`[b][color=red]Hold Stacking![/color][/b] ${defender.getStylizedName()} will have to suffer this hold for ${this.appliedModifiers[indexOfNewHold].uses} more turns, and will also suffer a bit more, as it has added
+                        this.fight.message.addSpecial($"[b][color=red]Hold Stacking![/color][/b] ${defender.getStylizedName()} will have to suffer this hold for ${this.appliedModifiers[indexOfNewHold].uses} more turns, and will also suffer a bit more, as it has added
                                          ${(this.appliedModifiers[indexOfNewHold].hpDamage > 0 ? " -" + this.appliedModifiers[indexOfNewHold].hpDamage + " HP per turn " : "")}
                                          ${(this.appliedModifiers[indexOfNewHold].lustDamage > 0 ? " +" + this.appliedModifiers[indexOfNewHold].lustDamage + " Lust per turn " : "")}
                                          ${(this.appliedModifiers[indexOfNewHold].focusDamage > 0 ? " -" + this.appliedModifiers[indexOfNewHold].focusDamage + " Focus per turn" : "")}
-                         `);
+                         ");
                     }
                     else {
                         for (var mod of this.appliedModifiers) {
                             if (mod.receiver.name == defender.name) {
-                                defender.modifiers.push(mod);
+                                defender.modifiers.Add(mod);
                             }
                             else if (mod.receiver.name == this.attacker.name) {
-                                this.attacker.modifiers.push(mod);
+                                this.attacker.modifiers.Add(mod);
                             }
                         }
                     }
@@ -323,10 +323,10 @@ public  Modifier[] = []    appliedModifiers {get; set;}
             else {
                 for (var mod of this.appliedModifiers) {
                     if (mod.receiver == this.attacker) {
-                        this.attacker.modifiers.push(mod);
+                        this.attacker.modifiers.Add(mod);
                     }
                     else if (this.defenders.findIndex(x => x.name == mod.receiver.name) != -1) {
-                        this.defenders.find(x => x.name == mod.receiver.name).modifiers.push(mod);
+                        this.defenders.find(x => x.name == mod.receiver.name).modifiers.Add(mod);
                     }
                 }
             }
@@ -373,14 +373,14 @@ public enum ActionType  {
 }
 
 public class ActionExplanation {
-    static Tag = `[b][color=red]TAG![/color][/b] %s heads out of the ring!`;
-    static Rest = `[b][color=red]%s rests for a bit![/color][/b]`;
-    static Bondage = `[b][color=red]%s just tied up their opponent a little bit more![/color][/b]`;
-    static ItemPickup = `[b][color=red]%s's picked up item looks like it could it hit hard![/color][/b]`;
-    static SextoyPickup = `[b][color=red]%s is going to have a lot of fun with this sex-toy![/color][/b]`;
-    static Escape = `[b][color=red]%s got away![/color][/b]`;
-    static Submit = `[b][color=red]%s taps out! It's over, it's done![/color][/b]`;
-    static Masturbate = `[b][color=red]%s really needed those strokes apparently![/color][/b]`;
-    static Pass = `[b][color=red]%s passed their turn...[/color][/b]`;
-    static SelfDebase = `[b][color=red]%s is sinking deeper...[/color][/b]`;
+    static Tag = "[b][color=red]TAG![/color][/b] %s heads out of the ring!";
+    static Rest = "[b][color=red]%s rests for a bit![/color][/b]";
+    static Bondage = "[b][color=red]%s just tied up their opponent a little bit more![/color][/b]";
+    static ItemPickup = "[b][color=red]%s's picked up item looks like it could it hit hard![/color][/b]";
+    static SextoyPickup = "[b][color=red]%s is going to have a lot of fun with this sex-toy![/color][/b]";
+    static Escape = "[b][color=red]%s got away![/color][/b]";
+    static Submit = "[b][color=red]%s taps out! It's over, it's done![/color][/b]";
+    static Masturbate = "[b][color=red]%s really needed those strokes apparently![/color][/b]";
+    static Pass = "[b][color=red]%s passed their turn...[/color][/b]";
+    static SelfDebase = "[b][color=red]%s is sinking deeper...[/color][/b]";
 }

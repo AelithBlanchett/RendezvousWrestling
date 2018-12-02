@@ -1,4 +1,4 @@
-enum Trigger {
+public enum Trigger {
     MainBarDamage = 1 << 0,
     SecondaryBarDamage = 1 << 1,
     UtilitaryBarDamage = 1 << 2,

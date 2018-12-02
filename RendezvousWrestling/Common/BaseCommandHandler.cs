@@ -69,7 +69,7 @@ public string = "Tina Armstrong"    debugImpersonatedCharacter {get; set;}
                 var cost = fighter.addFeature(parsedFeatureArgs[0], parsedFeatureArgs[1]);
                 await fighter.removeTokens(cost, TransactionType.Feature);
                 await fighter.save();
-                this.fChatLibInstance.sendPrivMessage(`[color=green]Success! Feature added.[/color]`, fighter.name);
+                this.fChatLibInstance.sendPrivMessage($"[color=green]Success! Feature added.[/color]", fighter.name);
             }
             catch (ex) {
                 this.fChatLibInstance.sendPrivMessage(string.Format(Messages.commandError, ex.message), fighter.name);
@@ -100,7 +100,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
     public async void restat(string args,IMsgEvent  data) {
         var parserPassed = Parser.checkIfValidStats(args, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
         if(parserPassed != ""){
-            this.fChatLibInstance.sendPrivMessage(`[color=red]${parserPassed}[/color]`, data.character);
+            this.fChatLibInstance.sendPrivMessage($"[color=red]${parserPassed}[/color]", data.character);
             return;
         }
 
@@ -112,7 +112,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
                     Array<int> arrParam = [];
 
                     for(var nbr of args.split(",")){
-                        arrParam.push(parseInt(nbr));
+                        arrParam.Add(parseInt(nbr));
                     }
 
                     var cost = GameSettings.restatCostInTokens;
@@ -146,7 +146,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
             try {
                 fighter.clearFeatures();
                 await fighter.save();
-                this.fChatLibInstance.sendPrivMessage(`[color=green]You successfully removed all your features.[/color]`, fighter.name);
+                this.fChatLibInstance.sendPrivMessage($"[color=green]You successfully removed all your features.[/color]", fighter.name);
             }
             catch (ex) {
                 this.fChatLibInstance.sendPrivMessage(string.Format(Messages.commandError, ex.message), data.character);
@@ -162,14 +162,14 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
     debugmode(string args,IMsgEvent  data) {
         if (this.fChatLibInstance.isUserMaster(data.character) && this.fight.hasStarted) {
             this.fight.debug = !this.fight.debug;
-            this.fChatLibInstance.sendPrivMessage(`Debug mode is now set to ${this.fight.debug}`, data.character);
+            this.fChatLibInstance.sendPrivMessage($"Debug mode is now set to ${this.fight.debug}", data.character);
         }
     }
 
     setdicescore(string args,IMsgEvent  data) {
         if (this.fChatLibInstance.isUserMaster(data.character) && this.fight.hasStarted) {
             this.fight.forcedDiceRoll = parseInt(args);
-            this.fChatLibInstance.sendPrivMessage(`Dice score is now automatically set to ${this.fight.debug}`, data.character);
+            this.fChatLibInstance.sendPrivMessage($"Dice score is now automatically set to ${this.fight.debug}", data.character);
         }
     }
 
@@ -188,10 +188,10 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         if (this.fChatLibInstance.isUserMaster(data.character) && this.isInFight(data.character, true)) {
             this.fight = new this.Fight();
             this.fight.build(this.fChatLibInstance, this.channel);
-            this.fChatLibInstance.sendMessage(`Successfully saved and stored the match for later. The ring is available now!`, this.channel);
+            this.fChatLibInstance.sendMessage($"Successfully saved and stored the match for later. The ring is available now!", this.channel);
         }
         else {
-            this.fChatLibInstance.sendPrivMessage(`[color=red]You're not ${this.fChatLibInstance.config.master}![/color]`, data.character);
+            this.fChatLibInstance.sendPrivMessage($"[color=red]You're not ${this.fChatLibInstance.config.master}![/color]", data.character);
         }
     }
 
@@ -248,7 +248,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         var chosenTeam = Parser.join(args);
         try {
             int assignedTeam = await this.fight.join(data.character, chosenTeam);
-            this.fChatLibInstance.sendMessage(`[color=green]${data.character} stepped into the ring for the [color=${Team[assignedTeam]}]${Team[assignedTeam]}[/color] team! Waiting for everyone to be !ready.[/color]`, this.channel);
+            this.fChatLibInstance.sendMessage($"[color=green]${data.character} stepped into the ring for the [color=${Team[assignedTeam]}]${Team[assignedTeam]}[/color] team! Waiting for everyone to be !ready.[/color]", this.channel);
         }
         catch (err) {
             this.fChatLibInstance.sendMessage("[color=red]" + err.message + "[/color]", this.channel);
@@ -364,13 +364,13 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         if (fighter == null) {
             var parserPassed = Parser.checkIfValidStats(args, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
             if(parserPassed != ""){
-                this.fChatLibInstance.sendPrivMessage(`[color=red]${parserPassed}[/color]`, data.character);
+                this.fChatLibInstance.sendPrivMessage($"[color=red]${parserPassed}[/color]", data.character);
                 return;
             }
             Array<int> arrParam = [];
 
             for(var nbr of args.split(",")){
-                arrParam.push(parseInt(nbr));
+                arrParam.Add(parseInt(nbr));
             }
 
             try {
@@ -404,8 +404,8 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
                     int amount = parsedArgs.amount;
                     await fighterReceiving.giveTokens(amount, TransactionType.DonationFromAdmin, data.character);
                     await fighterReceiving.save();
-                    this.fChatLibInstance.sendPrivMessage(`[color=green]You have successfully given ${fighterReceiving.name} ${amount} tokens.[/color]`, data.character);
-                    this.fChatLibInstance.sendPrivMessage(`[color=green]You've just received ${amount} tokens from ${data.character} ![/color]`, fighterReceiving.name);
+                    this.fChatLibInstance.sendPrivMessage($"[color=green]You have successfully given ${fighterReceiving.name} ${amount} tokens.[/color]", data.character);
+                    this.fChatLibInstance.sendPrivMessage($"[color=green]You've just received ${amount} tokens from ${data.character} ![/color]", fighterReceiving.name);
                 }
                 else{
                     this.fChatLibInstance.sendPrivMessage(Messages.errorRecipientOrSenderNotFound, data.character);
@@ -436,14 +436,14 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
                     await fighterReceiving.giveTokens(amount, TransactionType.Tip, fighterGiving.name);
                     await fighterGiving.save();
                     await fighterReceiving.save();
-                    this.fChatLibInstance.sendPrivMessage(`[color=green]You have successfully given ${fighterReceiving.name} ${amount} tokens.[/color]`, data.character);
-                    this.fChatLibInstance.sendPrivMessage(`[color=green]You've just received ${amount} tokens from ${fighterGiving.name} for your... services.[/color]`, fighterReceiving.name);
+                    this.fChatLibInstance.sendPrivMessage($"[color=green]You have successfully given ${fighterReceiving.name} ${amount} tokens.[/color]", data.character);
+                    this.fChatLibInstance.sendPrivMessage($"[color=green]You've just received ${amount} tokens from ${fighterGiving.name} for your... services.[/color]", fighterReceiving.name);
                     if(fighterReceiving.name == "Miss_Spencer"){
                         if(amount <= 5){
-                            this.fChatLibInstance.sendPrivMessage(//i.imgur.com/3b7r7qk.jpg]Thanks for the tip♥[/url]` `[url=http, data.character);
+                            this.fChatLibInstance.sendPrivMessage(//i.imgur.com/3b7r7qk.jpg]Thanks for the tip♥[/url]" "[url=http, data.character);
                         }
                         else {
-                            this.fChatLibInstance.sendPrivMessage(//i.imgur.com/fLpZ1IN.png]All those coins? For me?~[/url]` `[url=http, data.character);
+                            this.fChatLibInstance.sendPrivMessage(//i.imgur.com/fLpZ1IN.png]All those coins? For me?~[/url]" "[url=http, data.character);
                         }
                     }
                 }
@@ -469,7 +469,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
             if (fighter != null) {
                 fighter.removeFeature(parsedFeatureArgs[0]);
                 await fighter.save();
-                this.fChatLibInstance.sendPrivMessage(`[color=green]You successfully removed that feature.[/color]`, fighter.name);
+                this.fChatLibInstance.sendPrivMessage($"[color=green]You successfully removed that feature.[/color]", fighter.name);
             }
         }
         catch (ex) {
@@ -492,7 +492,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         TUser fighter = await (await this.database()).findOne(this.User, data.character);
 
         if (fighter != null) {
-            this.fChatLibInstance.sendPrivMessage(`[noparse]${fighter.outputStats()}[/noparse]`, fighter.name);
+            this.fChatLibInstance.sendPrivMessage($"[noparse]${fighter.outputStats()}[/noparse]", fighter.name);
         }
         else {
             this.fChatLibInstance.sendPrivMessage(Messages.errorNotRegistered, data.character);
@@ -503,7 +503,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         FightType parsedFT = Parser.setFightType(args);
         if (parsedFT == -1) {
             var fightTypes = Utils.getEnumList(FightType);
-            this.fChatLibInstance.sendMessage( ${fightTypes.join(" `[color=red]Fight Type not found. Types, !fighttype classic[/color]`, this.channel  ")}. Example);
+            this.fChatLibInstance.sendMessage( ${fightTypes.join(" "[color=red]Fight Type not found. Types, !fighttype classic[/color]", this.channel  ")}. Example);
             return;
         }
 
@@ -521,7 +521,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         FightLength parsedFD = Parser.setFightLength(args);
         if (parsedFD == -1) {
             var fightDurations = Utils.getEnumList(FightLength);
-            this.fChatLibInstance.sendMessage( ${fightDurations.join(" `[color=red]Fight Length not found. Types, !fightlength Long[/color]`, this.channel  ")}. Example);
+            this.fChatLibInstance.sendMessage( ${fightDurations.join(" "[color=red]Fight Length not found. Types, !fightlength Long[/color]", this.channel  ")}. Example);
             return;
         }
 

@@ -227,7 +227,7 @@ public RWUser    user {get; set;}
     }
 
     getStatsInString():string{
-        return `${this.user.power},${this.user.sensuality},${this.user.toughness},${this.user.endurance},${this.user.dexterity},${this.user.willpower}`;
+        return "${this.user.power},${this.user.sensuality},${this.user.toughness},${this.user.endurance},${this.user.dexterity},${this.user.willpower}";
     }
 
     //fight is "mistakenly" set as optional to be compatible with the super.init
@@ -415,12 +415,12 @@ public RWUser    user {get; set;}
             //this.heartsRemaining--;
             this.livesRemaining--;
             this.heartsDamageLastRound += 1;
-            this.fight.message.addHit(`[b][color=red]Heart broken![/color][/b] ${this.name} has ${this.livesRemaining} lives left.`);
+            this.fight.message.addHit($"[b][color=red]Heart broken![/color][/b] ${this.name} has ${this.livesRemaining} lives left.");
             if (this.livesRemaining > 0) {
                 this.hp = this.hpPerHeart();
             }
             else if (this.livesRemaining == 1) {
-                this.fight.message.addHit(`[b][color=red]Last life[/color][/b] for ${this.name}!`);
+                this.fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.name}!");
             }
             this.triggerMods(TriggerMoment.After, Trigger.MainBarDepleted);
         }
@@ -445,13 +445,13 @@ public RWUser    user {get; set;}
             //this.orgasmsRemaining--;
             this.livesRemaining--;
             this.orgasmsDamageLastRound += 1;
-            this.fight.message.addHit(`[b][color=pink]Orgasm on the mat![/color][/b] ${this.name} has ${this.livesRemaining} lives left.`);
+            this.fight.message.addHit($"[b][color=pink]Orgasm on the mat![/color][/b] ${this.name} has ${this.livesRemaining} lives left.");
             this.lust = 0;
             if (triggerMods) {
                 this.triggerMods(TriggerMoment.After, Trigger.SecondaryBarDepleted);
             }
             if (this.livesRemaining == 1) {
-                this.fight.message.addHit(`[b][color=red]Last life[/color][/b] for ${this.name}!`);
+                this.fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.name}!");
             }
         }
         this.triggerMods(TriggerMoment.After, Trigger.SecondaryBarDamage);
@@ -475,7 +475,7 @@ public RWUser    user {get; set;}
     isDead(displayMessage:bool = false):bool {
         var condition = (this.livesRemaining == 0);
         if(condition && displayMessage){
-            this.fight.message.addHit(`${this.getStylizedName()} couldn't take it anymore! They're out!`);
+            this.fight.message.addHit($"${this.getStylizedName()} couldn't take it anymore! They're out!");
         }
         return condition;
     }
@@ -483,7 +483,7 @@ public RWUser    user {get; set;}
     isSexuallyExhausted(displayMessage:bool = false):bool {
         var condition = (this.livesRemaining == 0);
         if(condition && displayMessage){
-            this.fight.message.addHit(`${this.getStylizedName()} got wrecked sexually! They're out!`);
+            this.fight.message.addHit($"${this.getStylizedName()} got wrecked sexually! They're out!");
         }
         return condition;
     }
@@ -491,7 +491,7 @@ public RWUser    user {get; set;}
     isBroken(displayMessage:bool = false):bool {
         var condition = (this.consecutiveTurnsWithoutFocus >= RWGameSettings.maxTurnsWithoutFocus);
         if(condition && displayMessage){
-            this.fight.message.addHit(`${this.getStylizedName()} completely lost their focus! They're out!`);
+            this.fight.message.addHit($"${this.getStylizedName()} completely lost their focus! They're out!");
         }
         return condition;
     }
@@ -499,7 +499,7 @@ public RWUser    user {get; set;}
     isCompletelyBound(displayMessage:bool = false):bool {
         var condition = (this.bondageItemsOnSelf() >= this.maxBondageItemsOnSelf());
         if(condition && displayMessage){
-            this.fight.message.addHit(`${this.getStylizedName()} is completely bound! They're out!`);
+            this.fight.message.addHit($"${this.getStylizedName()} is completely bound! They're out!");
         }
         return condition;
     }
@@ -538,16 +538,16 @@ public RWUser    user {get; set;}
     }
 
     outputStatus() {
-public `        var nameLine = `${this.getStylizedName()} {get; set;}
-public  "[color=green]")} (${Utils.getSignedint(-this.hpDamageLastRound + this.hpHealLastRound)})[/color]` : "")}|${this.hpPerHeart()}[/color] `         ${this.hp}${((this.hpDamageLastRound > 0 || this.hpHealLastRound > 0) ? `${(((-this.hpDamageLastRound + this.hpHealLastRound) < 0) ? "[colorhpLine = `  [color=yellow]hit points =red]"  {get; set;}
-public  "[color=green]")} (${Utils.getSignedint(this.lpDamageLastRound - this.lpHealLastRound)})[/color]` : "")}|${this.lustPerOrgasm()}[/color] `         ${this.lust}${((this.lpDamageLastRound > 0 || this.lpHealLastRound > 0) ? `${(((-this.lpDamageLastRound + this.lpHealLastRound) < 0) ? "[colorlpLine = `  [color=pink]lust points =red]"  {get; set;}
-public  "[color=green]")} (${Utils.getSignedint(-this.orgasmsDamageLastRound + this.orgasmsHealLastRound)} orgasm(s))[/color]` : "")}${((this.heartsDamageLastRound > 0 || this.heartsHealLastRound > 0) ? `${(((-this.heartsDamageLastRound + this.heartsHealLastRound) < 0) ? "[color=red]" : "[color=green]")}  (${Utils.getSignedint(-this.heartsDamageLastRound + this.heartsHealLastRound)} heart(s))[/color]` : "")}(${this.livesRemaining}|${this.maxLives()})[/color] `         ${this.displayRemainingLives}${((this.orgasmsDamageLastRound > 0 || this.orgasmsHealLastRound > 0) ? `${(((-this.orgasmsDamageLastRound + this.orgasmsHealLastRound) < 0) ? "[colorlivesLine = `  [color=red]lives =red]"  {get; set;}
-public [/color] [b][colorfocusLine = `  [color=orange]${this.user.hasFeature(FeatureType.DomSubLover) ? "submissiveness"  =${(this.focus <= 0 ? "red" : "orange")}]${this.focus}[/color][/b]${(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? `${(((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} (${Utils.getSignedint(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]` : "")}|[color=green]${this.maxFocus()}[/color] `         "focus"} {get; set;}
-public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] `        var turnsFocusLine = `  [color=orange]turns ${this.user.hasFeature(FeatureType.DomSubLover) ? "being too submissive"  {get; set;}
-        var bondageLine = `  [color=purple]bondage items ${this.bondageItemsOnSelf()}|${RWGameSettings.maxBondageItemsOnSelf}[/color] `;
-public  ${this.getListOfActiveModifiers()}[/color] `        var modifiersLine = `  [color=cyan]affected by {get; set;}
-        var targetLine = `  [color=red]target( ` + ((this.targets != null && this.targets.length > 0) ? `${this.targets.join(" s), "None set yet! (!targets charactername)" ").toString()}` ) + `[/color]`;
+public "        var nameLine = "${this.getStylizedName()} {get; set;}
+public  "[color=green]")} (${Utils.getSignedint(-this.hpDamageLastRound + this.hpHealLastRound)})[/color]" : "")}|${this.hpPerHeart()}[/color] "         ${this.hp}${((this.hpDamageLastRound > 0 || this.hpHealLastRound > 0) ? "${(((-this.hpDamageLastRound + this.hpHealLastRound) < 0) ? "[colorhpLine = "  [color=yellow]hit points =red]"  {get; set;}
+public  "[color=green]")} (${Utils.getSignedint(this.lpDamageLastRound - this.lpHealLastRound)})[/color]" : "")}|${this.lustPerOrgasm()}[/color] "         ${this.lust}${((this.lpDamageLastRound > 0 || this.lpHealLastRound > 0) ? "${(((-this.lpDamageLastRound + this.lpHealLastRound) < 0) ? "[colorlpLine = "  [color=pink]lust points =red]"  {get; set;}
+public  "[color=green]")} (${Utils.getSignedint(-this.orgasmsDamageLastRound + this.orgasmsHealLastRound)} orgasm(s))[/color]" : "")}${((this.heartsDamageLastRound > 0 || this.heartsHealLastRound > 0) ? "${(((-this.heartsDamageLastRound + this.heartsHealLastRound) < 0) ? "[color=red]" : "[color=green]")}  (${Utils.getSignedint(-this.heartsDamageLastRound + this.heartsHealLastRound)} heart(s))[/color]" : "")}(${this.livesRemaining}|${this.maxLives()})[/color] "         ${this.displayRemainingLives}${((this.orgasmsDamageLastRound > 0 || this.orgasmsHealLastRound > 0) ? "${(((-this.orgasmsDamageLastRound + this.orgasmsHealLastRound) < 0) ? "[colorlivesLine = "  [color=red]lives =red]"  {get; set;}
+public [/color] [b][colorfocusLine = "  [color=orange]${this.user.hasFeature(FeatureType.DomSubLover) ? "submissiveness"  =${(this.focus <= 0 ? "red" : "orange")}]${this.focus}[/color][/b]${(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? "${(((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} (${Utils.getSignedint(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]" : "")}|[color=green]${this.maxFocus()}[/color] "         "focus"} {get; set;}
+public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] "        var turnsFocusLine = "  [color=orange]turns ${this.user.hasFeature(FeatureType.DomSubLover) ? "being too submissive"  {get; set;}
+        var bondageLine = "  [color=purple]bondage items ${this.bondageItemsOnSelf()}|${RWGameSettings.maxBondageItemsOnSelf}[/color] ";
+public  ${this.getListOfActiveModifiers()}[/color] "        var modifiersLine = "  [color=cyan]affected by {get; set;}
+        var targetLine = "  [color=red]target( " + ((this.targets != null && this.targets.length > 0) ? "${this.targets.join(" s), "None set yet! (!targets charactername)" ").toString()}" ) + "[/color]";
 
-        return `${Utils.pad(50, ""  nameLine, "-")} ${hpLine} ${lpLine} ${livesLine} ${focusLine} ${turnsFocusLine} ${bondageLine} ${(this.getListOfActiveModifiers().length > 0 ? modifiersLine )} ${targetLine}`;
+        return "${Utils.pad(50, ""  nameLine, "-")} ${hpLine} ${lpLine} ${livesLine} ${focusLine} ${turnsFocusLine} ${bondageLine} ${(this.getListOfActiveModifiers().length > 0 ? modifiersLine )} ${targetLine}";
     }
 }

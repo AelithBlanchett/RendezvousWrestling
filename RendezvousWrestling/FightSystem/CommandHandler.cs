@@ -349,8 +349,8 @@ public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!read
 //            fighter.focus = fighter.initialFocus();
 //        }
 
-//        this.fChatLibInstance.sendPrivMessage(`Successfully resplenished ${ args}
-//        's HP, LP and FP.`, data.character);
+//        this.fChatLibInstance.sendPrivMessage($"Successfully resplenished ${ args}
+//        's HP, LP and FP.", data.character);
 //        }
 //}
 
@@ -362,8 +362,8 @@ public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!read
 //        try
 //        {
 //            this.fight.getFighterByName(splitted[0]).hp = parseInt(splitted[1]);
-//            this.fChatLibInstance.sendPrivMessage(`Successfully set ${ splitted[0]}
-//            's hp to ${splitted[1]}`, data.character);
+//            this.fChatLibInstance.sendPrivMessage($"Successfully set ${ splitted[0]}
+//            's hp to ${splitted[1]}", data.character);
 //            }
 //        catch (ex)
 //        {
@@ -380,8 +380,8 @@ public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!read
 //        try
 //        {
 //            this.fight.getFighterByName(splitted[0]).lust = parseInt(splitted[1]);
-//            this.fChatLibInstance.sendPrivMessage(`Successfully set ${ splitted[0]}
-//            's lp to ${splitted[1]}`, data.character);
+//            this.fChatLibInstance.sendPrivMessage($"Successfully set ${ splitted[0]}
+//            's lp to ${splitted[1]}", data.character);
 //            }
 //        catch (ex)
 //        {

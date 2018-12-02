@@ -39,7 +39,7 @@ public string    test {get; set;}
     punishPlayerOnForfeit(fighter: RWFighterState) {
         this.message.addHit(string.Format(Messages.forfeitItemApply, [fighter.getStylizedName(), fighter.maxBondageItemsOnSelf().toString()]));
         for(var i = 0; i < fighter.maxBondageItemsOnSelf(); i++){
-            fighter.modifiers.push(ModifierFactory.getModifier(ModifierType.Bondage, this, fighter, null));
+            fighter.modifiers.Add(ModifierFactory.getModifier(ModifierType.Bondage, this, fighter, null));
         }
         this.message.addHit(string.Format(Messages.forfeitTooManyItems, [fighter.getStylizedName()]));
         fighter.triggerPermanentOutsideRing();

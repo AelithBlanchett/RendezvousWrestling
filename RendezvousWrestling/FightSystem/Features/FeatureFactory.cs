@@ -34,7 +34,7 @@ public class FeatureFactory implements IFeatureFactory{
         }
 
         if(feature == null){
-            throw new Error(`The feature ${featureName} couldn't be initialized. The ${featureName} could be missing in Features.js and/or the ${featureName} isn't present in the features.json file.`)
+            throw new Error($"The feature ${featureName} couldn't be initialized. The ${featureName} could be missing in Features.js and/or the ${featureName} isn't present in the features.json file.")
         }
         return feature;
     }

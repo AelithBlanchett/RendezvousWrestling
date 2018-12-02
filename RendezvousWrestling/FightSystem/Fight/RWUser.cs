@@ -56,7 +56,7 @@ public RWFighterStats    stats {get; set;}
             "[b][color=brown]Willpower[/color][/b]: " + this.willpower +  "      " + "[b][color=orange]Tokens[/color][/b]: " + this.tokens + "         [b][color=orange]Total spent[/color][/b]: "+this.tokensSpent+"\n"  +
             "[b][color=red]Features[/color][/b]: [b]" + this.getFeaturesList() + "[/b]\n" +
             "[b][color=yellow]Common.Achievements[/color][/b]: [sub]" + this.getAchievementsList() + "[/sub]\n" +
-public  [sub]Avg. roll: ${this.stats.averageDiceRoll}, ${( "None!"  Fav. tag partner)} this.stats.favoriteTagPartner != null && this.stats.favoriteTagPartner != "" ? this.stats.favoriteTagPartner , Moves done: ${this.stats.actionsCount}, Nemesis: ${this.stats.nemesis} [/sub]`            `[b][color=white]Fun stats[/color][/b] {get; set;}
+public  [sub]Avg. roll: ${this.stats.averageDiceRoll}, ${( "None!"  Fav. tag partner)} this.stats.favoriteTagPartner != null && this.stats.favoriteTagPartner != "" ? this.stats.favoriteTagPartner , Moves done: ${this.stats.actionsCount}, Nemesis: ${this.stats.nemesis} [/sub]"            "[b][color=white]Fun stats[/color][/b] {get; set;}
     }
 
 }

@@ -101,7 +101,7 @@ public RWAction        var action {get; set;}
                 action = new ActionPass(fight, attacker, defenders);
                 break;
             default:
-                throw new Error(`The ${actionName} action doesn't exist!`);
+                throw new Error($"The ${actionName} action doesn't exist!");
         }
 
         return action;

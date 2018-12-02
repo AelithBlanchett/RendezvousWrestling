@@ -43,6 +43,6 @@ public class ActionSextoyPickup extends RWAction {
         this.fpHealToAtk += FocusHealOnHit[Tiers[Tiers.Light]];
         this.fpDamageToDef += FocusDamageOnHit[Tiers[Tiers.Light]];
         var itemPickupModifier = ModifierFactory.getModifier(ModifierType.SextoyPickupBonus, this.fight, this.attacker, null);
-        this.appliedModifiers.push(itemPickupModifier);
+        this.appliedModifiers.Add(itemPickupModifier);
     }
 }

@@ -48,7 +48,7 @@ public class ActionEscape extends RWAction {
     checkRequirements():void{
         super.checkRequirements();
         if(!this.attacker.isInHold()){
-            throw new Error(`You aren't in a hold... what are you trying to escape!`);
+            throw new Error($"You aren't in a hold... what are you trying to escape!");
         }
     }
 }

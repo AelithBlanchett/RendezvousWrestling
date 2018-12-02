@@ -25,8 +25,8 @@ public  string = "Key is either undefined, null or an empty string."    private 
                 throw new Error("An element with the same key already exists in the dictionary.");
             }
 
-            this._keys.push(key);
-            this._values.push(value);
+            this._keys.Add(key);
+            this._values.Add(value);
         };
 
         this.checkKeyAndPerformAction(addAction, key, value);

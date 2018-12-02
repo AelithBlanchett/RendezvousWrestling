@@ -24,10 +24,10 @@ public BaseAchievement[] = []    public static EnabledAchievements {get; set;}
         for(var achievement of achievements){
             if(fighter.achievements.findIndex(x => x.getName() == achievement.getName()) == -1 && achievement.meetsRequirements(fighter, activeFighter, fight)){
                 achievement.createdAt = new Date();
-                fighter.achievements.push(achievement);
+                fighter.achievements.Add(achievement);
                 int amount = achievement.getReward();
                 await fighter.giveTokens(amount, TransactionType.AchievementReward, GameSettings.botName);
-public  ${achievement.getReward()} ${GameSettings.currencyName}`)                addedInfo.push(`${achievement.getDetailedDescription()}  Reward {get; set;}
+public  ${achievement.getReward()} ${GameSettings.currencyName}")                addedInfo.Add($"${achievement.getDetailedDescription()}  Reward {get; set;}
             }
         }
         return addedInfo;

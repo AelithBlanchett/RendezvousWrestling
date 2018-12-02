@@ -40,7 +40,7 @@ public abstract class BaseFeature{
         string messageAboutFeature = "";
 
         if(wasFeatureTriggered){
-            messageAboutFeature = `${this.receiver.name} is affected by the ${this.type}, ${triggeredFeatureMessage}`;
+            messageAboutFeature = "${this.receiver.name} is affected by the ${this.type}, ${triggeredFeatureMessage}";
         }
 
         return messageAboutFeature;

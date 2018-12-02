@@ -11,7 +11,7 @@ public abstract class BaseAchievement implements IAchievement{
 public string    achievementId {get; set;}
 
     @CreateDateColumn()
-public Date    createdAt {get; set;}
+public DateTime    createdAt {get; set;}
 
     @ManyToOne(type => BaseUser, user => user.achievements)
 public BaseUser    user {get; set;}

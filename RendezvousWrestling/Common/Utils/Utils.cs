@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 public class Utils {
@@ -9,13 +10,13 @@ public class Utils {
         return Math.max.apply(Math, arr);
     }
 
-    static string getSignedint(theint)
+    public static string getSignedNumber(double theNumber)
     {
-        if(theint > 0){
-            return "+" + theint;
+        if(theNumber > 0){
+            return "+" + theNumber;
         }
         else{
-            return theint.toString();
+            return theNumber.ToString();
         }
     }
 
@@ -50,21 +51,10 @@ public class Utils {
         return array;
     }
 
-    static getEnumList(myEnum):Array<string>{
-        var arrResult = [];
-        for (var enumMember in myEnum) {
-            var isValueProperty = parseInt(enumMember, 10) >= 0;
-            if (isValueProperty) {
-                arrResult.push(myEnum[enumMember]);
-            }
-        }
-        return arrResult;
-    }
-
     static getStringEnumList(myEnum):Array<string>{
         var arrResult = [];
         for (var enumMember in myEnum) {
-            arrResult.push(enumMember);
+            arrResult.Add(enumMember);
         }
         return arrResult;
     }
@@ -77,7 +67,7 @@ public class Utils {
         var indexes = [], i;
         for(i = 0; i < arr.length; i++)
             if (arr[i] === val)
-                indexes.push(i);
+                indexes.Add(i);
         return indexes;
     }
 
@@ -96,16 +86,6 @@ public class Utils {
         }
         return -1;
     }
-
-    static string generateUUID():string {
-        var d = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = (d + Math.random()*16)%16 | 0;
-            d = Math.floor(d/16);
-public  (r&0x3|0x8)).toString(16)            return (c=='x' ? r  {get; set;}
-        });
-        return uuid;
-    };
 
     static mergeFromTo(any input,any  augmentedOutput){
         for(var prop of Object.getOwnPropertyNames(input)){
@@ -128,23 +108,5 @@ public  (r&0x3|0x8)).toString(16)            return (c=='x' ? r  {get; set;}
             }
         }
         return canPass;
-    }
-}
-
-public class EnumEx {
-    static getNamesAndValues<T extends int>(e: any) {
-        return EnumEx.getNames( n e).map(n => ({ name, e[n] as T })  value);
-    }
-
-    static getNames(e: any) {
-        return EnumEx.getObjValues(e).filter(v => typeof v === "string") as string[];
-    }
-
-    static getValues<T extends int>(e: any) {
-        return EnumEx.getObjValues(e).filter(v => typeof v === "int") as T[];
-    }
-
-    private static getObjValues(e: any): (int | string)[] {
-        return Object.keys(e).map(k => e[k]);
     }
 }

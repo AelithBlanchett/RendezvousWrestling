@@ -52,8 +52,8 @@ public class ActionSubHold extends RWAction {
         var holdModifier = ModifierFactory.getModifier( this.tier ModifierType.SubHold, hpDamage}  this.fight, this.defender, this.attacker, {tier, hpDamage);
         var brawlBonusAttacker = ModifierFactory.getModifier(ModifierType.SubHoldBrawlBonus, [holdModifier.idModifier]}  this.fight, this.attacker, null, {parentIds);
         var brawlBonusDefender = ModifierFactory.getModifier(ModifierType.SubHoldBrawlBonus, [holdModifier.idModifier]}  this.fight, this.defender, null, {parentIds);
-        this.appliedModifiers.push(holdModifier);
-        this.appliedModifiers.push(brawlBonusAttacker);
-        this.appliedModifiers.push(brawlBonusDefender);
+        this.appliedModifiers.Add(holdModifier);
+        this.appliedModifiers.Add(brawlBonusAttacker);
+        this.appliedModifiers.Add(brawlBonusDefender);
     }
 }

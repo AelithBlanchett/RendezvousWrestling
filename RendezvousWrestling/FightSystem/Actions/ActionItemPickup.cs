@@ -43,6 +43,6 @@ public class ActionItemPickup extends RWAction {
         this.fpHealToAtk += FocusHealOnHit[Tiers[Tiers.Light]];
         this.fpDamageToDef += FocusDamageOnHit[Tiers[Tiers.Light]];
         var itemPickupModifier = ModifierFactory.getModifier(ModifierType.ItemPickupBonus, this.fight, this.attacker, null);
-        this.appliedModifiers.push(itemPickupModifier);
+        this.appliedModifiers.Add(itemPickupModifier);
     }
 }

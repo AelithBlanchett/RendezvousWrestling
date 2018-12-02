@@ -23,9 +23,9 @@ public BaseFight    fight {get; set;}
 public BaseFighterState    applier {get; set;}
 public BaseFighterState    receiver {get; set;}
 
-public  Date    createdAt {get; set;}
-public  Date    updatedAt {get; set;}
-public  Date    deletedAt {get; set;}
+public  DateTime    createdAt {get; set;}
+public  DateTime    updatedAt {get; set;}
+public  DateTime    deletedAt {get; set;}
 
     constructor(string name,BaseFight, receiver:BaseFighterState, applier:BaseFighterState, tier:int, uses:int, timeToTrigger:TriggerMoment, event:Trigger, parentActionIds?:Array<string>  fight){
         this.idModifier = Utils.generateUUID();
@@ -95,7 +95,7 @@ public  Date    deletedAt {get; set;}
 
         if(Utils.willTriggerForEvent(this.timeToTrigger, moment, this.event, event)){
             this.uses--;
-            messageAboutModifier = `${this.receiver.getStylizedName()} is affected by the ${this.name}, `;
+            messageAboutModifier = "${this.receiver.getStylizedName()} is affected by the ${this.name}, ";
             if(!objFightAction){
                 messageAboutModifier += this.applyModifierOnReceiver(moment, event);
             }
@@ -107,10 +107,10 @@ public  Date    deletedAt {get; set;}
                 for(var fighter of this.fight.fighters){
                     fighter.removeMod(this.idModifier);
                 }
-                messageAboutModifier += ` and it is now expired.`;
+                messageAboutModifier += " and it is now expired.";
             }
             else{
-                messageAboutModifier += ` still effective for ${this.uses} more turns.`;
+                messageAboutModifier += " still effective for ${this.uses} more turns.";
             }
 
             this.fight.message.addSpecial(messageAboutModifier);

@@ -8,7 +8,7 @@ import {BaseAchievement} from "../../Common/Achievements/BaseAchievement";
 import {BaseUser} from "../../Common/Fight/BaseUser";
 
 public class RookieAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -36,7 +36,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class FiveFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -64,7 +64,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class TenFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -92,7 +92,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class TwentyFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -120,7 +120,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class FortyFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -148,7 +148,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class WinookieAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -176,7 +176,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class WinFiveFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -204,7 +204,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class WinTenFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -232,7 +232,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class WinTwentyFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -260,7 +260,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class WinThirtyFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -288,7 +288,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class WinFortyFightsAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -316,7 +316,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class ReachSilverAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -344,7 +344,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class ReachGoldAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -372,7 +372,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class LongFightAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -400,7 +400,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class SeasonOneAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -428,7 +428,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class DoubleKOAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
         var flag = false;
@@ -456,7 +456,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class SomeSeriousLuckAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight  activeFighter?): bool {
         var flag = false;
@@ -484,7 +484,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class CumFestAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: RWFight  BaseActiveFighter?): bool {
         var flag = false;
@@ -512,7 +512,7 @@ public  Date    createdAt {get; set;}
 }
 
 public class OneMoveTwoStonesAchievement extends BaseAchievement{
-public  Date    createdAt {get; set;}
+public  DateTime    createdAt {get; set;}
 
     meetsRequirements( BaseUser user, BaseFighterState, fight?: RWFight  BaseActiveFighter?): bool {
         var flag = false;
@@ -540,7 +540,7 @@ public  Date    createdAt {get; set;}
 }
 
 //The three dots replace the foreach=>push(achievement)
-AchievementManager.EnabledAchievements.push(...
+AchievementManager.EnabledAchievements.Add(...
     [
         new RookieAchievement(),
         new FiveFightsAchievement(),

@@ -1,109 +1,115 @@
-import {IMessage} from "./IFightMessage";
 
-public class FightMessage implements IMessage {
-public Array<string>    action {get; set;}
-public Array<string>    hit {get; set;}
-public Array<string>    status {get; set;}
-public Array<string>    hint {get; set;}
-public Array<string>    special {get; set;}
-public Array<string>    info {get; set;}
-public Array<string>    error {get; set;}
-public string    lastMessage {get; set;}
+using System.Collections.Generic;
 
-    constructor() {
+public class FightMessage : IMessage {
+public List<string>    Action {get; set;}
+public List<string>    Hit {get; set;}
+public List<string>    Status {get; set;}
+public List<string>    Hint {get; set;}
+public List<string>    Special {get; set;}
+public List<string>    Info {get; set;}
+public List<string>    Error {get; set;}
+public string    LastMessage {get; set;}
+
+    public FightMessage() {
         this.clear();
-        this.lastMessage = null;
+        this.LastMessage = null;
     }
 
-    clear(){
-        this.action = [];
-        this.hit = [];
-        this.status = [];
-        this.hint = [];
-        this.special = [];
-        this.info = [];
-        this.error = [];
+    void clear(){
+        Action = new List<string>();
+        Hit = new List<string>();
+        Status = new List<string>();
+        Hint = new List<string>();
+        Special = new List<string>();
+        Info = new List<string>();
+        Error = new List<string>();
     }
 
-    getAction() {
-public  [color=yellow]" + this.action.join(" ") + "[/color]"        return "Action {get; set;}
+    public string getAction() {
+        return "Action :[color=yellow]" + string.Join("\n", Action) + "[/color]"; 
     }
 
-    getHit() {
-        return "[color=red][b]" + this.hit.join("\n") + "[/b][/color]\n";
+    public string getHit() {
+        return "[color=red][b]" + string.Join("\n", Hit) + "[/b][/color]\n";
     }
 
-    getHint() {
-        return "[color=cyan]" + this.hint.join("\n") + "[/color]\n";
+    public string getHint() {
+        return "[color=cyan]" + string.Join("\n", Hint) + "[/color]\n";
     }
 
-    getSpecial() {
-        return "[color=red]" + this.special.join("\n") + "[/color]\n";
+    public string getSpecial() {
+        return "[color=red]" + string.Join("\n", Special) + "[/color]\n";
     }
 
-    getStatus(){
-        return this.status.join("\n");
+    public string getStatus(){
+        return string.Join("\n", Status);
     }
 
-    getInfo(){
-        return this.info.join("\n");
+    public string getInfo(){
+        return string.Join("\n", Info);
     }
 
-    getError() {
-        return "[color=red][b]" + this.error.join("\n") + "[/b][/color]";
+    public string getError() {
+        return "[color=red][b]" + string.Join("\n", Error) + "[/b][/color]";
     }
 
-    addAction(line) {
-        if (typeof line === "string") this.action.push(line);
+    public void addAction(string line)
+    {
+        if(!string.IsNullOrWhiteSpace(line)) this.Action.Add(line);
     }
 
-    addHit(line) {
-        if (typeof line === "string") this.hit.push(line);
+    public void addHit(string line)
+    {
+        if(!string.IsNullOrWhiteSpace(line)) this.Hit.Add(line);
     }
 
-    addHint(line) {
-        if (typeof line === "string") this.hint.push(line);
+    public void addHint(string line)
+    {
+        if(!string.IsNullOrWhiteSpace(line)) this.Hint.Add(line);
     }
 
-    addStatus(line) {
-        if (typeof line === "string") this.status.push(line);
+    public void addStatus(string line) {
+        if(!string.IsNullOrWhiteSpace(line)) this.Status.Add(line);
     }
 
-    addInfo(line){
-        if (typeof line === "string") this.info.push(line);
+    public void addInfo(string line)
+    {
+        if(!string.IsNullOrWhiteSpace(line)) this.Info.Add(line);
     }
 
-    addError(line){
-        if (typeof line === "string") this.error.push(line);
+    public void addError(string line)
+    {
+        if(!string.IsNullOrWhiteSpace(line)) this.Error.Add(line);
     }
 
-    addSpecial(line){
-        if (typeof line === "string") this.special.push(line);
+    public void addSpecial(string line){
+        if(!string.IsNullOrWhiteSpace(line)) this.Special.Add(line);
     }
 
 
-    buildMessage():string{
-        var lines = [];
+    public string buildMessage(){
+        var lines = new List<string>();
 
-        if (this.info.length) lines.push(this.getInfo());
-        if (this.action.length) lines.push(this.getAction());
-        if (this.hit.length) lines.push(this.getHit());
-        if (this.status.length) lines.push(this.getStatus());
-        if (this.hint.length) lines.push(this.getHint());
-        if (this.special.length) lines.push(this.getSpecial());
-        if (this.error.length) lines.push(this.getError());
+        if (Info.Count > 0) lines.Add(this.getInfo());
+        if (Action.Count > 0) lines.Add(this.getAction());
+        if (Hit.Count > 0) lines.Add(this.getHit());
+        if (Status.Count > 0) lines.Add(this.getStatus());
+        if (Hint.Count > 0) lines.Add(this.getHint());
+        if (Special.Count > 0) lines.Add(this.getSpecial());
+        if (Error.Count > 0) lines.Add(this.getError());
 
-        return lines.join("\n");
+        return string.Join("\n", lines);
     }
 
-    getMessage():string {
+    public string getMessage() {
         string message = this.buildMessage();
-        this.lastMessage = message;
+        this.LastMessage = message;
         this.clear();
         return message;
     }
 
-    getLastMessage():string{
-        return this.lastMessage;
+    public string getLastMessage(){
+        return this.LastMessage;
     }
 }

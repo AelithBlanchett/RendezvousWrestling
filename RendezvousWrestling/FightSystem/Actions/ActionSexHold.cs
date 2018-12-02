@@ -52,8 +52,8 @@ public class ActionSexHold extends RWAction {
         var holdModifier = ModifierFactory.getModifier( this.tier ModifierType.SexHold, lustDamage}  this.fight, this.defender, this.attacker, {tier, lustDamage);
         var lustBonusAttacker = ModifierFactory.getModifier(ModifierType.SexHoldLustBonus, [holdModifier.idModifier]}  this.fight, this.attacker, null, {parentIds);
         var lustBonusDefender = ModifierFactory.getModifier(ModifierType.SexHoldLustBonus, [holdModifier.idModifier]}  this.fight, this.defender, null, {parentIds);
-        this.appliedModifiers.push(holdModifier);
-        this.appliedModifiers.push(lustBonusAttacker);
-        this.appliedModifiers.push(lustBonusDefender);
+        this.appliedModifiers.Add(holdModifier);
+        this.appliedModifiers.Add(lustBonusAttacker);
+        this.appliedModifiers.Add(lustBonusDefender);
     }
 }

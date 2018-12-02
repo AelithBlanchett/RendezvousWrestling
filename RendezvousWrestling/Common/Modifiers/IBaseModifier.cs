@@ -17,9 +17,9 @@ public Trigger    event {get; set;}
 public TriggerMoment    timeToTrigger {get; set;}
 public  Array<string>    idParentActions {get; set;}
 
-public  Date    createdAt {get; set;}
-public  Date    updatedAt {get; set;}
-public  Date    deletedAt {get; set;}
+public  DateTime    createdAt {get; set;}
+public  DateTime    updatedAt {get; set;}
+public  DateTime    deletedAt {get; set;}
 
 public BaseFight    fight {get; set;}
 

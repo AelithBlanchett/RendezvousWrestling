@@ -10,8 +10,8 @@ public bool = true    canMoveFromOrOffRing {get; set;}
 public int = 9999999    lastTagTurn {get; set;}
 public bool = false    wantsDraw {get; set;}
 public int    distanceFromRingCenter {get; set;}
-public Date    createdAt {get; set;}
-public Date    updatedAt {get; set;}
+public DateTime    createdAt {get; set;}
+public DateTime    updatedAt {get; set;}
 public bool = false    deleted {get; set;}
 public  FightStatus    fightStatus {get; set;}
 
@@ -54,14 +54,14 @@ public Dice    dice {get; set;}
         for(var name of this.targets){
             var fighter = this.fight.getFighterByName(name);
             if(fighter != null){
-                fighters.push(fighter);
+                fighters.Add(fighter);
             }
         }
         return fighters;
     }
 
     public async void checkAchievements(fight?:BaseFight){
-        var strBase = `[color=yellow][b]Achievements unlocked for ${this.name}![/b][/color]\n`;
+        var strBase = "[color=yellow][b]Achievements unlocked for ${this.name}![/b][/color]\n";
         var added = await AchievementManager.checkAll(this.user, this, fight);
 
         if(added.length > 0){
@@ -297,14 +297,14 @@ public bool):bool    abstract isTechnicallyOut(displayMessage? {get; set;}
         var modifierBeginning = "";
         var modifierEnding = "";
         if (this.isTechnicallyOut()) {
-            modifierBeginning = `[s]`;
-            modifierEnding = `[/s]`;
+            modifierBeginning = "[s]";
+            modifierEnding = "[/s]";
         }
         else if (!this.isInTheRing) {
-            modifierBeginning = `[i]`;
-            modifierEnding = `[/i]`;
+            modifierBeginning = "[i]";
+            modifierEnding = "[/i]";
         }
-        return `${modifierBeginning}[b][color=${Team[this.assignedTeam].toLowerCase()}]${this.name}[/color][/b]${modifierEnding}`;
+        return "${modifierBeginning}[b][color=${Team[this.assignedTeam].toLowerCase()}]${this.name}[/color][/b]${modifierEnding}";
     }
 
     isInRange(targets:BaseFighterState[]):bool{

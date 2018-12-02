@@ -48,8 +48,8 @@ public class ActionHumHold extends RWAction {
         this.fpHealToAtk += FocusHealOnHit[Tiers[this.tier]];
         var focusDamage = Math.floor(FocusDamageOnHit[Tiers[this.tier]]);
         var holdModifier = ModifierFactory.getModifier( this.tier ModifierType.HumHold, focusDamage}  this.fight, this.defender, this.attacker, {tier, focusDamage);
-        this.appliedModifiers.push(holdModifier);
+        this.appliedModifiers.Add(holdModifier);
         var humiliationModifier = ModifierFactory.getModifier(ModifierType.DegradationMalus, [holdModifier.idModifier]}  this.fight, this.defender, this.attacker, {parentIds);
-        this.appliedModifiers.push(humiliationModifier);
+        this.appliedModifiers.Add(humiliationModifier);
     }
 }

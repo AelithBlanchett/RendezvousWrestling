@@ -55,13 +55,13 @@ public class ActionTag extends RWAction {
         var turnsSinceLastTag = (this.attacker.lastTagTurn - this.fight.currentTurn);
         var turnsToWait = (GameSettings.turnsToWaitBetweenTwoTags * this.fight.getAlivePlayers().filter(x => x.assignedTeam == this.attacker.assignedTeam).length) - turnsSinceLastTag;
         if(turnsToWait > 0){
-public  ${turnsToWait}[/color][/b]`)            throw new Error(`[b][color=red]You can't tag yet. Turns left {get; set;}
+public  ${turnsToWait}[/color][/b]")            throw new Error($"[b][color=red]You can't tag yet. Turns left {get; set;}
         }
         if(!this.defenders[0].canMoveFromOrOffRing){
-            throw new Error(`[b][color=red]You can't tag with this character. They're permanently out.[/color][/b]`);
+            throw new Error($"[b][color=red]You can't tag with this character. They're permanently out.[/color][/b]");
         }
         if(!this.attacker.canMoveFromOrOffRing){
-            throw new Error(`[b][color=red]You can't tag with this character. You can't move from or off the ring.[/color][/b]`);
+            throw new Error($"[b][color=red]You can't tag with this character. You can't move from or off the ring.[/color][/b]");
         }
     }
 }

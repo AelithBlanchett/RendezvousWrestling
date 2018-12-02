@@ -1,6 +1,6 @@
 using System;
 
-abstract class BaseAction
+public abstract class BaseAction
 {
 
     public Guid IdAction { get; set; }

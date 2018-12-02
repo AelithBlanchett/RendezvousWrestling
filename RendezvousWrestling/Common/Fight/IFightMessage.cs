@@ -1,10 +1,13 @@
-public interface IMessage {
-public  Array<string>    action {get; set;}
-public  Array<string>    hit {get; set;}
-public  Array<string>    status {get; set;}
-public  Array<string>    hint {get; set;}
-public  Array<string>    special {get; set;}
-public  Array<string>    info {get; set;}
-public  Array<string>    error {get; set;}
-public  string    lastMessage {get; set;}
+using System.Collections.Generic;
+
+public interface IMessage
+{
+    List<string> Action { get; set; }
+    List<string> Hit { get; set; }
+    List<string> Status { get; set; }
+    List<string> Hint { get; set; }
+    List<string> Special { get; set; }
+    List<string> Info { get; set; }
+    List<string> Error { get; set; }
+    string LastMessage { get; set; }
 }

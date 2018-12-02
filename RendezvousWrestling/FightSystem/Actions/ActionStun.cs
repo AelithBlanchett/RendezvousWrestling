@@ -58,7 +58,7 @@ public class ActionStun extends RWAction {
         this.fpDamageToDef += FocusDamageOnHit[Tiers[this.tier]];
         this.hpDamageToDef = Math.floor(this.attackFormula(this.tier, Math.floor(this.attacker.currentPower), this.defender.currentToughness, this.diceScore) * RWGameSettings.stunHPDamageMultiplier);
         var stunModifier = ModifierFactory.getModifier( this.tier ModifierType.Stun, -((this.tier + 1) * RWGameSettings.dicePenaltyMultiplierWhileStunned)}  this.fight, this.defender, this.attacker, {tier, diceRoll);
-        this.appliedModifiers.push(stunModifier);
+        this.appliedModifiers.Add(stunModifier);
         this.fight.message.addHit("STUNNED!");
     }
 }

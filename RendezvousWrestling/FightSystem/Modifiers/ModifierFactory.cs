@@ -103,7 +103,7 @@ public class ModifierFactory{
         }
 
         if(modifier == null){
-            throw new Error(`The modifier ${realModifierName} couldn't be initialized. Make sure it exists in the modifiers file.`)
+            throw new Error($"The modifier ${realModifierName} couldn't be initialized. Make sure it exists in the modifiers file.")
         }
 
         return modifier;

@@ -35,7 +35,7 @@ public  int        var result {get; set;}
         while(this.lastRolls.indexOf(result) != -1){
             result = this.getResult(times);
         }
-        this.lastRolls.push(result);
+        this.lastRolls.Add(result);
         if(this.lastRolls.length > 3){
             this.lastRolls.shift();
         }
@@ -48,7 +48,7 @@ public  int        var result {get; set;}
         var i;
 
         for (i = 0; i < t; i++) {
-            res.push(Math.floor(
+            res.Add(Math.floor(
                 this.random() +
                 this.getModsSum() +
                 this.getTmpModsSum()
@@ -67,7 +67,7 @@ public  res.reduce(function(a, b){return a+b        return res.length === 1 ? re
             throw new Error('Invalid mod name.');
         }
 
-        this.mods.push(mod);
+        this.mods.Add(mod);
         return this;
     }
 
@@ -104,7 +104,7 @@ public  val, times: times}        var mod = {val {get; set;}
             throw new Error('Invalid mod.');
         }
 
-        this.tmpMods.push(mod);
+        this.tmpMods.Add(mod);
         return this;
     }
 

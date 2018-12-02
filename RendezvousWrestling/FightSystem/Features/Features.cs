@@ -40,8 +40,8 @@ public int = 1.5        readonly hpDamageMultiplier {get; set;}
             if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.InitiationRoll)){
                 if(parameters.fighter != null){
                     var modifier = ModifierFactory.getModifier(ModifierType.ItemPickupBonus, 1}  parameters.fight, parameters.fighter, null,{uses);
-                    parameters.fighter.modifiers.push(modifier);
-                    return `multiplying their damage by ${this.hpDamageMultiplier}!`
+                    parameters.fighter.modifiers.Add(modifier);
+                    return "multiplying their damage by ${this.hpDamageMultiplier}!"
                 }
             }
             return "";
@@ -64,7 +64,7 @@ public int = 0.5        readonly lpDamageFromHpMultiplier {get; set;}
             if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.Attack)){
                 if(parameters.action.attacker.name == this.receiver.name && parameters.action.avgHpDamageToDefs > 0){
                     parameters.action.lpDamageToAtk = Math.floor(parameters.action.avgHpDamageToDefs * this.lpDamageFromHpMultiplier);
-                    return `returning some of the HP damage dealt for a total of ${this.lpDamageFromHpMultiplier}LP!`
+                    return "returning some of the HP damage dealt for a total of ${this.lpDamageFromHpMultiplier}LP!"
                 }
 
             }
@@ -88,14 +88,14 @@ public int = 3        readonly additionalLPDamage {get; set;}
             if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.Attack)){
                 if(parameters.action.attacker.name == this.receiver.name && parameters.action.lpDamageToAtk > 0){
                     parameters.action.lpDamageToAtk += this.additionalLPDamage;
-                    return `dealing more LP Damage (+${this.additionalLPDamage}LP)`;
+                    return "dealing more LP Damage (+${this.additionalLPDamage}LP)";
                 }
                 else if(parameters.action.avgLpDamageToDefs > 0){
                     var defenderIndex = parameters.action.defenders.findIndex(x => x.name == this.receiver.name);
                     if(defenderIndex != -1){
                         parameters.action.lpDamageToDefs[defenderIndex] += this.additionalLPDamage;
                     }
-                    return `dealing more LP Damage (+${this.additionalLPDamage}LP)`;
+                    return "dealing more LP Damage (+${this.additionalLPDamage}LP)";
                 }
 
             }
@@ -124,7 +124,7 @@ public int = 0.5        readonly lpDamageFromHpMultiplier {get; set;}
                         addedLPs = (parameters.action.hpDamageToDefs[defenderIndex] * this.lpDamageFromHpMultiplier);
                         parameters.action.lpDamageToDefs[defenderIndex] += addedLPs;
                     }
-                    return `converting some of the HP damage to LP! (+${addedLPs}LP)`;
+                    return "converting some of the HP damage to LP! (+${addedLPs}LP)";
                 }
 
             }

@@ -53,7 +53,7 @@ public class ActionFinisher extends RWAction {
     checkRequirements():void{
         super.checkRequirements();
         if((this.defender.livesRemaining <= 1 || this.defender.consecutiveTurnsWithoutFocus == RWGameSettings.maxTurnsWithoutFocus - 2)){
-            throw new Error(`You can't finish your opponent right now. They must have only one life left, or it must at least be their ${RWGameSettings.maxTurnsWithoutFocus - 2}th turn without focus.`)
+            throw new Error($"You can't finish your opponent right now. They must have only one life left, or it must at least be their ${RWGameSettings.maxTurnsWithoutFocus - 2}th turn without focus.")
         }
     }
 

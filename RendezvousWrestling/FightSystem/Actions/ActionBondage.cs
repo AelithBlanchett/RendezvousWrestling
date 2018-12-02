@@ -58,6 +58,6 @@ public class ActionBondage extends RWAction {
         this.fpHealToAtk += FocusHealOnHit[Tiers[Tiers.Heavy]];
         this.fpDamageToDef += FocusDamageOnHit[Tiers[Tiers.Heavy]];
         var bdModifier = ModifierFactory.getModifier(ModifierType.Bondage, this.fight, this.defender, this.attacker);
-        this.appliedModifiers.push(bdModifier);
+        this.appliedModifiers.Add(bdModifier);
     }
 }

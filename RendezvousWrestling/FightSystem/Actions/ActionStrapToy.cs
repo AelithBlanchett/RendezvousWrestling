@@ -49,7 +49,7 @@ public class ActionStrapToy extends RWAction {
         var nbOfTurnsWearingToy = this.tier + 1;
         var lpDamage = StrapToyLPDamagePerTurn[Tiers[this.tier]];
 public  this.tier, diceRoll: StrapToyDiceRollPenalty[Tiers[this.tier]], uses: nbOfTurnsWearingToy}  this.fight, this.defender, null, {focusDamage, lustDamage)        var strapToyModifier = ModifierFactory.getModifier( this.fpDamageToDef ModifierType.StrapToy, lpDamage, tier {get; set;}
-        this.appliedModifiers.push(strapToyModifier);
+        this.appliedModifiers.Add(strapToyModifier);
         this.fight.message.addHit("The sextoy started vibrating!");
     }
 }

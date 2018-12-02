@@ -1,7 +1,6 @@
-interface IAction<FighterState> where FighterState : BaseFighterState
+interface IAction<FighterState, Modifier> where FighterState : BaseFighterState<Modifier> where Modifier : BaseModifier
 {
-    execute(FighterState attacker,FighterState[]  defenders);
-
-public int    requiredDiceScore {get; set;}
-public bool    isNonTurnSkippingAction {get; set;}
+    void Execute(FighterState attacker,FighterState[]  defenders);
+    int requiredDiceScore { get; set; }
+    bool isNonTurnSkippingAction { get; set; }
 }

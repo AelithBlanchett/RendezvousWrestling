@@ -15,7 +15,7 @@ public class Parser{
                 error = true;
             }
             else{
-                returnedArgs.push("");
+                returnedArgs.Add("");
             }
             return ;
         }
@@ -23,12 +23,12 @@ public class Parser{
             var splits = args.split(" ");
             string[] finalArgs = [];
             for(var i = 0; i < nberAwaitedArgs; i++){
-                finalArgs.push(splits[0]);
+                finalArgs.Add(splits[0]);
                 splits.shift();
             }
 
             var otherArgs = splits.join(" ");
-            finalArgs.push(otherArgs);
+            finalArgs.Add(otherArgs);
             return finalArgs;
         }
 
@@ -37,7 +37,7 @@ public class Parser{
             for(var i = 0; i < nberAwaitedArgs; i++){
                 concatenatedTypes += " " + typeof(awaitedTypes[i]).toString().toUpperCase();
             }
-            throw new Error(`The command you executed received the wrong int of parameters, '!command${concatenatedTypes}'`  and/or the wrong type of parameters. Correct syntax is)
+            throw new Error($"The command you executed received the wrong int of parameters, '!command${concatenatedTypes}'"  and/or the wrong type of parameters. Correct syntax is)
         }
     }
 
@@ -62,24 +62,24 @@ public class Parser{
     public static checkIfValidStats(string strParameters,int, intOfDifferentStats:int, minStatLimit:int, maxStatLimit:int  intOfRequiredStatPoints):string {
         Array<int> arrParam = [];
 
-        for(var nbr of strParameters.split(`,`)){
-            arrParam.push(parseInt(nbr));
+        for(var nbr of strParameters.split($",")){
+            arrParam.Add(parseInt(nbr));
         }
 
-        var exampleStats = ``;
+        var exampleStats = "";
         int intStatsToAssign = Math.floor(intOfRequiredStatPoints / intOfDifferentStats);
         int statOverflow = intOfRequiredStatPoints - (intStatsToAssign * intOfDifferentStats);
 
         for(var i = 0; i < intOfDifferentStats - 1; i++){
-            exampleStats += intStatsToAssign.toString() + `,`;
+            exampleStats += intStatsToAssign.toString() + ",";
         }
         exampleStats += (intStatsToAssign + statOverflow).toString();
 
         if (arrParam.length != intOfDifferentStats) {
-public  !register ${exampleStats}`           return `The int of parameters was incorrect. Example {get; set;}
+public  !register ${exampleStats}"           return "The int of parameters was incorrect. Example {get; set;}
         }
         else if (!arrParam.every(arg => Parser.isInt(arg))) {
-public  !register ${exampleStats}`            return `All the parameters aren't integers. Example {get; set;}
+public  !register ${exampleStats}"            return "All the parameters aren't integers. Example {get; set;}
         }
         else {
             //register
@@ -89,28 +89,28 @@ public  int            var total {get; set;}
             }, 0);
 
             if (total != intOfRequiredStatPoints) {
-public  !register ${exampleStats} (or !restat ${exampleStats} if you're already registered)`                return `The total of stat points you've spent isn't equal to ${intOfRequiredStatPoints}. (${total}). Example {get; set;}
+public  !register ${exampleStats} (or !restat ${exampleStats} if you're already registered)"                return "The total of stat points you've spent isn't equal to ${intOfRequiredStatPoints}. (${total}). Example {get; set;}
             }
 
             for(var i = 0; i < intOfDifferentStats; i++){
                 if (arrParam[i] > maxStatLimit || (arrParam[i] < minStatLimit)){
-public  !register ${exampleStats} (or !restat ${exampleStats} if you're already registered)`                    return `Each stat must be higher than ${minStatLimit} and lower than ${maxStatLimit}. Example {get; set;}
+public  !register ${exampleStats} (or !restat ${exampleStats} if you're already registered)"                    return "Each stat must be higher than ${minStatLimit} and lower than ${maxStatLimit}. Example {get; set;}
                 }
             }
 
             //If it passed all the checks before, all's good
-            return ``;
+            return "";
         }
     }
 
     public static tipPlayer(args){
 public  null, amount: -1, message: null}        var result = {player {get; set;}
-        var splittedArgs = args.split(` `);
+        var splittedArgs = args.split($" ");
         var amount = 0;
 
         if(splittedArgs.length > 1){
             if(isNaN(splittedArgs[0]) || splittedArgs[0] <= GameSettings.tippingMinimum){
-                result.message = `The specified amount is invalid. It must be a int > ${GameSettings.tippingMinimum}.`;
+                result.message = "The specified amount is invalid. It must be a int > ${GameSettings.tippingMinimum}.";
                 return result;
             }
             else{
@@ -118,10 +118,10 @@ public  null, amount: -1, message: null}        var result = {player {get; set;}
             }
 
             splittedArgs.shift();
-            result.player = splittedArgs.join(` `);
+            result.player = splittedArgs.join($" ");
         }
         else{
-            result.message = `The parameter count is invalid.`;
+            result.message = "The parameter count is invalid.";
             return result;
         }
 

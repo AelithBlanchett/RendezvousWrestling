@@ -1,7 +1,4 @@
-import {BaseActiveAction} from "./BaseActiveAction";
-import {BaseFight} from "../Fight/BaseFight";
-import {BaseFighterState} from "../Fight/BaseFighterState";
-
-public interface IActionFactory<Fight extends BaseFight, FighterState extends BaseFighterState> {
-public FighterState, defenders:FighterState[], tier:int  fight):BaseActiveAction    getAction( string actionName,Fight, attacker {get; set;}
+public interface IActionFactory<Fight, FighterState, Modifier> where Modifier : BaseModifier where FighterState : BaseFighterState<Modifier> where Fight : BaseFight<FighterState, Modifier>
+{
+    BaseActiveAction<Fight, FighterState, Modifier> GetAction(string actionName, Fight fight, FighterState attacker, FighterState[] defenders, int tier);   
 }
