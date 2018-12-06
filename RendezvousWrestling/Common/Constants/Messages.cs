@@ -57,15 +57,15 @@ public class Messages
     You can check the command list on the profile.
     Available commands in fight: Brawl, Tease, HighRisk, RiskyLewd, SubHold, HumHold, Bondage, Degradation, ItemPickup, SextoyPickup, StrapToy, Submit, Finisher
     ";
-    public static string Ready = "[color=green]%s is now ready to get it on![/color] ( %s ---- Required Teams [color=green][b]%s[/b][/color] ---- Fight Length: %s)\n[sub]Hint: Don't forget you can change these settings with the !fighttype Fight Type, the !teamscount or the !fightlength commands.[/sub]";
+    public static string Ready = "[color=green]{0} is now ready to get it on![/color] ( {1} ---- Required Teams [color=green][b]{2}[/b][/color] ---- Fight Length: {3})\n[sub]Hint: Don't forget you can change these settings with the !fighttype Fight Type, the !teamscount or the !fightlength commands.[/sub]";
     public static string HitMessage = " HIT! ";
     public static string MissMessage = " MISS! ";
-    public static string ForcedHoldRelease = "%s forced %s to release their hold with this heavy blow!";
+    public static string ForcedHoldRelease = "{0} forced {1} to release their hold with this heavy blow!";
     public static string changeMinTeamsInvolvedInFightOK = "int of teams involved in the fight updated!";
     public static string changeMinTeamsInvolvedInFightFail = "The int of teams should be superior or equal than 2.";
     public static string setDiceLess = "The fight is now %susing the dice.";
     public static string setDiceLessFail = "Couldn't drop the dice for this fight, it is already started, or it's already over.";
-    public static string setFightLength = "The fight's pace has been set to %s";
+    public static string setFightLength = "The fight's pace has been set to {0}";
     public static string setFightLengthFail = "Couldn't change the pace for this fight, it is already started, or it's already over.";
     public static string setFightTypeClassic = "RWFight name successfully set to Classic.";
     public static string setFightTypeTag = "RWFight name successfully set to Tag-Team.";
@@ -76,19 +76,19 @@ public class Messages
     public static string setFightTypeNotFound = "Type not found. RWFight name reset to Classic.";
     public static string setFightTypeFail = "Can't change the fight name if the fight has already started or is already finished.";
 
-    public static string startMatchAnnounce = "[color=green]Everyone's ready, %s Keep it somewhere if you want to resume it later!  let's start the match![/color] (Match ID)";
-    public static string startMatchStageAnnounce = "The fighters will meet in the... [color=red][b]%s![/b][/color]";
-    public static string startMatchFirstPlayer = "%s starts first for the [color=%s]%s[/color] team!";
-    public static string startMatchFollowedBy = "%s will follow for the [color=%s]%s[/color] team.";
+    public static string startMatchAnnounce = "[color=green]Everyone's ready, {0} Keep it somewhere if you want to resume it later!  let's start the match![/color] (Match ID)";
+    public static string startMatchStageAnnounce = "The fighters will meet in the... [color=red][b]{0}![/b][/color]";
+    public static string startMatchFirstPlayer = "{0} starts first for the [color={1}]{2}[/color] team!";
+    public static string startMatchFollowedBy = "{0} will follow for the [color={1}]{2}[/color] team.";
 
-    public static string outputStatusInfo = "[b]Turn #%s[/b] [color=%s]------ %s team ------[/color] It's [u]%s[/u]'s turn.\n";
+    public static string outputStatusInfo = "[b]Turn #{0}[/b] [color={1}]------ {2} team ------[/color] It's [u]{3}[/u]'s turn.\n";
 
-    public static string setCurrentPlayerOK = "Successfully changed %s's place with %s's!";
+    public static string setCurrentPlayerOK = "Successfully changed {0}'s place with {1}'s!";
     public static string setCurrentPlayerFail = "Couldn't switch the two wrestlers. The name is either wrong, this user is already in the ring or this user isn't able to fight right now.";
 
-    public static string rollAllDiceEchoRoll = "%s rolled a %s";
+    public static string rollAllDiceEchoRoll = "{0} rolled a {1}";
 
-    public static string cantAttackExplanation = "You cannot do that right now: %s";
+    public static string cantAttackExplanation = "You cannot do that right now: {0}";
 
     public static string lastActionStillProcessing = "The last action hasn't been processed yet.";
     public static string playerOutOfFight = "You are out of this fight.";
@@ -116,28 +116,28 @@ public class Messages
     public static string doActionTargetIsSameTeam = "The targets for this action can't be in your team.";
     public static string doActionTargetIsNotSameTeam = "The targets for this action must be in your team.";
 
-    public static string stillActorsTurn = "[b]This is still your turn %s![/b]";
+    public static string stillActorsTurn = "[b]This is still your turn {0}![/b]";
 
     public static string targetAlreadyStunned = "Your targets is already stunned, you can't stack the effects.";
 
-    public static string forfeitItemApply = "%s forfeits! Which means... %s bondage items landing on them to punish them!";
-    public static string forfeitTooManyItems = "%s has too many items on them to possibly fight! [b][color=red]They're out![/color][/b]";
+    public static string forfeitItemApply = "{0} forfeits! Which means... {1} bondage items landing on them to punish them!";
+    public static string forfeitTooManyItems = "{0} has too many items on them to possibly fight! [b][color=red]They're out![/color][/b]";
     public static string forfeitAlreadyOut = "You are already out of the match. No need to give up.";
 
-    public static string tapoutMessage = "%s couldn't handle it anymore! They SUBMIT!";
+    public static string tapoutMessage = "{0} couldn't handle it anymore! They SUBMIT!";
     public static string tapoutTooEarly = "You can't tap out right now. Submitting is only allowed after the %sth turn.";
 
-    public static string finishFailMessage = "%s failed their finisher!";
-    public static string finishMessage = "%s couldn't fight against that! They're out!";
+    public static string finishFailMessage = "{0} failed their finisher!";
+    public static string finishMessage = "{0} couldn't fight against that! They're out!";
 
     public static string checkForDrawOK = "Everybody agrees, it's a draw!";
     public static string checkForDrawWaiting = "Waiting for the other players still in the fight to call the draw.";
-    public static string endFightAnnounce = "%s team wins the fight!";
+    public static string endFightAnnounce = "{0} team wins the fight!";
 
-    public static string wrongMatchTypeForAction = "You can't %s in a %s match.";
+    public static string wrongMatchTypeForAction = "You can't {0} in a {1} match.";
 
-    public static string commandError = "[color=red]An error happened: %s[/color]";
-    public static string commandErrorWithStack = "[color=red]An error happened: %s\n%s[/color]";
+    public static string commandError = "[color=red]An error happened: {0}[/color]";
+    public static string commandErrorWithStack = "[color=red]An error happened: {0}\n{1}[/color]";
 
     public static string statChangeSuccessful = "[color=green]You've successfully changed your stats![/color]";
     public static string registerWelcomeMessage = "[color=green]You are now registered! Welcome! Don't forget to read the quickstart guide AND the two collapses under Core Mechanics on [user]Rendezvous Wrestling[/user]'s profile.[/color]";
@@ -148,7 +148,7 @@ public class Messages
     public static string errorFightAlreadyInProgress = "[color=red]There is already a fight in progress.[/color]";
     public static string errorNotRegistered = "[color=red]You are not registered.[/color]";
     public static string errorRecipientOrSenderNotFound = "[color=red]Either you or the receiver wasn't found in the fighter database.[/color]";
-    public static string errorNotEnoughMoney = "[color=red]You don't have enough money. Required: %s[/color]";
+    public static string errorNotEnoughMoney = "[color=red]You don't have enough money. Required: {0}[/color]";
     public static string errorAlreadyRegistered = "[color=red]You are already registered.[/color]";
     public static string errorTooManyDefendersForThisCall = "Wrong function call. There are too many targets, this function can only return one.";
 }

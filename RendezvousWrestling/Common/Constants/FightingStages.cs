@@ -1,7 +1,9 @@
 
+using System;
+
 public class FightingStages {
 
-    static AvailableStages = [
+    public static string[] AvailableStages = {
         "The Pit",
         "Wrestling Ring",
         "Arena",
@@ -32,15 +34,15 @@ public class FightingStages {
         "Zoo",
         "Slaughterhouse",
         "Junkyard"
-    ];
+    };
 
-    static getAll():string[]{
+    public static string[] getAll(){
         return FightingStages.AvailableStages;
     }
 
-    static pick():string{
+    public static string pick(){
         var stages = FightingStages.getAll();
-        return stages[Math.floor(Math.random() * stages.length)];
+        return stages[(int)Math.Floor(new Random().NextDouble() * stages.Length)];
     }
 }
 

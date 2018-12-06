@@ -529,7 +529,7 @@ public RWUser    user {get; set;}
 
     bondageItemsOnSelf():int {
         var bondageModCount = 0;
-        for (var mod of this.modifiers) {
+        foreach (var mod in this.modifiers) {
             if (mod.name == ModifierType.Bondage) {
                 bondageModCount++;
             }

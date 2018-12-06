@@ -4,45 +4,43 @@ using System.Collections.Generic;
 public abstract class BaseFight<FighterState, Modifier> where Modifier : BaseModifier where FighterState : BaseFighterState<Modifier>
 {
 
-public string    idFight {get; set;}
-public int    requiredTeams {get; set;}
+    public string idFight { get; set; }
+    public int requiredTeams { get; set; }
     public bool hasStarted { get; set; } = false;
     public bool hasEnded { get; set; } = false;
-public string    stage {get; set;}
-public int    currentTurn {get; set;}
-public FightType    fightType {get; set;}
-public Team    winnerTeam {get; set;}
-public int    season {get; set;}
+    public string stage { get; set; }
+    public int currentTurn { get; set; }
+    public FightType fightType { get; set; }
+    public Team winnerTeam { get; set; }
+    public int season { get; set; }
     public bool waitingForAction { get; set; } = true;
     public FightLength fightLength { get; set; } = FightLength.Long;
 
-public DateTime    createdAt {get; set;}
-public DateTime    updatedAt {get; set;}
+    public DateTime createdAt { get; set; }
+    public DateTime updatedAt { get; set; }
     public bool deleted { get; set; } = false;
 
-    //@OneToMany(type => BaseActiveAction, action => action.fight)
-    //@JoinColumn()
-public List<BaseActiveAction>    pastActions {get; set;}
-    // @OneToMany(type => BaseFighter, action => action.fight)
-    // @JoinColumn()
-public FighterState[]    fighters {get; set;}
 
-public string    channel {get; set;}
-public FightMessage    message {get; set;}
-public IFChatLib    fChatLibInstance {get; set;}
-public IActionFactory<BaseFight, BaseFighterState>    actionFactory {get; set;}
+    public List<BaseActiveAction<BaseFight<FighterState, Modifier>, FighterState, Modifier>> pastActions { get; set; }
+    public List<FighterState> fighters { get; set; }
+
+    public string channel { get; set; }
+    public FightMessage message { get; set; }
+    public FChatSharpLib.BaseBot fChatLibInstance { get; set; }
+    public IActionFactory<BaseFight<FighterState, Modifier>, FighterState, Modifier> actionFactory { get; set; }
 
     public bool debug { get; set; } = false;
-public int forcedDiceRoll { get; set; } = 0;
-public bool diceLess { get; set; } = false;
+    public int forcedDiceRoll { get; set; } = 0;
+    public bool diceLess { get; set; } = false;
 
-    public BaseFight(IActionFactory<BaseFight actionFactory, BaseFighterState>) {
-        this.idFight = Utils.generateUUID();
+    public BaseFight(IActionFactory<BaseFight<FighterState, Modifier>, FighterState, Modifier> actionFactory)
+    {
+        this.idFight = Guid.NewGuid().ToString();
         this.fighters = [];
         this.stage = FightingStages.pick();
         this.fightType = FightType.Classic;
         this.pastActions = [];
-        this.winnerTeam = Team.Unknown;
+        this.winnerTeam = Team.White;
         this.currentTurn = 0;
         this.season = GameSettings.currentSeason;
         this.requiredTeams = 2;
@@ -52,70 +50,88 @@ public bool diceLess { get; set; } = false;
         this.message = new FightMessage();
     }
 
-    build(IFChatLib fChatLibInstance,string  channel){
+    public void build(FChatSharpLib.BaseBot fChatLibInstance, string channel)
+    {
         this.fChatLibInstance = fChatLibInstance;
         this.channel = channel;
     }
 
-    sendFightMessage():void{
-        this.fChatLibInstance.sendMessage(this.message.getMessage(), this.channel);
+    public void sendFightMessage()
+    {
+        this.fChatLibInstance.SendMessageInChannel(this.message.getMessage(), this.channel);
     }
 
-    resendFightMessage():void{
-        this.fChatLibInstance.sendMessage(this.message.getLastMessage(), this.channel);
+    public void resendFightMessage()
+    {
+        this.fChatLibInstance.SendMessageInChannel(this.message.getLastMessage(), this.channel);
     }
 
-    setTeamsCount(intNewintOfTeams:int){
-        if(intNewintOfTeams >= 2){
-            this.requiredTeams = intNewintOfTeams;
+    public void setTeamsCount(int intNewTeamsCount)
+    {
+        if (intNewTeamsCount >= 2)
+        {
+            this.requiredTeams = intNewTeamsCount;
             this.message.addInfo(Messages.changeMinTeamsInvolvedInFightOK);
         }
-        else{
+        else
+        {
             this.message.addInfo(Messages.changeMinTeamsInvolvedInFightFail);
         }
         this.sendFightMessage();
     }
 
-    setDiceLess(bln:bool){
-        if(!this.hasStarted && !this.hasEnded){
+    public void setDiceLess(bool bln)
+    {
+        if (!this.hasStarted && !this.hasEnded)
+        {
             this.diceLess = bln;
-            this.message.addInfo(string.Format(Messages.setDiceLess, "")])  [(bln ? "NOT " );
+            this.message.addInfo(string.Format(Messages.setDiceLess, (bln ? "NOT " : "")));
         }
-        else{
+        else
+        {
             this.message.addInfo(Messages.setDiceLessFail);
         }
         this.sendFightMessage();
     }
 
-    setFightLength(fightDuration:FightLength){
-        if(!this.hasStarted && !this.hasEnded){
+    public void setFightLength(FightLength fightDuration)
+    {
+        if (!this.hasStarted && !this.hasEnded)
+        {
             this.fightLength = fightDuration;
-            this.message.addInfo(string.Format(Messages.setFightLength, [FightLength[this.fightLength]]));
+            this.message.addInfo(string.Format(Messages.setFightLength, Enum.GetName(typeof(FightLength), fightDuration)));
         }
-        else{
+        else
+        {
             this.message.addInfo(Messages.setFightLengthFail);
         }
         this.sendFightMessage();
     }
 
-    setFightType(type:string){
-        if(!this.hasStarted && !this.hasEnded){
-            var fightTypesList = Utils.getEnumList(FightType);
+    public void setFightType(string type)
+    {
+        if (!this.hasStarted && !this.hasEnded)
+        {
+            var fightTypesList = Enum.GetNames(typeof(FightType));
             var foundAskedType = false;
-            for(var fightTypeId in fightTypesList){
-                if(type.toLowerCase() == FightType[fightTypeId].toLowerCase()){
-                    this.fightType = FightType[FightType[fightTypeId]];
-                    this.message.addInfo(Messages["setFightType"+ FightType[fightTypeId]]);
+            foreach (var fightTypeId in fightTypesList)
+            {
+                if (type.ToLower() == fightTypeId.ToLower())
+                {
+                    this.fightType = (FightType)Enum.Parse(typeof(FightType), fightTypeId);
+                    //TODO this.message.addInfo(Messages["setFightType"+ fightTypeId]);
                     foundAskedType = true;
                     break;
                 }
             }
-            if(!foundAskedType){
+            if (!foundAskedType)
+            {
                 this.fightType = FightType.Classic;
                 this.message.addInfo(Messages.setFightTypeNotFound);
             }
         }
-        else{
+        else
+        {
             this.message.addInfo(Messages.setFightTypeFail);
         }
         this.sendFightMessage();
@@ -123,71 +139,89 @@ public bool diceLess { get; set; } = false;
 
     //Pre-fight utils
 
-    public async void leave(fighterName:string) {
-        if(!this.hasStarted){
+    public async void leave(string fighterName)
+    {
+        if (!this.hasStarted)
+        {
             var index = this.getFighterIndex(fighterName);
-            if(index != -1){
+            if (index != -1)
+            {
                 var fighter = this.fighters[index];
-                this.fighters.splice(index, 1);
+                this.fighters.RemoveAt(index);
             }
         }
     }
 
-    public async void join(string fighterName,Team  team):Promise<int> {
-        if(!this.hasStarted){
-            if (!this.getFighterByName(fighterName)) { //find user by its name property instead of comparing objects, which doesn't work.
+    public int join(string fighterName, Team team)
+    {
+        if (!this.hasStarted)
+        {
+            if (!this.getFighterByName(fighterName))
+            { //find user by its name property instead of comparing objects, which doesn't work.
                 FighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName);//TODO fix this
-                if(activeFighter == null){
-                    throw new Error(Messages.errorNotRegistered);
+                if (activeFighter == null)
+                {
+                    throw new Exception(Messages.errorNotRegistered);
                 }
-                if(!activeFighter.user.canPayAmount(GameSettings.tokensCostToFight)){
-                    throw new Error(string.Format(Messages.errorNotEnoughMoney, [GameSettings.tokensCostToFight.toString()]));
+                if (!activeFighter.user.canPayAmount(GameSettings.tokensCostToFight))
+                {
+                    throw new Exception(string.Format(Messages.errorNotEnoughMoney, [GameSettings.tokensCostToFight.toString()]));
                 }
                 var areStatsValid = activeFighter.validateStats();
-                if(areStatsValid != ""){
-                    throw new Error(areStatsValid);
+                if (areStatsValid != "")
+                {
+                    throw new Exception(areStatsValid);
                 }
                 activeFighter.assignFight(this);
                 activeFighter.initialize();
                 activeFighter.fightStatus = FightStatus.Joined;
-                if(team != Team.Unknown){
+                if (team != Team.White)
+                {
                     activeFighter.assignedTeam = team;
                 }
-                else{
+                else
+                {
                     team = this.getAvailableTeam();
                     activeFighter.assignedTeam = team;
                 }
                 this.fighters.Add(activeFighter);
                 return team;
             }
-            else {
-                throw new Error("You have already joined the fight.");
+            else
+            {
+                throw new Exception("You have already joined the fight.");
             }
         }
-        else {
-            throw new Error("The fight has already started");
+        else
+        {
+            throw new Exception("The fight has already started");
         }
     }
 
-    public async void setFighterReady(fighterName:string) {
-        if(!this.hasStarted){
-            if (!this.getFighterByName(fighterName)) {
-                await this.join(fighterName, Team.Unknown);
+    public bool setFighterReady(string fighterName)
+    {
+        if (!this.hasStarted)
+        {
+            if (!this.getFighterByName(fighterName))
+            {
+                this.join(fighterName, Team.White);
             }
-            FighterState fighterInFight = this.getFighterByName(fighterName);
-            if(fighterInFight && !fighterInFight.isReady){ //find user by its name property instead of comparing objects, which doesn't work.
-                fighterInFight.isReady = true;
-                fighterInFight.fightStatus = FightStatus.Ready;
-                var fightTypes = Utils.getEnumList(FightType);
-                var listOfFightTypes = fightTypes.join(", ");
-                listOfFightTypes = listOfFightTypes.replace(FightType[this.fightType], "[color=green][b]${FightType[this.fightType]}[/b][/color]");
-                var fightDurations = Utils.getEnumList(FightLength);
-                var listOfFightDurations = fightDurations.join(", ");
-                listOfFightDurations = listOfFightDurations.replace(FightLength[this.fightLength], "[color=green][b]${FightLength[this.fightLength]}[/b][/color]");
-                this.message.addInfo(string.Format(Messages.Ready, [fighterInFight.getStylizedName(), listOfFightTypes, this.requiredTeams.toString(), listOfFightDurations]));
+            var fighterInFight = this.getFighterByName(fighterName);
+            if (fighterInFight.HasValue && !fighterInFight.Value.isReady)
+            { //find user by its name property instead of comparing objects, which doesn't work.
+                fighterInFight.Value.isReady = true;
+                fighterInFight.Value.fightStatus = FightStatus.Ready;
+                var fightTypes = Enum.GetNames(typeof(FightType));
+                var listOfFightTypes = string.Join(", ", fightTypes);
+                listOfFightTypes = listOfFightTypes.Replace(fightType.ToString(), $"[color=green][b]{fightType.ToString()}[/b][/color]");
+                var fightDurations = Enum.GetNames(typeof(FightLength));
+                var listOfFightDurations = string.Join(", ", fightDurations);
+                listOfFightDurations = listOfFightDurations.Replace(this.fightLength.ToString(), $"[color=green][b]{this.fightLength.ToString()}[/b][/color]");
+                this.message.addInfo(string.Format(Messages.Ready, [fighterInFight.Value.getStylizedName(), listOfFightTypes, this.requiredTeams.ToString(), listOfFightDurations]));
                 this.sendFightMessage();
-                if (this.canStart()) {
-                    await this.start();
+                if (this.canStart())
+                {
+                    this.start();
                 }
                 return true;
             }
@@ -195,14 +229,16 @@ public bool diceLess { get; set; } = false;
         return false;
     }
 
-    canStart() {
+    public bool canStart()
+    {
         return (this.isEveryoneReady() && !this.hasStarted && this.getAllOccupiedTeams().length >= this.requiredTeams); //only start if everyone's ready and if the teams are balanced
     }
 
 
     //RWFight logic
 
-    public async void start() {
+    public void start()
+    {
         this.message.addInfo(string.Format(Messages.startMatchAnnounce, [this.idFight]));
         this.currentTurn = 1;
         this.hasStarted = true;
@@ -210,135 +246,167 @@ public bool diceLess { get; set; } = false;
 
         this.message.addInfo(string.Format(Messages.startMatchStageAnnounce, [this.stage]));
 
-        for (var i = 0; i < this.maxPlayersPerTeam; i++) { //Prints as much names as there are Team
+        for (var i = 0; i < this.maxPlayersPerTeam; i++)
+        { //Prints as much names as there are Team
             var fullStringVS = "[b]";
-            for (var j of this.getTeamsStillInGame()) {
+            foreach (var j in this.getTeamsStillInGame())
+            {
                 var theFighter = this.getTeam(j)[i];
-                if(theFighter != null){
+                if (theFighter != null)
+                {
                     fullStringVS = "${fullStringVS} VS ${theFighter.getStylizedName()}";
                 }
             }
             fullStringVS = "${fullStringVS}[/b]";
-            fullStringVS =  fullStringVS.replace(" VS ","");
+            fullStringVS = fullStringVS.replace(" VS ", "");
             this.message.addInfo(fullStringVS);
         }
 
 
         this.reorderFightersByInitiative(this.rollAllDice(Trigger.InitiationRoll));
         this.message.addInfo(string.Format(Messages.startMatchFirstPlayer, [this.currentPlayer.getStylizedName(), this.currentTeamName.toLowerCase(), this.currentTeamName]));
-        for (var i = 1; i < this.fighters.length; i++) {
+        for (var i = 1; i < this.fighters.length; i++)
+        {
             this.message.addInfo(string.Format(Messages.startMatchFollowedBy, [this.fighters[i].getStylizedName(), Team[this.fighters[i].assignedTeam].toLowerCase(), Team[this.fighters[i].assignedTeam]]));
-            if(this.fightType == FightType.Tag) {
+            if (this.fightType == FightType.Tag)
+            {
                 this.fighters[i].isInTheRing = false;
             }
         }
-        if(this.fightType == FightType.Tag){ //if it's a tag match, only allow the first player of the next Team
-            for (var i = 1; i < this.fighters.length; i++) {
-                if (this.currentPlayer.assignedTeam != this.fighters[i].assignedTeam) {
+        if (this.fightType == FightType.Tag)
+        { //if it's a tag match, only allow the first player of the next Team
+            for (var i = 1; i < this.fighters.length; i++)
+            {
+                if (this.currentPlayer.assignedTeam != this.fighters[i].assignedTeam)
+                {
                     this.fighters[i].isInTheRing = true;
                     break;
                 }
             }
         }
 
-        for (var i = 0; i < this.fighters.length; i++) {
+        for (var i = 0; i < this.fighters.length; i++)
+        {
             this.fighters[i].fightStatus = FightStatus.Playing;
             int fightCost = GameSettings.tokensCostToFight;
-            await this.fighters[i].user.removeTokens(fightCost, TransactionType.FightStart);
+            this.fighters[i].user.removeTokens(fightCost, TransactionType.FightStart);
             this.fighters[i].triggerFeatures(TriggerMoment.After, Trigger.InitiationRoll, new BaseFeatureParameter(this, this.fighters[i]));
         }
 
 
 
         this.sendFightMessage();
-        await this.save();
+        this.save();
         this.outputStatus();
     }
 
-    requestDraw(fighterName:string) {
+    public void requestDraw(string fighterName)
+    {
         var fighter = this.getFighterByName(fighterName);
-        if (fighter) {
-            if (!fighter.isRequestingDraw()) {
+        if (fighter)
+        {
+            if (!fighter.isRequestingDraw())
+            {
                 fighter.requestDraw();
             }
-            else {
-                throw new Error("You already have requested a draw.");
+            else
+            {
+                throw new Exception("You already have requested a draw.");
             }
         }
-        else {
-            throw new Error("You aren't in this fight.");
+        else
+        {
+            throw new Exception("You aren't in this fight.");
         }
     }
 
-    unrequestDraw(fighterName:string) {
+    public void unrequestDraw(string fighterName)
+    {
         var fighter = this.getFighterByName(fighterName);
-        if (fighter) {
-            if (fighter.isRequestingDraw()) {
+        if (fighter)
+        {
+            if (fighter.isRequestingDraw())
+            {
                 fighter.unrequestDraw();
             }
-            else {
-                throw new Error("You already have requested a draw.");
+            else
+            {
+                throw new Exception("You already have requested a draw.");
             }
         }
-        else {
-            throw new Error("You aren't in this fight.");
+        else
+        {
+            throw new Exception("You aren't in this fight.");
         }
     }
 
-    public async void nextTurn(){
+    public async void nextTurn()
+    {
         this.currentTurn++;
 
-        for(var fighter of this.fighters){
+        foreach (var fighter in this.fighters)
+        {
             var strAchievements = await fighter.checkAchievements(this);
-            if(strAchievements != ""){
+            if (strAchievements != "")
+            {
                 this.message.addSpecial(strAchievements);
             }
         }
 
-        if (this.isOver()) { //Check for the ending
+        if (this.isOver())
+        { //Check for the ending
             int tokensToGiveToWinners = TokensPerWin[FightTier[this.getFightTier(this.winnerTeam)]];
             int tokensToGiveToLosers = tokensToGiveToWinners * GameSettings.tokensPerLossMultiplier;
-            if(this.isDraw()){
+            if (this.isDraw())
+            {
                 this.message.addHit($"DOUBLE KO! Everyone is out! It's over!");
                 tokensToGiveToLosers = tokensToGiveToWinners;
             }
             this.outputStatus();
-            await this.endFight(tokensToGiveToWinners, tokensToGiveToLosers);
+            this.endFight(tokensToGiveToWinners, tokensToGiveToLosers);
         }
-        else{
-            await this.save();
+        else
+        {
+            this.save();
             this.waitingForAction = true;
             this.outputStatus();
         }
 
-        for(var fighter of this.fighters){
+        foreach (var fighter in this.fighters)
+        {
             fighter.nextRound();
         }
     }
 
-    isOver():bool {
+    public bool isOver()
+    {
         return this.getTeamsStillInGame().length <= 1;
     }
 
-    isDraw():bool{
+    public bool isDraw()
+    {
         return this.getTeamsStillInGame().length == 0;
     }
 
-    public async void waitUntilWaitingForAction():Promise<void>{
-        while((!this.hasStarted || !this.waitingForAction || this.currentTurn <= 0) && !this.hasEnded){
-            await new Promise(resolve => setTimeout(resolve, 1))
-        }
-        return;
+    public void waitUntilWaitingForAction()
+    {
+        //while((!this.hasStarted || !this.waitingForAction || this.currentTurn <= 0) && !this.hasEnded){
+        //    await new Promise(resolve => setTimeout(resolve, 1))
+        //}
+        //return;
     }
 
     //Fighting info displays
 
-    outputStatus(){
+    public void outputStatus()
+    {
         this.message.addInfo(string.Format(Messages.outputStatusInfo, [this.currentTurn.toString(), this.currentTeamName.toLowerCase(), this.currentTeamName, this.currentPlayer.getStylizedName()]));
 
-        for (var i = 0; i < this.fighters.length; i++) { //Prints as much names as there are Team
+        for (var i = 0; i < this.fighters.length; i++)
+        { //Prints as much names as there are Team
             var theFighter = this.fighters[i];
-            if(theFighter != null){
+            if (theFighter != null)
+            {
                 this.message.addStatus(theFighter.outputStatus());
             }
         }
@@ -346,391 +414,487 @@ public bool diceLess { get; set; } = false;
         this.sendFightMessage();
     }
 
-    get currentTeam():Team{
-        return this.getAlivePlayers()[(this.currentTurn - 1) % this.aliveFighterCount].assignedTeam;
-    }
-
-    get nextTeamToPlay():Team{
-        return this.getAlivePlayers()[this.currentTurn % this.aliveFighterCount].assignedTeam;
-    }
-
-    get currentPlayerIndex():int {
-        var curTurn = 1;
-        if(this.currentTurn > 0){
-            curTurn = this.currentTurn - 1;
+    public Team currentTeam
+    {
+        get
+        {
+            return this.getAlivePlayers()[(this.currentTurn - 1) % this.aliveFighterCount].assignedTeam;
         }
-        return curTurn % this.aliveFighterCount;
     }
 
-    get currentPlayer():FighterState {
-        return this.getAlivePlayers()[this.currentPlayerIndex];
+    public Team nextTeamToPlay
+    {
+        get
+        {
+            return this.getAlivePlayers()[this.currentTurn % this.aliveFighterCount].assignedTeam;
+        }
     }
 
-    get nextPlayer():FighterState {
-        return this.getAlivePlayers()[this.currentTurn % this.aliveFighterCount];
+    public int currentPlayerIndex
+    {
+        get
+        {
+            var curTurn = 1;
+            if (this.currentTurn > 0)
+            {
+                curTurn = this.currentTurn - 1;
+            }
+            return curTurn % this.aliveFighterCount;
+        }
     }
 
-    setCurrentPlayer(fighterName:string){
-        var index = this.fighters.findIndex((x) => x.name == fighterName && !x.isTechnicallyOut());
-        if (index != -1 && this.fighters[this.currentPlayerIndex].name != fighterName) { //switch positions
+    public FighterState currentPlayer
+    {
+        get
+        {
+            return this.getAlivePlayers()[this.currentPlayerIndex];
+        }
+    }
+
+    public FighterState nextPlayer
+    {
+        get
+        {
+            return this.getAlivePlayers()[this.currentTurn % this.aliveFighterCount];
+        }
+    }
+
+    public void setCurrentPlayer(string fighterName)
+    {
+        var index = this.fighters.FindIndex((x) => x.name == fighterName && !x.isTechnicallyOut());
+        if (index != -1 && this.fighters[this.currentPlayerIndex].name != fighterName)
+        { //switch positions
             var temp = this.fighters[this.currentPlayerIndex];
             this.fighters[this.currentPlayerIndex] = this.fighters[index];
             this.fighters[index] = temp;
             this.fighters[this.currentPlayerIndex].isInTheRing = true;
-            if (this.fighters[index].assignedTeam == this.fighters[this.currentPlayerIndex].assignedTeam && this.fighters[index].isInTheRing == true && this.fightType == FightType.Tag) {
+            if (this.fighters[index].assignedTeam == this.fighters[this.currentPlayerIndex].assignedTeam && this.fighters[index].isInTheRing == true && this.fightType == FightType.Tag)
+            {
                 this.fighters[index].isInTheRing = false;
             }
-            if (this.fighters[index].assignedTeam != this.fighters[this.currentPlayerIndex].assignedTeam && this.fighters[this.currentPlayerIndex].isInTheRing == true && this.fightType == FightType.Tag) {
+            if (this.fighters[index].assignedTeam != this.fighters[this.currentPlayerIndex].assignedTeam && this.fighters[this.currentPlayerIndex].isInTheRing == true && this.fightType == FightType.Tag)
+            {
                 this.fighters.filter(x => x.isInTheRing && x.assignedTeam == this.fighters[this.currentPlayerIndex].assignedTeam && x.name != fighterName).forEach(x => x.isInTheRing = false);
             }
             this.message.addInfo(string.Format(Messages.setCurrentPlayerOK, [temp.name, this.fighters[this.currentPlayerIndex].name]));
         }
-        else{
+        else
+        {
             this.message.addInfo(Messages.setCurrentPlayerFail)
-        }
+            }
     }
 
     //RWFight helpers
-    get currentTeamName():string{
-        return Team[this.currentTeam];
+    public string currentTeamName
+    {
+        get
+        {
+            return Team[this.currentTeam];
+        }
     }
 
-    get currentTarget():BaseFighterState[] {
-        return this.currentPlayer.getTargets();
+    public BaseFighterState[] currentTarget
+    {
+        get
+        {
+            return this.currentPlayer.getTargets();
+        }
     }
 
-    assignRandomTargetToAllFighters():void{
-        for (var fighter of this.getAlivePlayers()) {
+¸public void assignRandomTargetToAllFighters()
+    {
+        foreach (var fighter in this.getAlivePlayers())
+        {
             this.assignRandomTargetToFighter(fighter);
         }
     }
 
-    assignRandomTargetToFighter(fighter:FighterState):void {
+    public void assignRandomTargetToFighter(FighterState fighter)  {
         fighter.targets.Add(this.getRandomFighterNotInTeam(fighter.assignedTeam).name);
     }
 
     //Dice rolling
-    rollAllDice(event:Trigger):Array<FighterState> {
+    public List<FighterState>  rollAllDice(Trigger triggeringEvent) {
         var arrSortedFightersByInitiative = [];
         for (var player of this.getAlivePlayers()) {
-            player.lastDiceRoll = player.roll(10, event);
-            arrSortedFightersByInitiative.Add(player);
-            this.message.addHint(string.Format(Messages.rollAllDiceEchoRoll, [player.getStylizedName(), player.lastDiceRoll.toString()]));
-        }
+    player.lastDiceRoll = player.roll(10, triggeringEvent);
+    arrSortedFightersByInitiative.Add(player);
+    this.message.addHint(string.Format(Messages.rollAllDiceEchoRoll, [player.getStylizedName(), player.lastDiceRoll.toString()]));
+}
 
-        arrSortedFightersByInitiative.sort((a,b):int => {
-            return b.lastDiceRoll - a.lastDiceRoll;
-        });
+arrSortedFightersByInitiative.sort((a, b):int => {
+    return b.lastDiceRoll - a.lastDiceRoll;
+});
 
         return arrSortedFightersByInitiative;
+}
+
+public FighterState rollAllGetWinner(TriggertriggeringEvent)  {
+        return this.rollAllDice(triggeringEvent)[0];
     }
 
-    rollAllGetWinner(event:Trigger):FighterState {
-        return this.rollAllDice(event)[0];
+//Attacks
+
+public voidassignTarget(string fighterName, string name)
+{
+    var theTarget = this.getFighterByName(name);
+    if (theTarget != null)
+    {
+        this.getFighterByName(fighterName).targets = [theTarget.name];
+        this.message.addInfo("Target set to " + theTarget.getStylizedName());
+        this.sendFightMessage();
+    }
+    else
+    {
+        this.message.addError("Target not found.");
+        this.sendFightMessage();
+    }
+}
+
+public void prepareAction(string attacker, string actionType, bool tierRequired, bool isCustomTargetInsteadOfTier, string args)
+{
+    var tier = -1;
+    if (!this.isMatchInProgress())
+    {
+        throw new Exception("There isn't any fight going on.");
     }
 
-    //Attacks
-
-    assignTarget(string fighterName,string  name) {
-        var theTarget = this.getFighterByName(name);
-        if(theTarget != null){
-            this.getFighterByName(fighterName).targets = [theTarget.name];
-            this.message.addInfo("Target set to "+ theTarget.getStylizedName());
-            this.sendFightMessage();
-        }
-        else{
-            this.message.addError("Target not found.");
-            this.sendFightMessage();
-        }
+    if (!this.waitingForAction)
+    {
+        throw new Exception(Messages.lastActionStillProcessing);
     }
 
-    public async void prepareAction(string attacker,string, tierRequired:bool, isCustomTargetInsteadOfTier:bool, args:string  actionType) {
-        var tier = -1;
-        if (!this.isMatchInProgress()) {
-            throw new Error("There isn't any fight going on.");
-        }
+    if (this.currentPlayer == null || attacker != this.currentPlayer.name)
+    {
+        throw new Exception(Messages.doActionNotActorsTurn);
+    }
 
-        if(!this.waitingForAction){
-            throw new Error(Messages.lastActionStillProcessing);
-        }
+    if (!isNaN(int(args)))
+    {
+        tier = int.Parse(args);
+    }
 
-        if (this.currentPlayer == null || attacker != this.currentPlayer.name) {
-            throw new Error(Messages.doActionNotActorsTurn);
+    if (tierRequired && tier == -1)
+    {
+        throw new Exception($"The tier is required and neither Light, Medium or Heavy was specified. Example: !action Medium");
+    }
+    if (isCustomTargetInsteadOfTier)
+    {
+        FighterState customTarget = this.getFighterByName(args);
+        if (customTarget == null)
+        {
+            throw new Exception("The character to tag with is required and wasn't found.");
         }
-
-        if(!isNaN(int(args))){
-            tier = parseInt(args);
-        }
-
-        if (tierRequired && tier == -1) {
-            throw new Error($"The tier is required, !action Medium"  and neither Light, Medium or Heavy was specified. Example);
-        }
-        if (isCustomTargetInsteadOfTier) {
-            FighterState customTarget = this.getFighterByName(args);
-            if (customTarget == null) {
-                throw new Error("The character to tag with is required and wasn't found.");
-            }
-            else{
-                this.currentPlayer.targets = [customTarget.name];
-            }
-        }
-
-        if (!this.getFighterByName(attacker)) {
-            throw new Error("You aren't participating in this fight.");
-        }
-
-        //Might need to disable this for self-targetted actions?
-        if(this.currentTarget == null || this.currentTarget.length == 0){
-            if(this.fighters.filter(x => x.assignedTeam != this.currentPlayer.assignedTeam && x.isInTheRing && !x.isTechnicallyOut()).length == 1){
-                this.assignRandomTargetToFighter(this.currentPlayer);
-            }
-            else{
-                throw new Error("There are too many possible targets. Please choose one with the '!target characternamehere' command.");
-            }
-        }
-
-        this.waitingForAction = false;
-        var action = await this.doAction(actionType, this.currentPlayer, this.currentTarget, tier);
-        this.displayDeathMessagesIfNeedBe([action.attacker, ...action.defenders]);
-        if (action.keepActorsTurn && action.missed == false) {
-            this.message.addHint($"[b]This is still your turn ${action.attacker.getStylizedName()}![/b]");
-            this.sendFightMessage();
-            this.waitingForAction = true;
-        }
-        else if (!this.isOver()) {
-            await this.nextTurn();
-        }
-        else {
-            await this.onMatchEnding();
+        else
+        {
+            this.currentPlayer.targets = [customTarget.name];
         }
     }
 
-    public async void doAction(string actionName,BaseFighterState, defenders:BaseFighterState[], tier:int  attacker):Promise<BaseActiveAction> {
+    if (!this.getFighterByName(attacker))
+    {
+        throw new Error("You aren't participating in this fight.");
+    }
+
+    //Might need to disable this for self-targetted actions?
+    if (this.currentTarget == null || this.currentTarget.length == 0)
+    {
+        if (this.fighters.filter(x => x.assignedTeam != this.currentPlayer.assignedTeam && x.isInTheRing && !x.isTechnicallyOut()).length == 1)
+        {
+            this.assignRandomTargetToFighter(this.currentPlayer);
+        }
+        else
+        {
+            throw new Error("There are too many possible targets. Please choose one with the '!target characternamehere' command.");
+        }
+    }
+
+    this.waitingForAction = false;
+    var action = this.doAction(actionType, this.currentPlayer, this.currentTarget, tier);
+    this.displayDeathMessagesIfNeedBe([action.attacker, ...action.defenders]);
+    if (action.keepActorsTurn && action.missed == false)
+    {
+        this.message.addHint($"[b]This is still your turn ${action.attacker.getStylizedName()}![/b]");
+        this.sendFightMessage();
+        this.waitingForAction = true;
+    }
+    else if (!this.isOver())
+    {
+        this.nextTurn();
+    }
+    else
+    {
+        this.onMatchEnding();
+    }
+}
+
+public BaseActiveAction doAction(string actionName, FighterState[] attacker, FighterState[]  defenders, int tier ) {
         BaseActiveAction action = this.actionFactory.getAction(actionName, this, attacker, defenders, tier);
-        action.execute();
+action.execute();
         await action.save();
         this.pastActions.Add(action);
         return action;
     }
 
-    displayDeathMessagesIfNeedBe(involvedActors:BaseFighterState[]){
-        for(var actor of involvedActors){
-            actor.isTechnicallyOut(true);
-        }
+displayDeathMessagesIfNeedBe(involvedActors:BaseFighterState[])
+{
+    for (var actor of involvedActors)
+    {
+        actor.isTechnicallyOut(true);
     }
+}
 
-    public async void onMatchEnding(){
-        int tokensToGiveToWinners = TokensPerWin[FightTier[this.getFightTier(this.winnerTeam)]];
-        int tokensToGiveToLosers = tokensToGiveToWinners * GameSettings.tokensPerLossMultiplier;
-        if(this.isDraw()){
-            this.message.addHit($"DOUBLE KO! Everyone is out! It's over!");
-            tokensToGiveToLosers = tokensToGiveToWinners;
-        }
-        this.outputStatus();
-
-        await this.endFight(tokensToGiveToWinners, tokensToGiveToLosers);
+public async void onMatchEnding()
+{
+    int tokensToGiveToWinners = TokensPerWin[FightTier[this.getFightTier(this.winnerTeam)]];
+    int tokensToGiveToLosers = tokensToGiveToWinners * GameSettings.tokensPerLossMultiplier;
+    if (this.isDraw())
+    {
+        this.message.addHit($"DOUBLE KO! Everyone is out! It's over!");
+        tokensToGiveToLosers = tokensToGiveToWinners;
     }
+    this.outputStatus();
+
+    await this.endFight(tokensToGiveToWinners, tokensToGiveToLosers);
+}
 
 
 
-    isMatchInProgress():bool{
+isMatchInProgress() :bool{
         return (this.hasStarted && !this.hasEnded);
+}
+
+getFightTier(winnerTeam)
+{
+    var highestWinnerTier = FightTier.Bronze;
+    for (var fighter of this.getTeam(winnerTeam))
+    {
+        if (fighter.user.fightTier() > highestWinnerTier)
+        {
+            highestWinnerTier = fighter.user.fightTier();
+        }
     }
 
-    getFightTier(winnerTeam){
-        var highestWinnerTier = FightTier.Bronze;
-        for (var fighter of this.getTeam(winnerTeam)) {
-            if(fighter.user.fightTier() > highestWinnerTier){
-                highestWinnerTier = fighter.user.fightTier();
+    var lowestLoserTier = -99;
+    for (var fighter of this.fighters)
+    {
+        if (fighter.assignedTeam != winnerTeam)
+        {
+            if (lowestLoserTier == -99)
+            {
+                lowestLoserTier = fighter.user.fightTier();
+            }
+            else if (lowestLoserTier > fighter.user.fightTier())
+            {
+                lowestLoserTier = fighter.user.fightTier();
             }
         }
-
-        var lowestLoserTier = -99;
-        for (var fighter of this.fighters) {
-            if(fighter.assignedTeam != winnerTeam){
-                if(lowestLoserTier == -99){
-                    lowestLoserTier = fighter.user.fightTier();
-                }
-                else if(lowestLoserTier > fighter.user.fightTier()){
-                    lowestLoserTier = fighter.user.fightTier();
-                }
-            }
-        }
-
-        //If the loser was weaker, the fight fightTier matches the winner's fightTier
-        //if the weakest wrestler was equal or more powerful, the fight fightTier matches the loser's fightTier
-        var fightTier = highestWinnerTier;
-        if(lowestLoserTier >= highestWinnerTier){
-            fightTier = lowestLoserTier;
-        }
-
-        return fightTier;
     }
 
-    public async void forfeit(fighterName:string) {
-        var fighter = this.getFighterByName(fighterName);
-        if(fighter != null){
-            if(!fighter.isTechnicallyOut()){
-                fighter.fightStatus = FightStatus.Forfeited;
-                this.punishPlayerOnForfeit(fighter);
-            }
-            else{
-                this.message.addError(Messages.forfeitAlreadyOut);
-                this.sendFightMessage();
-                return;
-            }
+    //If the loser was weaker, the fight fightTier matches the winner's fightTier
+    //if the weakest wrestler was equal or more powerful, the fight fightTier matches the loser's fightTier
+    var fightTier = highestWinnerTier;
+    if (lowestLoserTier >= highestWinnerTier)
+    {
+        fightTier = lowestLoserTier;
+    }
+
+    return fightTier;
+}
+
+public async void forfeit(fighterName:string)
+{
+    var fighter = this.getFighterByName(fighterName);
+    if (fighter != null)
+    {
+        if (!fighter.isTechnicallyOut())
+        {
+            fighter.fightStatus = FightStatus.Forfeited;
+            this.punishPlayerOnForfeit(fighter);
         }
-        else{
-            this.message.addInfo($"You are not participating in the match. OH, and that message should NEVER happen.");
+        else
+        {
+            this.message.addError(Messages.forfeitAlreadyOut);
             this.sendFightMessage();
             return;
         }
+    }
+    else
+    {
+        this.message.addInfo($"You are not participating in the match. OH, and that message should NEVER happen.");
         this.sendFightMessage();
-        if (this.isOver()) {
-            int tokensToGiveToWinners = TokensPerWin[FightTier[this.getFightTier(this.winnerTeam)]] * GameSettings.tokensForWinnerByForfeitMultiplier;
-            await this.endFight(tokensToGiveToWinners, 0);
-        }
-        else{
-            this.outputStatus();
+        return;
+    }
+    this.sendFightMessage();
+    if (this.isOver())
+    {
+        int tokensToGiveToWinners = TokensPerWin[FightTier[this.getFightTier(this.winnerTeam)]] * GameSettings.tokensForWinnerByForfeitMultiplier;
+        await this.endFight(tokensToGiveToWinners, 0);
+    }
+    else
+    {
+        this.outputStatus();
+    }
+}
+
+public async void checkForDraw()
+{
+    var neededDrawFlags = this.getAlivePlayers().length;
+    var drawFlags = 0;
+    for (var fighter of this.getAlivePlayers())
+    {
+        if (fighter.wantsDraw)
+        {
+            drawFlags++;
         }
     }
-
-    public async void checkForDraw(){
-        var neededDrawFlags = this.getAlivePlayers().length;
-        var drawFlags = 0;
-        for (var fighter of this.getAlivePlayers()) {
-            if(fighter.wantsDraw){
-                drawFlags++;
-            }
+    if (neededDrawFlags == drawFlags)
+    {
+        this.message.addInfo(Messages.checkForDrawOK);
+        this.sendFightMessage();
+        int tokensToGive = this.currentTurn;
+        if (tokensToGive > parseInt(TokensPerWin[FightTier.Bronze]))
+        {
+            tokensToGive = parseInt(TokensPerWin[FightTier.Bronze]);
         }
-        if(neededDrawFlags == drawFlags){
-            this.message.addInfo(Messages.checkForDrawOK);
-            this.sendFightMessage();
-            int tokensToGive = this.currentTurn;
-            if(tokensToGive > parseInt(TokensPerWin[FightTier.Bronze])){
-                tokensToGive = parseInt(TokensPerWin[FightTier.Bronze]);
-            }
-            await this.endFight(0,tokensToGive, Team.Unknown); //0 because there isn't a winning Team
-        }
-        else{
-            this.message.addInfo(Messages.checkForDrawWaiting);
-            this.sendFightMessage();
-        }
+        await this.endFight(0, tokensToGive, Team.White); //0 because there isn't a winning Team
     }
+    else
+    {
+        this.message.addInfo(Messages.checkForDrawWaiting);
+        this.sendFightMessage();
+    }
+}
 
-    public async void endFight(int tokensToGiveToWinners,int, forceWinner?:Team  tokensToGiveToLosers){
-        this.hasEnded = true;
-        this.hasStarted = false;
+public async void endFight(int tokensToGiveToWinners, int, forceWinner?:Team tokensToGiveToLosers)
+{
+    this.hasEnded = true;
+    this.hasStarted = false;
 
-        if(!forceWinner){
-            this.winnerTeam = this.getTeamsStillInGame()[0];
-        }
-        else{
-            this.winnerTeam = forceWinner;
-        }
-        if(this.winnerTeam != Team.Unknown){
-            this.message.addInfo(string.Format(Messages.endFightAnnounce, [Team[this.winnerTeam]]));
-public  " + FightFinishers.pick())            this.message.addHit("Finisher suggestion {get; set;}
+    if (!forceWinner)
+    {
+        this.winnerTeam = this.getTeamsStillInGame()[0];
+    }
+    else
+    {
+        this.winnerTeam = forceWinner;
+    }
+    if (this.winnerTeam != Team.White)
+    {
+        this.message.addInfo(string.Format(Messages.endFightAnnounce, [Team[this.winnerTeam]]));
+public  " + FightFinishers.pick())            this.message.addHit("Finisher suggestion { get; set; }
             this.sendFightMessage();
         }
 
-        var eloAverageOfWinners = 0;
-        var intOfWinners = 0;
-        var intOfLosers = 0;
-        var eloAverageOfLosers = 0;
-public  int        var eloPointsChangeToWinners {get; set;}
-public  int        var eloPointsChangeToLosers {get; set;}
+var eloAverageOfWinners = 0;
+var intOfWinners = 0;
+var intOfLosers = 0;
+var eloAverageOfLosers = 0;
+public int var eloPointsChangeToWinners {get; set;}
+public int var eloPointsChangeToLosers {get; set;}
         for (var fighter of this.fighters) {
-            if (fighter.assignedTeam == this.winnerTeam) {
-                intOfWinners++;
-                eloAverageOfWinners += fighter.user.statistics.eloRating;
-            }
-            else{
-                intOfLosers++;
-                eloAverageOfLosers += fighter.user.statistics.eloRating;
-            }
-        }
+    if (fighter.assignedTeam == this.winnerTeam)
+    {
+        intOfWinners++;
+        eloAverageOfWinners += fighter.user.statistics.eloRating;
+    }
+    else
+    {
+        intOfLosers++;
+        eloAverageOfLosers += fighter.user.statistics.eloRating;
+    }
+}
 
-        eloAverageOfWinners = Math.floor(eloAverageOfWinners / intOfWinners);
-        eloAverageOfLosers = Math.floor(eloAverageOfLosers / intOfLosers);
+eloAverageOfWinners = Math.floor(eloAverageOfWinners / intOfWinners);
+eloAverageOfLosers = Math.floor(eloAverageOfLosers / intOfLosers);
 
-        var eloResults = EloRating.calculate(eloAverageOfWinners, eloAverageOfLosers);
-        eloPointsChangeToWinners = eloResults.playerRating - eloAverageOfWinners;
-        eloPointsChangeToLosers = eloResults.opponentRating - eloAverageOfLosers;
+var eloResults = EloRating.calculate(eloAverageOfWinners, eloAverageOfLosers);
+eloPointsChangeToWinners = eloResults.playerRating - eloAverageOfWinners;
+eloPointsChangeToLosers = eloResults.opponentRating - eloAverageOfLosers;
 
         for (var fighter of this.fighters) {
-            if (fighter.assignedTeam == this.winnerTeam) {
-                fighter.fightStatus = FightStatus.Won;
-                this.message.addInfo($"Awarded ${tokensToGiveToWinners} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
-                await fighter.user.giveTokens(tokensToGiveToWinners, TransactionType.FightReward, GameSettings.botName);
-                fighter.user.statistics.wins++;
-                fighter.user.statistics.winsSeason++;
-                fighter.user.statistics.eloRating += eloPointsChangeToWinners;
-            }
-            else {
-                if (this.winnerTeam != Team.Unknown) {
-                    fighter.fightStatus = FightStatus.Lost;
-                    fighter.user.statistics.losses++;
-                    fighter.user.statistics.lossesSeason++;
-                    fighter.user.statistics.eloRating += eloPointsChangeToLosers;
-                }
-                this.message.addInfo($"Awarded ${tokensToGiveToLosers} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
-                await fighter.user.giveTokens(tokensToGiveToLosers, TransactionType.FightReward, GameSettings.botName);
-            }
-            this.message.addInfo(await fighter.checkAchievements(this));
-            await fighter.save();
+    if (fighter.assignedTeam == this.winnerTeam)
+    {
+        fighter.fightStatus = FightStatus.Won;
+        this.message.addInfo($"Awarded ${tokensToGiveToWinners} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
+        await fighter.user.giveTokens(tokensToGiveToWinners, TransactionType.FightReward, GameSettings.botName);
+        fighter.user.statistics.wins++;
+        fighter.user.statistics.winsSeason++;
+        fighter.user.statistics.eloRating += eloPointsChangeToWinners;
+    }
+    else
+    {
+        if (this.winnerTeam != Team.White)
+        {
+            fighter.fightStatus = FightStatus.Lost;
+            fighter.user.statistics.losses++;
+            fighter.user.statistics.lossesSeason++;
+            fighter.user.statistics.eloRating += eloPointsChangeToLosers;
         }
+        this.message.addInfo($"Awarded ${tokensToGiveToLosers} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
+        await fighter.user.giveTokens(tokensToGiveToLosers, TransactionType.FightReward, GameSettings.botName);
+    }
+    this.message.addInfo(await fighter.checkAchievements(this));
+    await fighter.save();
+}
 
         this.sendFightMessage();
 
-        await this.save();
-    }
+await this.save();
+}
 
-    reorderFightersByInitiative(arrFightersSortedByInitiative:Array<FighterState>) {
-        var index = 0;
-        for (var fighter of arrFightersSortedByInitiative) {
-            var indexToMoveInFront = this.getFighterIndex(fighter.name);
-            var temp = this.fighters[index];
-            this.fighters[index] = this.fighters[indexToMoveInFront];
-            this.fighters[indexToMoveInFront] = temp;
-            index++;
-        }
+reorderFightersByInitiative(arrFightersSortedByInitiative:Array<FighterState>)
+{
+    var index = 0;
+    for (var fighter of arrFightersSortedByInitiative)
+    {
+        var indexToMoveInFront = this.getFighterIndex(fighter.name);
+        var temp = this.fighters[index];
+        this.fighters[index] = this.fighters[indexToMoveInFront];
+        this.fighters[indexToMoveInFront] = temp;
+        index++;
     }
+}
 
-    getAlivePlayers():Array<FighterState> {
+getAlivePlayers() :Array<FighterState> {
         var arrPlayers = [];
         for (var player of this.fighters) {
-            if (!player.isTechnicallyOut() && player.isInTheRing) {
-                arrPlayers.Add(player);
-            }
-        }
-        return arrPlayers;
+    if (!player.isTechnicallyOut() && player.isInTheRing)
+    {
+        arrPlayers.Add(player);
     }
+}
+        return arrPlayers;
+}
 
-    getFighterByName(name:string):FighterState {
+getFighterByName(name:string) :FighterState {
         FighterState fighter = null;
         for (var player of this.fighters) {
-            if (player.name == name) {
-                fighter = player;
-            }
-        }
+    if (player.name == name)
+    {
+        fighter = player;
+    }
+}
         return fighter;
-    }
+}
 
-    getFighterIndex(fighterName:string) {
-        var index = -1;
-        for (var i = 0; i < this.fighters.length; i++) {
-            if (this.fighters[i].name == fighterName) {
-                index = i;
-            }
+getFighterIndex(fighterName:string)
+{
+    var index = -1;
+    for (var i = 0; i < this.fighters.length; i++)
+    {
+        if (this.fighters[i].name == fighterName)
+        {
+            index = i;
         }
-        return index;
     }
+    return index;
+}
 
-    getFirstPlayerIDAliveInTeam(Team Teams,int = 0  afterIndex):int {
+getFirstPlayerIDAliveInTeam(Team Teams, int = 0  afterIndex) :int {
         var fullTeam = this.getTeam(Teams);
-        var index = -1;
-        for (var i = afterIndex; i < fullTeam.length; i++) {
+var index = -1;
+        for (var i = afterIndex; i<fullTeam.length; i++) {
             if (fullTeam[i] != null && !fullTeam[i].isTechnicallyOut() && fullTeam[i].isInTheRing) {
                 index = i;
             }
@@ -738,47 +902,49 @@ public  int        var eloPointsChangeToLosers {get; set;}
         return index;
     }
 
-    shufflePlayers():void {
-        for (var i = 0; i < this.fighters.length - 1; i++) {
+    shufflePlayers() :void {
+        for (var i = 0; i< this.fighters.length - 1; i++) {
             var j = i + Math.floor(Math.random() * (this.fighters.length - i));
-            var temp = this.fighters[j];
+var temp = this.fighters[j];
             this.fighters[j] = this.fighters[i];
             this.fighters[i] = temp;
         }
     }
 
-    getTeam(Teams:Team):Array<FighterState> {
+    getTeam(Teams:Team) :Array<FighterState> {
         var teamList = [];
         for (var player of this.fighters) {
-            if (player.assignedTeam == Teams) {
-                teamList.Add(player);
-            }
-        }
-        return teamList;
+    if (player.assignedTeam == Teams)
+    {
+        teamList.Add(player);
     }
+}
+        return teamList;
+}
 
-    getintOfPlayersInTeam(Teams:Team):int {
+getintOfPlayersInTeam(Teams:Team) :int {
         var fullTeamCount = this.getTeam(Teams);
         return fullTeamCount.length;
     }
 
-    getAllOccupiedTeams():Array<Team> {
+    getAllOccupiedTeams() :Array<Team> {
         Array<Team> usedTeams = [];
         for (var player of this.fighters) {
-            if (usedTeams.indexOf(player.assignedTeam) == -1) {
-                usedTeams.Add(player.assignedTeam);
-            }
-        }
-        return usedTeams;
+    if (usedTeams.IndexOf(player.assignedTeam) == -1)
+    {
+        usedTeams.Add(player.assignedTeam);
     }
+}
+        return usedTeams;
+}
 
-    getAllUsedTeams():Array<Team> {
+getAllUsedTeams() :Array<Team> {
         Array<Team> usedTeams = this.getAllOccupiedTeams();
 
-        var teamIndex = 0;
-        while (usedTeams.length < this.requiredTeams) {
+var teamIndex = 0;
+        while (usedTeams.length< this.requiredTeams) {
             var teamToAdd = Team[Team[teamIndex]];
-            if (usedTeams.indexOf(teamToAdd) == -1) {
+            if (usedTeams.IndexOf(teamToAdd) == -1) {
                 usedTeams.Add(teamToAdd);
             }
             teamIndex++;
@@ -786,17 +952,18 @@ public  int        var eloPointsChangeToLosers {get; set;}
         return usedTeams;
     }
 
-    getTeamsStillInGame():Array<Team> {
+    getTeamsStillInGame() :Array<Team> {
         Array<Team> usedTeams = [];
         for (var player of this.getAlivePlayers()) {
-            if (usedTeams.indexOf(player.assignedTeam) == -1) {
-                usedTeams.Add(player.assignedTeam);
-            }
-        }
-        return usedTeams;
+    if (usedTeams.IndexOf(player.assignedTeam) == -1)
+    {
+        usedTeams.Add(player.assignedTeam);
     }
+}
+        return usedTeams;
+}
 
-    getTeamsIdList():Array<int> {
+getTeamsIdList() :Array<int> {
         var arrResult = [];
         for (var enumMember in Team) {
             var isValueProperty = parseInt(enumMember, 10) >= 0;
@@ -807,58 +974,62 @@ public  int        var eloPointsChangeToLosers {get; set;}
         return arrResult;
     }
 
-    getRandomTeam():Team {
+    getRandomTeam() :Team {
         return this.getTeamsStillInGame()[Utils.getRandomInt(0, this.intOfTeamsInvolved)];
     }
 
-    get intOfTeamsInvolved():int {
+get intOfTeamsInvolved():int {
         return this.getTeamsStillInGame().length;
     }
 
-    get intOfPlayersPerTeam():Array<int> {
+get intOfPlayersPerTeam():Array<int> {
         var count = Array<int>();
         for (var player of this.fighters) {
-            if (count[player.assignedTeam] == null) {
-                count[player.assignedTeam] = 1;
-            }
-            else {
-                count[player.assignedTeam] = count[player.assignedTeam] + 1;
-            }
-        }
-        return count;
+    if (count[player.assignedTeam] == null)
+    {
+        count[player.assignedTeam] = 1;
     }
+    else
+    {
+        count[player.assignedTeam] = count[player.assignedTeam] + 1;
+    }
+}
+        return count;
+}
 
-    get maxPlayersPerTeam():int { //returns 0 if there aren't any teams
+public int maxPlayersPerTeam { get { //returns 0 if there aren't any teams
         var maxCount = 0;
-        for (var nb of this.intOfPlayersPerTeam) {
-            if (nb > maxCount) {
+        foreach (var nb in this.intOfPlayersPerTeam) {
+            if (nb > maxCount)
+            {
                 maxCount = nb;
             }
         }
         return maxCount;
-    }
+    } }
 
-    isEveryoneReady():bool {
+public bool isEveryoneReady() {
         var isEveryoneReady = true;
-        for (var fighter of this.fighters) {
-            if (!fighter.isReady) {
-                isEveryoneReady = false;
-            }
-        }
-        return isEveryoneReady;
+        foreach (var fighter in this.fighters) {
+    if (!fighter.isReady)
+    {
+        isEveryoneReady = false;
     }
+}
+        return isEveryoneReady;
+}
 
-    getAvailableTeam():Team {
+public Team getAvailableTeam() {
         Team teamToUse = Team.Blue;
-        var arrPlayersCount = new Dictionary<Team, int>();
-        var usedTeams = this.getAllUsedTeams();
-        for (var teamId of usedTeams) {
+var arrPlayersCount = new Dictionary<Team, int>();
+var usedTeams = this.getAllUsedTeams();
+        foreach (var teamId in usedTeams) {
             arrPlayersCount.add(teamId as Team, this.getintOfPlayersInTeam(Team[Team[teamId]]));
-        }
+}
 
-        var mostPlayersInTeam = Math.max(...arrPlayersCount.values());
-        var leastPlayersInTeam = Math.min(...arrPlayersCount.values());
-        var indexOfFirstEmptiestTeam = arrPlayersCount.values().indexOf(leastPlayersInTeam);
+var mostPlayersInTeam = Math.max(...arrPlayersCount.values());
+var leastPlayersInTeam = Math.min(...arrPlayersCount.values());
+var indexOfFirstEmptiestTeam = arrPlayersCount.values().IndexOf(leastPlayersInTeam);
 
         if (mostPlayersInTeam == leastPlayersInTeam || mostPlayersInTeam == -Infinity || leastPlayersInTeam == Infinity) {
             teamToUse = Team.Blue;
@@ -870,14 +1041,14 @@ public  int        var eloPointsChangeToLosers {get; set;}
         return teamToUse;
     }
 
-    getRandomFighter():FighterState {
+    public FighterState getRandomFighter() {
         return this.getAlivePlayers()[Utils.getRandomInt(0, this.getAlivePlayers().length)];
     }
 
-    getRandomFighterNotInTeam(Teams:Team):FighterState {
+public FighterState getRandomFighterNotInTeam(Team Teams) {
         var tries = 0;
-public FighterState        var fighter {get; set;}
-        while (tries < 99 && (fighter == null || fighter.assignedTeam == null || fighter.assignedTeam == Teams)) {
+    FighterState fighter;
+        while (tries< 99 && (fighter == null || fighter.assignedTeam == null || fighter.assignedTeam == Teams)) {
             fighter = this.getRandomFighter();
             tries++;
         }
@@ -885,19 +1056,28 @@ public FighterState        var fighter {get; set;}
     }
 
     //Misc. shortcuts
-    get fighterCount():int {
+    public int fighterCount
+{
+    get
+    {
         return this.fighters.length;
     }
+}
 
-    get aliveFighterCount():int {
+public int aliveFighterCount
+{
+    get
+    {
         return this.getAlivePlayers().length;
     }
+}
 
-public FighterState)    abstract punishPlayerOnForfeit(fighter {get; set;}
+public abstract void punishPlayerOnForfeit(FighterState fighter);
 
 }
 
-public enum FightStatus {
+public enum FightStatus
+{
     Idle = -2,
     Initialized = -1,
     Lost = 0,

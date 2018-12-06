@@ -26,35 +26,35 @@ public RWFighterState    receiver {get; set;}
         return (this.name == ModifierType.SubHold || this.name == ModifierType.SexHold || this.name == ModifierType.HumHold);
     }
 
-    applyModifierOnReceiver( TriggerMoment moment,Trigger  event){
+    applyModifierOnReceiver( TriggerMoment moment,Trigger  triggeringEvent){
         var messageAboutModifier = "";
         if(this.hpDamage > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, event))
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, triggeringEvent))
             messageAboutModifier += " losing ${this.hpDamage} HP,";
             this.receiver.hitHP(this.hpDamage, flagTriggerMods);
         }
         if(this.lustDamage > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarDamage, event));
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarDamage, triggeringEvent));
             messageAboutModifier += " losing ${this.lustDamage} LP,";
             this.receiver.hitLP(this.lustDamage, flagTriggerMods);
         }
         if(this.focusDamage > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarDamage, event));
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarDamage, triggeringEvent));
             messageAboutModifier += " losing ${this.focusDamage} FP,";
             this.receiver.hitFP(this.focusDamage, flagTriggerMods);
         }
         if(this.hpHeal > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarHealing, event));
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarHealing, triggeringEvent));
             messageAboutModifier += " gaining ${this.hpHeal} HP,";
             this.receiver.healHP(this.hpHeal, flagTriggerMods);
         }
         if(this.lustHeal > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarHealing, event));
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarHealing, triggeringEvent));
             messageAboutModifier += " gaining ${this.lustHeal} LP,";
             this.receiver.healLP(this.lustHeal, flagTriggerMods);
         }
         if(this.focusHeal > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarHealing, event));
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarHealing, triggeringEvent));
             messageAboutModifier += " gaining ${this.focusHeal} FP,";
             this.receiver.healFP(this.focusHeal, flagTriggerMods);
         }
@@ -71,7 +71,7 @@ public RWFighterState    receiver {get; set;}
         return messageAboutModifier;
     }
 
-    applyModifierOnAction( TriggerMoment moment,Trigger, objFightAction:any  event){
+    applyModifierOnAction( TriggerMoment moment,Trigger, objFightAction:any  triggeringEvent){
         var messageAboutModifier = "";
         if(this.hpDamage > 0){
             if(this.areDamageMultipliers){
@@ -79,7 +79,7 @@ public RWFighterState    receiver {get; set;}
                 messageAboutModifier += " multiplying their attack's HP damage by ${this.hpDamage},";
             }
             else{
-                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, event));
+                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, triggeringEvent));
                 messageAboutModifier += " losing ${this.hpDamage} HP,";
                 this.receiver.hitHP(this.hpDamage, flagTriggerMods);
             }
@@ -90,7 +90,7 @@ public RWFighterState    receiver {get; set;}
                 messageAboutModifier += " multiplying their attack's LP damage by ${this.lustDamage},";
             }
             else {
-                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarDamage, event));
+                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarDamage, triggeringEvent));
                 messageAboutModifier += " losing ${this.lustDamage} LP,";
                 this.receiver.hitLP(this.lustDamage, flagTriggerMods);
             }
@@ -101,7 +101,7 @@ public RWFighterState    receiver {get; set;}
                 messageAboutModifier += " multiplying their attack's FP damage by ${this.focusDamage},";
             }
             else {
-                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarDamage, event));
+                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarDamage, triggeringEvent));
                 messageAboutModifier += " losing ${this.focusDamage} LP,";
                 this.receiver.hitFP(this.focusDamage, flagTriggerMods);
             }
@@ -112,7 +112,7 @@ public RWFighterState    receiver {get; set;}
                 messageAboutModifier += " multiplying their action's HP healing by ${this.hpHeal},";
             }
             else{
-                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarHealing, event));
+                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarHealing, triggeringEvent));
                 messageAboutModifier += " gaining ${this.hpHeal} HP,";
                 this.receiver.healHP(this.hpHeal, flagTriggerMods);
             }
@@ -123,7 +123,7 @@ public RWFighterState    receiver {get; set;}
                 messageAboutModifier += " multiplying their action's LP healing by ${this.lustHeal},";
             }
             else {
-                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarHealing, event));
+                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarHealing, triggeringEvent));
                 messageAboutModifier += " gaining ${this.lustHeal} LP,";
                 this.receiver.healLP(this.lustHeal, flagTriggerMods);
             }
@@ -134,7 +134,7 @@ public RWFighterState    receiver {get; set;}
                 messageAboutModifier += " multiplying their action's FP healing by ${this.focusHeal},";
             }
             else {
-                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarHealing, event));
+                var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarHealing, triggeringEvent));
                 messageAboutModifier += " gaining ${this.focusHeal} LP,";
                 this.receiver.healFP(this.focusHeal, flagTriggerMods);
             }

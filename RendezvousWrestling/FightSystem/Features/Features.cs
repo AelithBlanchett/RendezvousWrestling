@@ -19,7 +19,7 @@ public namespace Feature{
             return 0;
         }
 
-        applyFeature( TriggerMoment moment,Trigger, parameters?:BaseFeatureParameter  event):string{
+        applyFeature( TriggerMoment moment,Trigger, parameters?:BaseFeatureParameter  triggeringEvent):string{
             return "";
         }
     }
@@ -36,8 +36,8 @@ public int = 1.5        readonly hpDamageMultiplier {get; set;}
             return this.uses * 5;
         }
 
-        applyFeature( TriggerMoment moment,Trigger, parameters?:BaseFeatureParameter  event):string{
-            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.InitiationRoll)){
+        applyFeature( TriggerMoment moment,Trigger, parameters?:BaseFeatureParameter  triggeringEvent):string{
+            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, triggeringEvent, Trigger.InitiationRoll)){
                 if(parameters.fighter != null){
                     var modifier = ModifierFactory.getModifier(ModifierType.ItemPickupBonus, 1}  parameters.fight, parameters.fighter, null,{uses);
                     parameters.fighter.modifiers.Add(modifier);
@@ -60,8 +60,8 @@ public int = 0.5        readonly lpDamageFromHpMultiplier {get; set;}
             return this.uses * 5;
         }
 
-        applyFeature( TriggerMoment moment,Trigger, parameters?:FeatureParameter  event):string{
-            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.Attack)){
+        applyFeature( TriggerMoment moment,Trigger, parameters?:FeatureParameter  triggeringEvent):string{
+            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, triggeringEvent, Trigger.Attack)){
                 if(parameters.action.attacker.name == this.receiver.name && parameters.action.avgHpDamageToDefs > 0){
                     parameters.action.lpDamageToAtk = Math.floor(parameters.action.avgHpDamageToDefs * this.lpDamageFromHpMultiplier);
                     return "returning some of the HP damage dealt for a total of ${this.lpDamageFromHpMultiplier}LP!"
@@ -84,14 +84,14 @@ public int = 3        readonly additionalLPDamage {get; set;}
             return this.uses * 5;
         }
 
-        applyFeature( TriggerMoment moment,Trigger, parameters?:FeatureParameter  event):string{
-            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.Attack)){
+        applyFeature( TriggerMoment moment,Trigger, parameters?:FeatureParameter  triggeringEvent):string{
+            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, triggeringEvent, Trigger.Attack)){
                 if(parameters.action.attacker.name == this.receiver.name && parameters.action.lpDamageToAtk > 0){
                     parameters.action.lpDamageToAtk += this.additionalLPDamage;
                     return "dealing more LP Damage (+${this.additionalLPDamage}LP)";
                 }
                 else if(parameters.action.avgLpDamageToDefs > 0){
-                    var defenderIndex = parameters.action.defenders.findIndex(x => x.name == this.receiver.name);
+                    var defenderIndex = parameters.action.defenders.FindIndex(x => x.name == this.receiver.name);
                     if(defenderIndex != -1){
                         parameters.action.lpDamageToDefs[defenderIndex] += this.additionalLPDamage;
                     }
@@ -115,11 +115,11 @@ public int = 0.5        readonly lpDamageFromHpMultiplier {get; set;}
             return this.uses * 5;
         }
 
-        applyFeature( TriggerMoment moment,Trigger, parameters?:FeatureParameter  event):string{
-            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, event, Trigger.Attack)){
+        applyFeature( TriggerMoment moment,Trigger, parameters?:FeatureParameter  triggeringEvent):string{
+            if(Utils.willTriggerForEvent(moment, TriggerMoment.After, triggeringEvent, Trigger.Attack)){
                 if(parameters.action.avgHpDamageToDefs > 0){
                     var addedLPs = 0;
-                    var defenderIndex = parameters.action.defenders.findIndex(x => x.name == this.receiver.name);
+                    var defenderIndex = parameters.action.defenders.FindIndex(x => x.name == this.receiver.name);
                     if(defenderIndex != -1){
                         addedLPs = (parameters.action.hpDamageToDefs[defenderIndex] * this.lpDamageFromHpMultiplier);
                         parameters.action.lpDamageToDefs[defenderIndex] += addedLPs;

@@ -1,19 +1,23 @@
 
-public abstract class BaseUser{
-public string = ""    Name {get; set;}
-public bool = true    AreStatsPrivate {get; set;}
-public  int = 50    Tokens {get; set;}
-public  int = 0    TokensSpent {get; set;}
-public DateTime    CreatedAt {get; set;}
-public DateTime    UpdatedAt {get; set;}
-public bool = false    Deleted {get; set;}
+using System;
+using System.Collections.Generic;
 
-public BaseAchievement[]    Achievements {get; set;}
-public BaseFighterStats    Statistics {get; set;}
-public BaseFeature[]    Features {get; set;}
-public BaseFighterState[]    FightStates {get; set;}
+public abstract class BaseUser
+{
+    public string Name { get; set; } = "";
+    public bool AreStatsPrivate { get; set; } = true;
+    public int Tokens { get; set; } = 50;
+    public int TokensSpent { get; set; } = 0;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    public bool Deleted { get; set; } = false;
 
-public IFeatureFactory    featureFactory {get; set;}
+    public List<BaseAchievement> Achievements { get; set; }
+    public BaseFighterStats Statistics { get; set; }
+    public List<BaseFeature> Features { get; set; }
+    //public List<BaseFighterState<Modifier>>    FightStates {get; set;}
+
+    public IFeatureFactory FeatureFactory { get; set; }
 
     public BaseUser(string name, IFeatureFactory featureFactory)
     {
@@ -21,113 +25,141 @@ public IFeatureFactory    featureFactory {get; set;}
         FeatureFactory = featureFactory;
     }
 
-    getFeaturesList(){
+    public string getFeaturesList()
+    {
         var strResult = [];
-        for(var feature of this.features){
+        foreach (var feature in Features)
+        {
             var usesLeft = "";
-            if(feature.uses > 0){
+            if (feature.Uses > 0)
+            {
                 usesLeft = " - ${feature.uses} uses left";
             }
-            else{
+            else
+            {
                 usesLeft = " - permanent";
             }
-            strResult.Add($"${feature.type}${usesLeft}");
+            strResult.Add($"${feature.Type}${usesLeft}");
         }
         return strResult.join(", ");
     }
 
-    getAchievementsList(){
-        var strResult = [];
-        for(var achievement of this.achievements){
+    public string getAchievementsList()
+    {
+        var strResult = new List<string>();
+        foreach (var achievement in this.Achievements)
+        {
             strResult.Add($"${achievement.getDetailedDescription()}");
         }
-        return strResult.join(", ");
+        return string.Join(", ", strResult);
     }
 
-    removeFeature(type:string):void{
-        var index = this.features.findIndex(x => x.type == type);
-        if(index != -1){
-            this.features.splice(index, 1);
+    public void removeFeature(string type)
+    {
+        var index = this.Features.FindIndex(x => x.type == type);
+        if (index != -1)
+        {
+            this.Features.RemoveAt(index);
         }
-        else{
-            throw new Error("You don't have this feature, you can't remove it.");
+        else
+        {
+            throw new Exception("You don't have this feature, you can't remove it.");
         }
     }
 
-    addFeature(string type,int  matches):int{
-        any feature = this.featureFactory.getFeature(type, this, matches);
+    public int addFeature(string type, int matches)
+    {
+        var feature = this.FeatureFactory.getFeature(type, this, matches);
 
-        if(feature == null){
-            throw new Error( ${this.featureFactory.getExistingFeatures().join(' "Feature not found. These are the existing features,')}");
+        if (feature == null)
+        {
+            throw new Exception("Feature not found.These are the existing features: ${ this.featureFactory.getExistingFeatures().join(',') }");
         }
 
-        if(feature.getCost() > 0 && matches == 0){
-            throw new Error($"A paid feature requires a specific int of matches.");
+        if (feature.getCost() > 0 && matches == 0)
+        {
+            throw new Exception("A paid feature requires a specific number of matches.");
         }
 
-        int amountToRemove = feature.getCost() * matches;
+        var amountToRemove = feature.getCost() * matches;
 
-        if(this.tokens - amountToRemove >= 0){
-            var index = this.features.findIndex(x => x.type == type);
-            if(index == -1){
-                this.features.Add(feature);
+        if (this.Tokens - amountToRemove >= 0)
+        {
+            var index = this.Features.FindIndex(x => x.Type == type);
+            if (index == -1)
+            {
+                this.Features.Add(feature);
                 return amountToRemove;
             }
-            else{
-                throw new Error(Messages.cantAddFeatureAlreadyHaveIt);
+            else
+            {
+                throw new Exception(Messages.cantAddFeatureAlreadyHaveIt);
             }
         }
-        else{
-public  ${amountToRemove}.")            throw new Error($"Not enough tokens. Required {get; set;}
+        else
+        {
+            throw new Exception($"Not enough tokens.Required: {amountToRemove}.");
         }
     }
 
-    clearFeatures(){
-        this.features = [];
+    public void clearFeatures()
+    {
+        this.Features = new List<BaseFeature>();
     }
 
-    hasFeature(featureType:string):bool{
-        return this.features.findIndex(x => x.type == featureType) != -1;
+    public bool hasFeature(string featureType)
+    {
+        return this.Features.FindIndex(x => x.Type == featureType) != -1;
     }
 
-    public async void giveTokens(int amount,TransactionType, fromFighter:string = ""  transactionType):Promise<void>{
-        this.tokens += amount;
-        await this.saveTokenTransaction(this.name, amount, transactionType, fromFighter);
+    public void giveTokens(int amount, TransactionType transactionType, string fromFighter = "")
+    {
+        this.Tokens += amount;
+        this.saveTokenTransaction(this.Name, amount, transactionType, fromFighter);
     }
 
-    public async void removeTokens(int amount,TransactionType, fromFighter:string = ""  transactionType):Promise<void>{
-        this.tokens -= amount;
-        this.tokensSpent += amount;
-        if(this.tokens < 0){
-            this.tokens = 0;
+    public void removeTokens(int amount, TransactionType transactionType, string fromFighter = "")
+    {
+        this.Tokens -= amount;
+        this.TokensSpent += amount;
+        if (this.Tokens < 0)
+        {
+            this.Tokens = 0;
         }
-        await this.saveTokenTransaction(this.name, amount, transactionType, fromFighter);
+        this.saveTokenTransaction(this.Name, amount, transactionType, fromFighter);
     }
 
-    canPayAmount(amount):bool{
-        return (this.tokens - amount >= 0);
+    public bool canPayAmount(int amount)
+    {
+        return (this.Tokens - amount >= 0);
     }
 
-    fightTier():FightTier{
-        if(this.statistics == null){
+    public FightTier getFightTier()
+    {
+        if (this.Statistics == null)
+        {
             return FightTier.Bronze;
         }
-        if(this.statistics.wins < FightTierWinRequirements.Silver){
+        if (this.Statistics.wins < (int)FightTierWinRequirements.Silver)
+        {
             return FightTier.Bronze;
         }
-        else if(this.statistics.wins < FightTierWinRequirements.Gold){
-            return FightTier.Silver
+        else if (this.Statistics.wins < (int)FightTierWinRequirements.Gold)
+        {
+            return FightTier.Silver;
         }
-        else if(this.statistics.wins >= FightTierWinRequirements.Gold){
+        else if (this.Statistics.wins >= (int)FightTierWinRequirements.Gold)
+        {
             return FightTier.Gold;
         }
-        else{
+        else
+        {
             return FightTier.Bronze;
         }
     }
 
-public string    abstract outputStats() {get; set;}
-public Array<int>)    abstract restat(statArray {get; set;}
-public TransactionType, fromFighter?:string  amount):Promise<void>    abstract public async void saveTokenTransaction(string idFighter,int, transactionType {get; set;}
+    public abstract string outputStats();
+    public abstract void restat(int[] statArray);
+    public abstract void saveTokenTransaction(string idFighter, int amount, TransactionType type, string fromFighter = null);
 
 }

@@ -39,9 +39,9 @@ public  string = "Key is either undefined, null or an empty string."    private 
                 return false;
             }
 
-            var index = this._keys.indexOf(key);
-            this._keys.splice(index, 1);
-            this._values.splice(index, 1);
+            var index = this._keys.IndexOf(key);
+            this._keys.RemoveAt(index, 1);
+            this._values.RemoveAt(index, 1);
 
             return true;
         };
@@ -56,7 +56,7 @@ public  string = "Key is either undefined, null or an empty string."    private 
                 return null;
             }
 
-            var index = this._keys.indexOf(key);
+            var index = this._keys.IndexOf(key);
             return this._values[index];
         };
 
@@ -66,7 +66,7 @@ public  string = "Key is either undefined, null or an empty string."    private 
     public containsKey(key: T): bool {
 
          T): bool containsKeyAction = (key => {
-            return this._keys.indexOf(key) !== -1;
+            return this._keys.IndexOf(key) !== -1;
         };
 
         return <bool>this.checkKeyAndPerformAction(containsKeyAction, key);
@@ -79,7 +79,7 @@ public  string = "Key is either undefined, null or an empty string."    private 
                 throw new Error("In the dictionary there is no element with the given key.");
             }
 
-            var index = this._keys.indexOf(key);
+            var index = this._keys.IndexOf(key);
             this._values[index] = newValue;
         };
 

@@ -3,7 +3,7 @@ using System;
 public abstract class BaseAction
 {
 
-    public Guid IdAction { get; set; }
+    public string IdAction { get; set; }
     public string Name { get; set; }
     public int Tier { get; set; }
     public bool IsHold { get; set; }
@@ -68,7 +68,7 @@ public abstract class BaseAction
                 string explanation = null,
                 int? maxTargets = null)
     {
-        IdAction = Guid.NewGuid();
+        IdAction = Guid.NewGuid().ToString();
         Name = name;
         Tier = tier;
         IsHold = isHold;

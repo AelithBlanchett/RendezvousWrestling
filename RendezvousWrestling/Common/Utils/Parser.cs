@@ -46,7 +46,7 @@ public class Parser{
         for(var teamId in teams){
             teams[teamId] = teams[teamId].toLowerCase();
         }
-        var indexOfTeam = teams.indexOf(args.toLowerCase());
+        var indexOfTeam = teams.IndexOf(args.toLowerCase());
         if(indexOfTeam != -1){
             return Team[Team[indexOfTeam]];
         }
@@ -133,7 +133,7 @@ public  null, amount: -1, message: null}        var result = {player {get; set;}
         for(var fightTypeId in fightTypes){
             fightTypes[fightTypeId] = fightTypes[fightTypeId].toLowerCase();
         }
-        var indexOfFightType = fightTypes.indexOf(args.toLowerCase());
+        var indexOfFightType = fightTypes.IndexOf(args.toLowerCase());
         if(indexOfFightType != -1){
             return FightType[FightType[indexOfFightType]];
         }
@@ -145,7 +145,7 @@ public  null, amount: -1, message: null}        var result = {player {get; set;}
         for(var fightTypeId in fightDurations){
             fightDurations[fightTypeId] = fightDurations[fightTypeId].toLowerCase();
         }
-        var indexOfFightDuration = fightDurations.indexOf(args.toLowerCase());
+        var indexOfFightDuration = fightDurations.IndexOf(args.toLowerCase());
         if(indexOfFightDuration != -1){
             return FightLength[FightLength[indexOfFightDuration]];
         }

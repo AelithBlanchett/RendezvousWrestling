@@ -1,8 +1,9 @@
 using System;
 
-public abstract class BaseFeature{
+public abstract class BaseFeature
+{
 
-    public Guid Id;
+    public string Id;
     public string Type;
     public int Uses;
     public bool Permanent;
@@ -11,12 +12,15 @@ public abstract class BaseFeature{
     public DateTime UpdatedAt;
     public bool Deleted;
 
-    public BaseFeature(string featureType, BaseUser receiver, int uses, Guid? id = null) {
-        if(id.HasValue){
-            Id = id.Value;
+    public BaseFeature(string featureType, BaseUser receiver, int uses, Guid? id = null)
+    {
+        if (id.HasValue)
+        {
+            Id = id.Value.ToString();
         }
-        else{
-            Id = Guid.NewGuid();
+        else
+        {
+            Id = Guid.NewGuid().ToString();
         }
 
         Receiver = receiver;
@@ -24,30 +28,35 @@ public abstract class BaseFeature{
         Type = featureType;
     }
 
-    public bool isExpired(){
-        if(!this.permanent){
-            if(this.uses <= 0){
+    public bool isExpired()
+    {
+        if (!this.Permanent)
+        {
+            if (this.Uses <= 0)
+            {
                 return true;
             }
         }
         return false;
     }
 
-    public string Trigger<OptionalParameterType>(TriggerMoment moment, Trigger @event, OptionalParameterType parameters = null){
-        var triggeredFeatureMessage = this.applyFeature(moment, event, parameters);
-        var wasFeatureTriggered = (triggeredFeatureMessage.length > 0);
+    public string Trigger<OptionalParameterType>(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters)
+    {
+        var triggeredFeatureMessage = this.applyFeature(moment, @triggeringEvent, parameters);
+        var wasFeatureTriggered = (triggeredFeatureMessage.Length > 0);
 
         string messageAboutFeature = "";
 
-        if(wasFeatureTriggered){
+        if (wasFeatureTriggered)
+        {
             messageAboutFeature = "${this.receiver.name} is affected by the ${this.type}, ${triggeredFeatureMessage}";
         }
 
         return messageAboutFeature;
     }
 
-public int    abstract getCost() {get; set;}
+    public abstract int getCost();
 
-    abstract applyFeature<OptionalParameterType>( TriggerMoment moment,Trigger, parameters?:OptionalParameterType  event):string
+    public abstract string applyFeature<OptionalParameterType>(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters);
 
 }

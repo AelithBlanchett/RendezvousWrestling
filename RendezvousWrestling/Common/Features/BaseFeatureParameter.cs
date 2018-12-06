@@ -1,14 +1,10 @@
-import {BaseFight} from "../Fight/BaseFight";
-import {BaseFighterState} from "../Fight/BaseFighterState";
-import {BaseActiveAction} from "../Actions/BaseActiveAction";
+public class BaseFeatureParameter<ActiveAction, Fight, FighterState, Modifier> where ActiveAction : BaseActiveAction<Fight, FighterState, Modifier> where Fight : BaseFight<FighterState, Modifier> where FighterState : BaseFighterState<Modifier> where Modifier : BaseModifier{
+public Fight fight {get; set;}
+public FighterState fighter {get; set;}
+public FighterState target {get; set;}
+public ActiveAction action {get; set;}
 
-public class BaseFeatureParameter{
-public BaseFight    fight? {get; set;}
-public BaseFighterState    fighter? {get; set;}
-public BaseFighterState    target? {get; set;}
-public BaseActiveAction    action? {get; set;}
-
-    constructor(BaseFight fight?,BaseFighterState, target?:BaseFighterState, action?:BaseActiveAction  fighter?){
+    public BaseFeatureParameter(Fight fight = null, FighterState fighter = null, FighterState target = null, ActiveAction action = null){
         this.fight = fight;
         this.fighter = fighter;
         this.target = target;

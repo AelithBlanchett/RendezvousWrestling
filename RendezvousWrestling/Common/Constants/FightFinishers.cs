@@ -1,19 +1,22 @@
 
+using System;
+using System.Linq;
+
 public class FightFinishers {
 
-    static AvailableFinishers = [
+    public static string[] AvailableFinishers = {
         "Tombstone Piledriver into the mats",
         "Make the loser lick the mats",
         "Smother"
-    ];
+    };
 
-    static getAll():string[]{
+    public static string[] getAll() {
         return FightFinishers.AvailableFinishers;
     }
 
-    static pick():string{
+    public static string pick(){
         var finishers = FightFinishers.getAll();
-        return finishers[Math.floor(Math.random() * finishers.length)];
+        return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Length)];
     }
 }
 

@@ -33,21 +33,21 @@ public class ModifierFactory{
         parameters.uses = parameters.uses || 0;
         parameters.areDamageMultipliers = false;
 
-        //Convert textual event to its equivalent in the code
+        //Convert textual triggeringEvent to its equivalent in the code
         var eventFound = false;
 
         if(parameters.sEvent != null){
             var listOfEvents = Utils.getEnumList(Trigger);
             for(var trigger in listOfEvents){
                 if(listOfEvents[trigger].toLowerCase() == parameters.sEvent.toLowerCase()){
-                    parameters.event = Trigger[listOfEvents[trigger]];
+                    parameters.triggeringEvent = Trigger[listOfEvents[trigger]];
                     eventFound = true;
                 }
             }
         }
 
         if(!eventFound){
-            parameters.event = Trigger.None;
+            parameters.triggeringEvent = Trigger.None;
         }
 
         //Convert textual timeToTrigger to its equivalent in the code
@@ -90,10 +90,10 @@ public class ModifierFactory{
             throw new Error("This modifier wasn't found in the ModifierType list.");
         }
 
-        var indexOfSearchedModifier = (<any>modifiersList).findIndex(x => x.name.toLowerCase() == realModifierName.toLowerCase());
+        var indexOfSearchedModifier = (<any>modifiersList).FindIndex(x => x.name.toLowerCase() == realModifierName.toLowerCase());
         if(indexOfSearchedModifier != -1){
             inputParameters = ModifierFactory.checkAndInitializeDefaultValues(indexOfSearchedModifier, realModifierName, inputParameters);
-            modifier = new Modifier(modifierName, fight, receiver, applier , inputParameters.tier, inputParameters.uses, inputParameters.timeToTrigger, inputParameters.event, inputParameters.parentIds);
+            modifier = new Modifier(modifierName, fight, receiver, applier , inputParameters.tier, inputParameters.uses, inputParameters.timeToTrigger, inputParameters.triggeringEvent, inputParameters.parentIds);
             modifier.hpDamage = inputParameters.hpDamage;
             modifier.lustDamage = inputParameters.lustDamage;
             modifier.areDamageMultipliers = inputParameters.focusDamage;

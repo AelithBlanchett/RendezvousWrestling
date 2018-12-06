@@ -1,6 +1,5 @@
 public enum Team {
-    White = null,
-    Unknown = -1,
+    White = -1,
     Blue = 0,
     Red = 1,
     Yellow = 2,

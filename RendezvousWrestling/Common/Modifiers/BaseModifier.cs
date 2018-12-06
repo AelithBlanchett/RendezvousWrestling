@@ -1,88 +1,83 @@
-import {IBaseModifier} from "./IBaseModifier";
-import {Utils} from "../Utils/Utils";
-import {BaseFight} from "../Fight/BaseFight";
-import {BaseFighterState} from "../Fight/BaseFighterState";
-import {Trigger} from "../Constants/Trigger";
-import {TriggerMoment} from "../Constants/TriggerMoment";
+using System;
+using System.Collections.Generic;
 
-
-public abstract class BaseModifier implements IBaseModifier{
+public abstract class BaseModifier : IBaseModifier{
 public  string    idModifier {get; set;}
 public int    tier {get; set;}
 public string    name {get; set;}
 
-public  bool = false    areDamageMultipliers {get; set;}
+    public bool areDamageMultipliers { get; set; } = false;
 public  int    diceRoll {get; set;}
 public  int    escapeRoll {get; set;}
 public  int    uses {get; set;}
-public Trigger    event {get; set;}
+public Trigger triggeringEvent { get; set;}
 public TriggerMoment    timeToTrigger {get; set;}
-public Array<string>    idParentActions {get; set;}
+public List<string>    idParentActions {get; set;}
 
-public BaseFight    fight {get; set;}
-public BaseFighterState    applier {get; set;}
-public BaseFighterState    receiver {get; set;}
+public BaseFight<BaseFighterState<BaseModifier>, BaseModifier>    fight {get; set;}
+public BaseFighterState<BaseModifier>    applier {get; set;}
+public BaseFighterState<BaseModifier> receiver {get; set;}
 
 public  DateTime    createdAt {get; set;}
 public  DateTime    updatedAt {get; set;}
 public  DateTime    deletedAt {get; set;}
 
-    constructor(string name,BaseFight, receiver:BaseFighterState, applier:BaseFighterState, tier:int, uses:int, timeToTrigger:TriggerMoment, event:Trigger, parentActionIds?:Array<string>  fight){
-        this.idModifier = Utils.generateUUID();
+    public BaseModifer(string name, BaseFight<BaseFighterState<BaseModifier>, BaseModifier> fight, BaseFighterState<BaseModifier> receive, BaseFighterState<BaseModifier> applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null){
+        this.idModifier = Guid.NewGuid().ToString();
         this.receiver = receiver;
         this.applier = applier;
         this.fight = fight;
         this.tier = tier;
         this.name = name;
         this.uses = uses;
-        this.event = event;
+        this.triggeringEvent = triggeringEvent;
         this.timeToTrigger = timeToTrigger;
         this.idParentActions = parentActionIds;
         this.initialize();
     }
 
-    initialize(){
+    public void initialize(){
         this.areDamageMultipliers = false;
         this.diceRoll = 0;
     }
 
-    isOver():bool{
+    public bool isOver(){
         return (this.uses <= 0); //note: removed "|| this.receiver.isTechnicallyOut()" in latest patch. may break things.
     }
 
-    remove():void{
-        var indexModReceiver = this.receiver.modifiers.findIndex(x => x.idModifier == this.idModifier);
+    public void remove(){
+        var indexModReceiver = this.receiver.modifiers.FindIndex(x => x.idModifier == this.idModifier);
         if (indexModReceiver != -1) {
-            this.receiver.modifiers.splice(indexModReceiver, 1);
+            this.receiver.modifiers.RemoveAt(indexModReceiver);
         }
 
         if(this.applier != null){
-            var indexModApplier = this.applier.modifiers.findIndex(x => x.idModifier == this.idModifier);
+            var indexModApplier = this.applier.modifiers.FindIndex(x => x.idModifier == this.idModifier);
             if (indexModApplier != -1) {
-                this.applier.modifiers.splice(indexModApplier, 1);
+                this.applier.modifiers.RemoveAt(indexModApplier);
             }
         }
 
 
-        for (var mod of this.receiver.modifiers) {
-            if (mod.idParentActions) {
-                if (mod.idParentActions.length == 1 && mod.idParentActions[0] == this.idModifier) {
+        foreach (var mod in this.receiver.modifiers) {
+            if (mod.idParentActions != null) {
+                if (mod.idParentActions.Count == 1 && mod.idParentActions[0] == this.idModifier) {
                     mod.remove();
                 }
-                else if (mod.idParentActions.indexOf(this.idModifier) != -1) {
-                    mod.idParentActions.splice(mod.idParentActions.indexOf(this.idModifier), 1);
+                else if (mod.idParentActions.IndexOf(this.idModifier) != -1) {
+                    mod.idParentActions.RemoveAt(mod.idParentActions.IndexOf(this.idModifier));
                 }
             }
         }
 
         if(this.applier != null) {
-            for (var mod of this.applier.modifiers) {
-                if (mod.idParentActions) {
-                    if (mod.idParentActions.length == 1 && mod.idParentActions[0] == this.idModifier) {
+            foreach (var mod in this.applier.modifiers) {
+                if (mod.idParentActions != null) {
+                    if (mod.idParentActions.Count == 1 && mod.idParentActions[0] == this.idModifier) {
                         mod.remove();
                     }
-                    else if (mod.idParentActions.indexOf(this.idModifier) != -1) {
-                        mod.idParentActions.splice(mod.idParentActions.indexOf(this.idModifier), 1);
+                    else if (mod.idParentActions.IndexOf(this.idModifier) != -1) {
+                        mod.idParentActions.RemoveAt(mod.idParentActions.IndexOf(this.idModifier));
                     }
                 }
             }
@@ -90,21 +85,21 @@ public  DateTime    deletedAt {get; set;}
 
     }
 
-    trigger( TriggerMoment moment,Trigger, objFightAction?:any  event):string{
+    public string trigger( TriggerMoment moment,Trigger triggeringEvent, dynamic objFightAction = null){
         string messageAboutModifier = "";
 
-        if(Utils.willTriggerForEvent(this.timeToTrigger, moment, this.event, event)){
+        if(Utils.willTriggerForEvent(this.timeToTrigger, moment, this.triggeringEvent, triggeringEvent)){
             this.uses--;
             messageAboutModifier = "${this.receiver.getStylizedName()} is affected by the ${this.name}, ";
             if(!objFightAction){
-                messageAboutModifier += this.applyModifierOnReceiver(moment, event);
+                messageAboutModifier += this.applyModifierOnReceiver(moment, triggeringEvent);
             }
             else{
-                messageAboutModifier += this.applyModifierOnAction(moment, event, objFightAction);
+                messageAboutModifier += this.applyModifierOnAction(moment, triggeringEvent, objFightAction);
             }
 
             if(this.isOver()){
-                for(var fighter of this.fight.fighters){
+                foreach(var fighter in this.fight.fighters){
                     fighter.removeMod(this.idModifier);
                 }
                 messageAboutModifier += " and it is now expired.";
@@ -119,8 +114,8 @@ public  DateTime    deletedAt {get; set;}
         return messageAboutModifier;
     }
 
-    abstract applyModifierOnReceiver( TriggerMoment moment,Trigger  event);
-public any  event)    abstract applyModifierOnAction( TriggerMoment moment,Trigger, objFightAction {get; set;}
-public bool    abstract isAHold() {get; set;}
+    public abstract string applyModifierOnReceiver( TriggerMoment moment,Trigger  triggeringEvent);
+public abstract string applyModifierOnAction( TriggerMoment moment,Trigger triggeringEvent, dynamic objFightAction);
+public abstract bool isAHold();
 
 }

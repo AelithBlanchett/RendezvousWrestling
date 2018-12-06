@@ -315,7 +315,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
             try {
                 if (args) {
                     TFight theFight = await (await this.database()).findOne(this.Fight, args);
-                    if(theFight != null && (this.fChatLibInstance.isUserChatOP(data.character, data.channel) || theFight.fighters.findIndex(x => x.name == data.character) != -1)){
+                    if(theFight != null && (this.fChatLibInstance.isUserChatOP(data.character, data.channel) || theFight.fighters.FindIndex(x => x.name == data.character) != -1)){
                         this.fight = theFight;
                         this.fight.build(this.fChatLibInstance, this.channel);
                         this.fight.outputStatus();
@@ -537,7 +537,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
 
     public async void usedice(string args,IMsgEvent  data) {
         if (this.fChatLibInstance.isUserChatOP(data.character, data.channel)) {
-            var flag = (args.toLowerCase().indexOf("no") != -1);
+            var flag = (args.toLowerCase().IndexOf("no") != -1);
             this.fight.setDiceLess(flag);
             return;
         }
@@ -545,7 +545,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         TUser fighter = await (await this.database()).findOne(this.User, data.character);
 
         if (fighter != null) {
-            var flag = (args.toLowerCase().indexOf("no") != -1);
+            var flag = (args.toLowerCase().IndexOf("no") != -1);
             this.fight.setDiceLess(flag);
         }
         else {
@@ -683,7 +683,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
     }
 
     private isInFight(string character,bool = false, displayIfInFight:bool = false  displayIfNotInFight):bool{
-        if (this.isFightGoingOn(character, false, false) || (this.fight.fighters != null && this.fight.fighters.findIndex(x => x.name == character) == -1)) {
+        if (this.isFightGoingOn(character, false, false) || (this.fight.fighters != null && this.fight.fighters.FindIndex(x => x.name == character) == -1)) {
             if(displayIfNotInFight){
                 this.fChatLibInstance.sendPrivMessage("[color=red]There isn't any fight going on, or you're not participating in it.[/color]", character);
             }

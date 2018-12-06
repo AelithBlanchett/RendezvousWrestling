@@ -48,7 +48,7 @@ public class ActionStun extends RWAction {
 
     checkRequirements():void{
         super.checkRequirements();
-        if (this.defenders.findIndex(x => x.isStunned() == true) != -1) {
+        if (this.defenders.FindIndex(x => x.isStunned() == true) != -1) {
             throw new Error(Messages.targetAlreadyStunned);
         }
     }

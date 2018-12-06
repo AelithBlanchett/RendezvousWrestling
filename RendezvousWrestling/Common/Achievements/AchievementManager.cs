@@ -1,36 +1,33 @@
-import {BaseFighterState} from "../Fight/BaseFighterState";
-import {BaseFight} from "../Fight/BaseFight";
-import {GameSettings} from "../Configuration/GameSettings";
-import {TransactionType} from "../Constants/TransactionType";
-import {BaseAchievement} from "./BaseAchievement";
-import {BaseUser} from "../Fight/BaseUser";
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class AchievementManager {
 
-public BaseAchievement[] = []    public static EnabledAchievements {get; set;}
+    public static BaseAchievement[] EnabledAchievements { get; set; } = new BaseAchievement[0];
 
-    static getAll():BaseAchievement[]{
-        return this.EnabledAchievements;
+    public static BaseAchievement[] getAll(){
+        return EnabledAchievements;
     }
 
-    static get(name:string):BaseAchievement{
-        return AchievementManager.getAll().find(x => x.getName() == name);
+    public static BaseAchievement get(string name){
+        return AchievementManager.getAll().FirstOrDefault(x => x.getName() == name);
     }
 
-    static public async void checkAll(BaseUser fighter,BaseFighterState, fight?:BaseFight<BaseFighterState>  activeFighter):Promise<string[]>{
-        var addedInfo = [];
+    public static string[] checkAll(BaseUser fighter, BaseFighterState<BaseModifier> activeFighter, BaseFight<BaseFighterState<BaseModifier>, BaseModifier> fight = null){
+        var addedInfo = new List<string>();
         var achievements = AchievementManager.getAll();
 
-        for(var achievement of achievements){
-            if(fighter.achievements.findIndex(x => x.getName() == achievement.getName()) == -1 && achievement.meetsRequirements(fighter, activeFighter, fight)){
-                achievement.createdAt = new Date();
-                fighter.achievements.Add(achievement);
+        foreach(var achievement in achievements){
+            if(fighter.Achievements.FindIndex(x => x.getName() == achievement.getName()) == -1 && achievement.meetsRequirements(fighter, activeFighter, fight)){
+                achievement.CreatedAt = DateTime.Now;
+                fighter.Achievements.Add(achievement);
                 int amount = achievement.getReward();
-                await fighter.giveTokens(amount, TransactionType.AchievementReward, GameSettings.botName);
-public  ${achievement.getReward()} ${GameSettings.currencyName}")                addedInfo.Add($"${achievement.getDetailedDescription()}  Reward {get; set;}
+                fighter.giveTokens(amount, TransactionType.AchievementReward, GameSettings.botName);
+                addedInfo.Add($"{ achievement.getDetailedDescription()} Reward: { achievement.getReward()} { GameSettings.currencyName}");
             }
         }
-        return addedInfo;
+        return addedInfo.ToArray();
     }
 }
 

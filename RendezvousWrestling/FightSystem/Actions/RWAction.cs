@@ -272,31 +272,31 @@ public  Modifier[] = []    appliedModifiers {get; set;}
 
         if (this.appliedModifiers.length > 0) {
             if (this.isHold) { //for any holds, do the stacking here
-                var indexOfNewHold = this.appliedModifiers.findIndex(x => x.isAHold());
+                var indexOfNewHold = this.appliedModifiers.FindIndex(x => x.isAHold());
 
                 for(var defender of this.defenders){
                     //START
-                    var indexOfAlreadyExistantHoldForDefender = defender.modifiers.findIndex(x => x.isAHold());
+                    var indexOfAlreadyExistantHoldForDefender = defender.modifiers.FindIndex(x => x.isAHold());
                     if (indexOfAlreadyExistantHoldForDefender != -1) {
                         var idOfFormerHold = defender.modifiers[indexOfAlreadyExistantHoldForDefender].idModifier;
-                        for (var mod of defender.modifiers) {
+                        foreach (var mod in defender.modifiers) {
                             //we updated the children and parent's damage and turns
                             if (mod.idModifier == idOfFormerHold) {
                                 mod.name = this.appliedModifiers[indexOfNewHold].name;
-                                mod.event = this.appliedModifiers[indexOfNewHold].event;
+                                mod.triggeringEvent = this.appliedModifiers[indexOfNewHold].triggeringEvent;
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                                 mod.hpDamage += this.appliedModifiers[indexOfNewHold].hpDamage;
                                 mod.lustDamage += this.appliedModifiers[indexOfNewHold].lustDamage;
                                 mod.focusDamage += this.appliedModifiers[indexOfNewHold].focusDamage;
                                 //Did not add the dice/escape score modifications, if needed, implement here
                             }
-                            else if (mod.idParentActions && mod.idParentActions.indexOf(idOfFormerHold) != -1) {
+                            else if (mod.idParentActions && mod.idParentActions.IndexOf(idOfFormerHold) != -1) {
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                             }
                         }
-                        for (var mod of this.attacker.modifiers) {
+                        foreach (var mod in this.attacker.modifiers) {
                             //upDateTime the bonus appliedModifiers length
-                            if (mod.idParentActions && mod.idParentActions.indexOf(idOfFormerHold) != -1) {
+                            if (mod.idParentActions && mod.idParentActions.IndexOf(idOfFormerHold) != -1) {
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                             }
                         }
@@ -307,7 +307,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
                          ");
                     }
                     else {
-                        for (var mod of this.appliedModifiers) {
+                        foreach (var mod in this.appliedModifiers) {
                             if (mod.receiver.name == defender.name) {
                                 defender.modifiers.Add(mod);
                             }
@@ -321,11 +321,11 @@ public  Modifier[] = []    appliedModifiers {get; set;}
                 }
             }
             else {
-                for (var mod of this.appliedModifiers) {
+                foreach (var mod in this.appliedModifiers) {
                     if (mod.receiver == this.attacker) {
                         this.attacker.modifiers.Add(mod);
                     }
-                    else if (this.defenders.findIndex(x => x.name == mod.receiver.name) != -1) {
+                    else if (this.defenders.FindIndex(x => x.name == mod.receiver.name) != -1) {
                         this.defenders.find(x => x.name == mod.receiver.name).modifiers.Add(mod);
                     }
                 }

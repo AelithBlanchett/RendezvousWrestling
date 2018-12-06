@@ -201,7 +201,7 @@ string explanation = null,
                 this.Attacker.releaseHoldsAppliedBy(defender.name);
                 this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, [this.Attacker.getStylizedName(), defender.getStylizedName()]));
             }
-            else if (this.tier == GameSettings.tierRequiredToBreakHold && defender.isApplyingHold())
+            else if (this.Tier == GameSettings.tierRequiredToBreakHold && defender.isApplyingHold())
             {
                 defender.releaseHoldsApplied();
                 this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, [this.Attacker.getStylizedName(), defender.getStylizedName()]));
@@ -329,7 +329,7 @@ string explanation = null,
             this.Defender.triggerFeatures(TriggerMoment.After, this.trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
         }
 
-        if (this.isHold)
+        if (this.IsHold)
         {
             this.Attacker.triggerMods(TriggerMoment.After, Trigger.GrapplingHold);
             this.Attacker.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));

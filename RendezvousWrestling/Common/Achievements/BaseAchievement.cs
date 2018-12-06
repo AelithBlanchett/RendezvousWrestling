@@ -1,29 +1,22 @@
-import {CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {IAchievement} from "./IAchievement";
-import {BaseFighterState} from "../Fight/BaseFighterState";
-import {BaseFight} from "../Fight/BaseFight";
-import {BaseUser} from "../Fight/BaseUser";
+using System;
 
-@Entity("Achievements")
-public abstract class BaseAchievement implements IAchievement{
+public abstract class BaseAchievement
+{
 
-    @PrimaryGeneratedColumn()
-public string    achievementId {get; set;}
+    public string AchievementId { get; set; }
 
-    @CreateDateColumn()
-public DateTime    createdAt {get; set;}
+    public DateTime CreatedAt { get; set; }
 
-    @ManyToOne(type => BaseUser, user => user.achievements)
-public BaseUser    user {get; set;}
+    public BaseUser User { get; set; }
 
-public  string    abstract getDetailedDescription() {get; set;}
+    public abstract string getDetailedDescription();
 
-public  string    abstract getName() {get; set;}
+    public abstract string getName();
 
-public  int    abstract getReward() {get; set;}
+    public abstract int getReward();
 
-public  string    abstract getUniqueShortName() {get; set;}
+    public abstract string getUniqueShortName();
 
-public  BaseFight  activeFighter): bool    abstract meetsRequirements( BaseUser user, BaseFighterState, fight {get; set;}
+    public abstract bool meetsRequirements(BaseUser user, BaseFighterState<BaseModifier> activeFighter, BaseFight<BaseFighterState<BaseModifier>, BaseModifier> fight);
 
 }
