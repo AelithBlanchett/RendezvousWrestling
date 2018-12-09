@@ -17,6 +17,6 @@ public abstract class BaseAchievement
 
     public abstract string getUniqueShortName();
 
-    public abstract bool meetsRequirements(BaseUser user, BaseFighterState<BaseModifier> activeFighter, BaseFight<BaseFighterState<BaseModifier>, BaseModifier> fight);
+    public abstract bool meetsRequirements(BaseUser user, BaseFighterState activeFighter, BaseFight fight);
 
 }

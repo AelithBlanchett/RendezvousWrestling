@@ -1,13 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
-public abstract class BaseActiveAction<Fight, FighterState, Modifier> : BaseAction where Fight : BaseFight<FighterState, Modifier> where FighterState : BaseFighterState<Modifier> where Modifier : BaseModifier
+public abstract class BaseActiveAction : BaseAction
 {
 
-    public Fight Fight { get; set; }
+    public BaseFight Fight { get; set; }
 
-    public FighterState Attacker { get; set; }
+    public BaseFighterState Attacker { get; set; }
 
-    public FighterState[] Defenders { get; set; }
+    public List<BaseFighterState> Defenders { get; set; }
 
     public int AtTurn { get; set; }
     public int DiceScore { get; set; }
@@ -28,9 +30,9 @@ public abstract class BaseActiveAction<Fight, FighterState, Modifier> : BaseActi
     public string[] TemporaryIdDefenders { get; set; }
     public string TemporaryIdFight { get; set; }
 
-    public BaseActiveAction(Fight Fight,
-FighterState Attacker,
-FighterState[] Defenders,
+    public BaseActiveAction(BaseFight Fight,
+BaseFighterState Attacker,
+BaseFighterState[] Defenders,
 string name,
  int tier,
  bool isHold,
@@ -98,7 +100,7 @@ string explanation = null,
         AppliedModifiers = new Modifier[0];
     }
 
-    public FighterState Defender
+    public BaseFighterState Defender
     {
         get
         {
@@ -106,7 +108,7 @@ string explanation = null,
             {
                 return null;
             }
-            if (this.Defenders.Length == 1)
+            if (this.Defenders.Count() == 1)
             {
                 return this.Defenders[0];
             }
@@ -199,77 +201,77 @@ string explanation = null,
             if (this.Tier == GameSettings.tierRequiredToBreakHold && this.Attacker.isInHoldAppliedBy(defender.name))
             {
                 this.Attacker.releaseHoldsAppliedBy(defender.name);
-                this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, [this.Attacker.getStylizedName(), defender.getStylizedName()]));
+                this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, this.Attacker.getStylizedName(), defender.getStylizedName()));
             }
             else if (this.Tier == GameSettings.tierRequiredToBreakHold && defender.isApplyingHold())
             {
                 defender.releaseHoldsApplied();
-                this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, [this.Attacker.getStylizedName(), defender.getStylizedName()]));
+                this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, this.Attacker.getStylizedName(), defender.getStylizedName()));
             }
         }
     }
 
     public void checkRequirements()
     {
-        if (this.SingleTarget && !this.UsableOnSelf && this.Defenders.Length > 1)
+        if (this.SingleTarget && !this.UsableOnSelf && this.Defenders.Count() > 1)
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.tooManyTargets]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.tooManyTargets));
         }
         if (this.RequiresBeingAlive && this.Attacker.isTechnicallyOut())
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.playerOutOfFight]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.playerOutOfFight));
         }
         if (this.RequiresBeingDead && !this.Attacker.isTechnicallyOut())
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.playerStillInFight]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.playerStillInFight));
         }
         if (this.RequiresBeingInRing && !this.Attacker.isInTheRing)
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.playerOutOfRing]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.playerOutOfRing));
         }
         if (this.RequiresBeingOffRing && this.Attacker.isInTheRing)
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.playerOnTheRing]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.playerOnTheRing));
         }
         if (this.RequiresBeingInHold && !this.Attacker.isInHold())
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.mustBeStuckInHold]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.mustBeStuckInHold));
         }
         if (this.RequiresNotBeingInHold && this.Attacker.isInHold())
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.mustNotBeStuckInHold]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.mustNotBeStuckInHold));
         }
         if (this.TargetMustBeAlive && this.Defenders.Any(x => x.isTechnicallyOut() == true))
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetOutOfFight]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetOutOfFight));
         }
         if (this.TargetMustBeDead && this.Defenders.Any(x => x.isTechnicallyOut() == false))
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetNotOutOfFight]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetNotOutOfFight));
         }
         if (this.TargetMustBeInRing && this.Defenders.Any(x => x.isInTheRing == false))
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetOutOfRing]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetOutOfRing));
         }
         if (this.TargetMustBeOffRing && this.Defenders.Any(x => x.isInTheRing == true))
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetStillInRing]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetStillInRing));
         }
         if (this.TargetMustBeInRange && !this.Attacker.isInRange(this.Defenders))
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetMustBeInRange]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeInRange));
         }
         if (this.TargetMustBeOffRange && this.Attacker.isInRange(this.Defenders))
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetMustBeOffRange]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeOffRange));
         }
-        if (this.TargetMustBeInHold && this.Defenders.Where(x => x.isInHold()).length != this.Defenders.length)
+        if (this.TargetMustBeInHold && this.Defenders.Where(x => x.isInHold()).Count() != this.Defenders.Count())
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetMustBeInHold]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeInHold));
         }
-        if (this.TargetMustNotBeInHold && this.Defenders.Where(x => !x.isInHold()).length != this.Defenders.length)
+        if (this.TargetMustNotBeInHold && this.Defenders.Where(x => !x.isInHold()).Count() != this.Defenders.Count())
         {
-            throw new System.Exception(string.Format(Messages.cantAttackExplanation, [Messages.targetMustNotBeInHold]));
+            throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustNotBeInHold));
         }
         if (!this.UsableOnSelf && !(this.UsableOnAllies && this.UsableOnEnemies))
         {
@@ -286,9 +288,9 @@ string explanation = null,
 
     public void announceAction()
     {
-        if (this.Defenders.Length > 0)
+        if (this.Defenders.Count > 0)
         {
-            this.Fight.message.addAction($"{ this.Name} on { this.Defenders.map(x => x.getStylizedName()).join(",")}");
+            this.Fight.message.addAction($"{ this.Name} on { string.Join(",", this.Defenders.Select(x => x.getStylizedName()))}");
         }
         else
         {
@@ -301,7 +303,7 @@ string explanation = null,
 
     public void displayHitMessage()
     {
-        string message = (this.Explanation != null ? string.Format(this.Explanation, Messages.HitMessage[this.Attacker.getStylizedName()]) );
+        string message = (this.Explanation != null ? string.Format(this.Explanation, this.Attacker.getStylizedName()) : Messages.HitMessage);
         this.Fight.message.addHit(message);
     }
 
@@ -312,21 +314,21 @@ string explanation = null,
 
     public void triggerBeforeEvent()
     {
-        this.Attacker.triggerMods(TriggerMoment.Before, this.trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.Before, this.trigger, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerMods(TriggerMoment.Before, this.Trigger);
+        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
         if (this.Defender != null)
         {
-            this.Defender.triggerFeatures(TriggerMoment.Before, this.trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
+            this.Defender.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
         }
     }
 
     public void triggerAfterEvent()
     {
-        this.Attacker.triggerMods(TriggerMoment.After, this.trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.After, this.trigger, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerMods(TriggerMoment.After, this.Trigger);
+        this.Attacker.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
         if (this.Defender != null)
         {
-            this.Defender.triggerFeatures(TriggerMoment.After, this.trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
+            this.Defender.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
         }
 
         if (this.IsHold)
@@ -338,5 +340,10 @@ string explanation = null,
                 this.Defender.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
             }
         }
+    }
+
+    public void save()
+    {
+        throw new NotImplementedException();
     }
 }

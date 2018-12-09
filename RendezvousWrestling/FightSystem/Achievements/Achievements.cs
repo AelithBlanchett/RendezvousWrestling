@@ -489,7 +489,7 @@ public  DateTime    createdAt {get; set;}
     meetsRequirements( BaseUser user, BaseFighterState, fight?: RWFight  BaseActiveFighter?): bool {
         var flag = false;
         if(fight != null){
-            flag = (fight.fighters.filter(x => x.orgasmsDamageLastRound == 1).length >= 2);
+            flag = (fight.fighters.filter(x => x.orgasmsDamageLastRound == 1).Count >= 2);
         }
         return flag;
     }
@@ -517,7 +517,7 @@ public  DateTime    createdAt {get; set;}
     meetsRequirements( BaseUser user, BaseFighterState, fight?: RWFight  BaseActiveFighter?): bool {
         var flag = false;
         if(fight != null){
-            flag = (fight.fighters.filter(x => x.heartsDamageLastRound == 1).length >= 2);
+            flag = (fight.fighters.filter(x => x.heartsDamageLastRound == 1).Count >= 2);
         }
         return flag;
     }

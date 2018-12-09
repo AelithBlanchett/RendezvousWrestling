@@ -30,10 +30,10 @@ public  int    diceScoreBonusPoints {get; set;}
 public  Modifier[] = []    appliedModifiers {get; set;}
 
     get avgHpDamageToDefs():int{
-        if(this.hpDamageToDefs != null && this.hpDamageToDefs.length == 1){
+        if(this.hpDamageToDefs != null && this.hpDamageToDefs.Count == 1){
             return this.hpDamageToDefs[0];
         }
-        else if(this.hpDamageToDefs != null && this.hpDamageToDefs.length > 1){
+        else if(this.hpDamageToDefs != null && this.hpDamageToDefs.Count > 1){
             return this.hpDamageToDefs.reduce((a, b) => a + b, 0);
         }
         else{
@@ -42,10 +42,10 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get avgLpDamageToDefs():int{
-        if(this.lpDamageToDefs != null && this.lpDamageToDefs.length == 1){
+        if(this.lpDamageToDefs != null && this.lpDamageToDefs.Count == 1){
             return this.lpDamageToDefs[0];
         }
-        else if(this.lpDamageToDefs != null && this.lpDamageToDefs.length > 1){
+        else if(this.lpDamageToDefs != null && this.lpDamageToDefs.Count > 1){
             return this.lpDamageToDefs.reduce((a, b) => a + b, 0);
         }
         else{
@@ -54,10 +54,10 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get avgFpDamageToDefs():int{
-        if(this.fpDamageToDefs != null && this.fpDamageToDefs.length == 1){
+        if(this.fpDamageToDefs != null && this.fpDamageToDefs.Count == 1){
             return this.fpDamageToDefs[0];
         }
-        else if(this.fpDamageToDefs != null && this.fpDamageToDefs.length > 1){
+        else if(this.fpDamageToDefs != null && this.fpDamageToDefs.Count > 1){
             return this.fpDamageToDefs.reduce((a, b) => a + b, 0);
         }
         else{
@@ -66,7 +66,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get hpDamageToDef():int{
-        if(this.hpDamageToDefs != null && this.hpDamageToDefs.length == 1){
+        if(this.hpDamageToDefs != null && this.hpDamageToDefs.Count == 1){
             return this.hpDamageToDefs[0];
         }
         else{
@@ -79,7 +79,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get lpDamageToDef():int{
-        if(this.lpDamageToDefs != null && this.lpDamageToDefs.length == 1){
+        if(this.lpDamageToDefs != null && this.lpDamageToDefs.Count == 1){
             return this.lpDamageToDefs[0];
         }
         else{
@@ -92,7 +92,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get fpDamageToDef():int{
-        if(this.fpDamageToDefs != null && this.fpDamageToDefs.length == 1){
+        if(this.fpDamageToDefs != null && this.fpDamageToDefs.Count == 1){
             return this.fpDamageToDefs[0];
         }
         else{
@@ -105,7 +105,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get hpHealToDef():int{
-        if(this.hpHealToDefs != null && this.hpHealToDefs.length == 1){
+        if(this.hpHealToDefs != null && this.hpHealToDefs.Count == 1){
             return this.hpHealToDefs[0];
         }
         else{
@@ -118,7 +118,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get lpHealToDef():int{
-        if(this.lpHealToDefs != null && this.lpHealToDefs.length == 1){
+        if(this.lpHealToDefs != null && this.lpHealToDefs.Count == 1){
             return this.lpHealToDefs[0];
         }
         else{
@@ -131,7 +131,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     get fpHealToDef():int{
-        if(this.fpHealToDefs != null && this.fpHealToDefs.length == 1){
+        if(this.fpHealToDefs != null && this.fpHealToDefs.Count == 1){
             return this.fpHealToDefs[0];
         }
         else{
@@ -207,43 +207,43 @@ public  Modifier[] = []    appliedModifiers {get; set;}
     }
 
     applyDamage():void{
-        if (this.hpDamageToDefs.length > 0) {
-            for(var i = 0; i < this.hpDamageToDefs.length; i++){
+        if (this.hpDamageToDefs.Count > 0) {
+            for(var i = 0; i < this.hpDamageToDefs.Count; i++){
                 if(this.hpDamageToDefs[i] > 0){
                     this.defenders[i].hitHP(this.hpDamageToDefs[i]);
                 }
             }
         }
-        if (this.lpDamageToDefs.length > 0) {
-            for(var i = 0; i < this.lpDamageToDefs.length; i++){
+        if (this.lpDamageToDefs.Count > 0) {
+            for(var i = 0; i < this.lpDamageToDefs.Count; i++){
                 if(this.lpDamageToDefs[i] > 0){
                     this.defenders[i].hitLP(this.lpDamageToDefs[i]);
                 }
             }
         }
-        if (this.fpDamageToDefs.length > 0) {
-            for(var i = 0; i < this.fpDamageToDefs.length; i++){
+        if (this.fpDamageToDefs.Count > 0) {
+            for(var i = 0; i < this.fpDamageToDefs.Count; i++){
                 if(this.fpDamageToDefs[i] > 0){
                     this.defenders[i].hitFP(this.fpDamageToDefs[i]);
                 }
             }
         }
-        if (this.hpHealToDefs.length > 0) {
-            for(var i = 0; i < this.hpHealToDefs.length; i++){
+        if (this.hpHealToDefs.Count > 0) {
+            for(var i = 0; i < this.hpHealToDefs.Count; i++){
                 if(this.hpHealToDefs[i] > 0){
                     this.defenders[i].healHP(this.hpHealToDefs[i]);
                 }
             }
         }
-        if (this.lpHealToDefs.length > 0) {
-            for(var i = 0; i < this.lpHealToDefs.length; i++){
+        if (this.lpHealToDefs.Count > 0) {
+            for(var i = 0; i < this.lpHealToDefs.Count; i++){
                 if(this.lpHealToDefs[i] > 0){
                     this.defenders[i].healLP(this.lpHealToDefs[i]);
                 }
             }
         }
-        if (this.fpHealToDefs.length > 0) {
-            for(var i = 0; i < this.fpHealToDefs.length; i++){
+        if (this.fpHealToDefs.Count > 0) {
+            for(var i = 0; i < this.fpHealToDefs.Count; i++){
                 if(this.fpHealToDefs[i] > 0){
                     this.defenders[i].healFP(this.fpHealToDefs[i]);
                 }
@@ -270,7 +270,7 @@ public  Modifier[] = []    appliedModifiers {get; set;}
         }
 
 
-        if (this.appliedModifiers.length > 0) {
+        if (this.appliedModifiers.Count > 0) {
             if (this.isHold) { //for any holds, do the stacking here
                 var indexOfNewHold = this.appliedModifiers.FindIndex(x => x.isAHold());
 

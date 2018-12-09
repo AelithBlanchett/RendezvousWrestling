@@ -546,8 +546,8 @@ public [/color] [b][colorfocusLine = "  [color=orange]${this.user.hasFeature(Fea
 public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] "        var turnsFocusLine = "  [color=orange]turns ${this.user.hasFeature(FeatureType.DomSubLover) ? "being too submissive"  {get; set;}
         var bondageLine = "  [color=purple]bondage items ${this.bondageItemsOnSelf()}|${RWGameSettings.maxBondageItemsOnSelf}[/color] ";
 public  ${this.getListOfActiveModifiers()}[/color] "        var modifiersLine = "  [color=cyan]affected by {get; set;}
-        var targetLine = "  [color=red]target( " + ((this.targets != null && this.targets.length > 0) ? "${this.targets.join(" s), "None set yet! (!targets charactername)" ").toString()}" ) + "[/color]";
+        var targetLine = "  [color=red]target( " + ((this.targets != null && this.targets.Count > 0) ? "${this.targets.join(" s), "None set yet! (!targets charactername)" ").ToString()}" ) + "[/color]";
 
-        return "${Utils.pad(50, ""  nameLine, "-")} ${hpLine} ${lpLine} ${livesLine} ${focusLine} ${turnsFocusLine} ${bondageLine} ${(this.getListOfActiveModifiers().length > 0 ? modifiersLine )} ${targetLine}";
+        return "${Utils.pad(50, ""  nameLine, "-")} ${hpLine} ${lpLine} ${livesLine} ${focusLine} ${turnsFocusLine} ${bondageLine} ${(this.getListOfActiveModifiers().Count > 0 ? modifiersLine )} ${targetLine}";
     }
 }

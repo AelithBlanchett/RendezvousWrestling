@@ -39,7 +39,7 @@ public class ModifierFactory{
         if(parameters.sEvent != null){
             var listOfEvents = Utils.getEnumList(Trigger);
             for(var trigger in listOfEvents){
-                if(listOfEvents[trigger].toLowerCase() == parameters.sEvent.toLowerCase()){
+                if(listOfEvents[trigger].ToLower() == parameters.sEvent.ToLower()){
                     parameters.triggeringEvent = Trigger[listOfEvents[trigger]];
                     eventFound = true;
                 }
@@ -56,7 +56,7 @@ public class ModifierFactory{
         if(parameters.sTimeToTrigger != null){
             var listOfEvents = Utils.getEnumList(TriggerMoment);
             for(var trigger in listOfEvents){
-                if(listOfEvents[trigger].toLowerCase() == parameters.sTimeToTrigger.toLowerCase()){
+                if(listOfEvents[trigger].ToLower() == parameters.sTimeToTrigger.ToLower()){
                     parameters.timeToTrigger = TriggerMoment[listOfEvents[trigger]];
                     timeToTriggerFound = true;
                 }
@@ -90,7 +90,7 @@ public class ModifierFactory{
             throw new Error("This modifier wasn't found in the ModifierType list.");
         }
 
-        var indexOfSearchedModifier = (<any>modifiersList).FindIndex(x => x.name.toLowerCase() == realModifierName.toLowerCase());
+        var indexOfSearchedModifier = (<any>modifiersList).FindIndex(x => x.name.ToLower() == realModifierName.ToLower());
         if(indexOfSearchedModifier != -1){
             inputParameters = ModifierFactory.checkAndInitializeDefaultValues(indexOfSearchedModifier, realModifierName, inputParameters);
             modifier = new Modifier(modifierName, fight, receiver, applier , inputParameters.tier, inputParameters.uses, inputParameters.timeToTrigger, inputParameters.triggeringEvent, inputParameters.parentIds);

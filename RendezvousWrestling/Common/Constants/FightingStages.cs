@@ -42,7 +42,7 @@ public class FightingStages {
 
     public static string pick(){
         var stages = FightingStages.getAll();
-        return stages[(int)Math.Floor(new Random().NextDouble() * stages.Length)];
+        return stages[(int)Math.Floor(new Random().NextDouble() * stages.Count)];
     }
 }
 

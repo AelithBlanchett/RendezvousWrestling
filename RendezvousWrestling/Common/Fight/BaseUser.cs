@@ -27,7 +27,7 @@ public abstract class BaseUser
 
     public string getFeaturesList()
     {
-        var strResult = [];
+        var strResult = new List<string>();
         foreach (var feature in Features)
         {
             var usesLeft = "";
@@ -41,7 +41,7 @@ public abstract class BaseUser
             }
             strResult.Add($"${feature.Type}${usesLeft}");
         }
-        return strResult.join(", ");
+        return string.Join(", ", strResult);
     }
 
     public string getAchievementsList()
@@ -56,7 +56,7 @@ public abstract class BaseUser
 
     public void removeFeature(string type)
     {
-        var index = this.Features.FindIndex(x => x.type == type);
+        var index = this.Features.FindIndex(x => x.Type == type);
         if (index != -1)
         {
             this.Features.RemoveAt(index);

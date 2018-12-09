@@ -30,7 +30,7 @@ public class Utils {
     }
 
 
-public static bool willTriggerForEvent( TriggerMoment checkedMoment, Trigger checkedEvent, TriggerMoment searchedMoment, Trigger searchedEvent)
+public static bool willTriggerForEvent( TriggerMoment checkedMoment, TriggerMoment searchedMoment, Trigger checkedEvent,  Trigger searchedEvent)
 {
         var canPass = false;
 

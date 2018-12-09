@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
+public abstract class BaseFighterState
 {
 
     public Team assignedTeam { get; set; } = Team.White;
@@ -18,15 +18,15 @@ public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
     public bool deleted { get; set; } = false;
     public FightStatus fightStatus { get; set; }
 
-    public BaseFight<BaseFighterState<Modifier>, Modifier> fight { get; set; }
+    public BaseFight fight { get; set; }
     public BaseUser user { get; set; }
-    public List<Modifier> modifiers { get; set; }
+    public List<BaseModifier> modifiers { get; set; }
 
     public Dice dice { get; set; }
 
-    public string name { get { return this.user.Name } }
+    public string name { get { return this.user.Name; } }
 
-    public BaseFighterState(BaseFight<BaseFighterState<Modifier>, Modifier> fight, BaseUser fighter)
+    public BaseFighterState(BaseFight fight, BaseUser fighter)
     {
         this.fight = fight;
         this.user = fighter;
@@ -40,7 +40,7 @@ public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
         this.lastTagTurn = 9999999;
         this.distanceFromRingCenter = 0;
         this.wantsDraw = false;
-        this.modifiers = new List<Modifier>();
+        this.modifiers = new List<BaseModifier>();
         this.targets = new List<string>();
 
         this.dice = new Dice(GameSettings.diceSides);
@@ -48,14 +48,14 @@ public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
         this.lastDiceRoll = 0;
     }
 
-    public void assignFight(BaseFight<BaseFighterState<Modifier>, Modifier> fight)
+    public void assignFight(BaseFight fight)
     {
         this.fight = fight;
     }
 
-    public List<BaseFighterState<Modifier>> getTargets()
+    public List<BaseFighterState> getTargets()
     {
-        var fighters = new List<BaseFighterState<Modifier>>();
+        var fighters = new List<BaseFighterState>();
         foreach (var name in this.targets)
         {
             var fighter = this.fight.getFighterByName(name);
@@ -67,14 +67,14 @@ public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
         return fighters;
     }
 
-    public void checkAchievements(BaseFight<BaseFighterState<Modifier>, Modifier> fight = null)
+    public string checkAchievements(BaseFight fight = null)
     {
         var strBase = "[color=yellow][b]Achievements unlocked for ${this.name}![/b][/color]\n";
         var added = AchievementManager.checkAll(this.user, this, fight);
 
-        if (added.length > 0)
+        if (added.Count > 0)
         {
-            strBase += added.join("\n");
+            strBase += string.Join("\n", added);
         }
         else
         {
@@ -138,7 +138,7 @@ public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
         foreach (var mod in this.modifiers)
         {
             var message = mod.trigger(moment, @triggeringEvent, objFightAction);
-            if (message.length > 0)
+            if (message.Count > 0)
             {
                 this.fight.message.addSpecial(message);
                 atLeastOneModWasActivated = true;
@@ -147,227 +147,255 @@ public abstract class BaseFighterState<Modifier> where Modifier : BaseModifier
         return atLeastOneModWasActivated;
     }
 
-    public bool triggerFeatures<OptionalParameterType>(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters){
-    bool atLeastOneFeatureWasActivated = false;
-    foreach (var feat in this.user.Features)
+    public bool triggerFeatures<OptionalParameterType>(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters)
     {
-        var message = feat.trigger(moment, @triggeringEvent, parameters);
-        if (message.length > 0)
+        bool atLeastOneFeatureWasActivated = false;
+        foreach (var feat in this.user.Features)
         {
-            this.fight.message.addSpecial(message);
-            atLeastOneFeatureWasActivated = true;
+            var message = feat.Trigger(moment, @triggeringEvent, parameters);
+            if (!string.IsNullOrEmpty(message))
+            {
+                this.fight.message.addSpecial(message);
+                atLeastOneFeatureWasActivated = true;
+            }
+        }
+        return atLeastOneFeatureWasActivated;
+    }
+
+    public void removeMod(string idMod)
+    { //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
+        var index = this.modifiers.FindIndex(x => x.idModifier == idMod);
+        if (index != -1)
+        {
+            this.modifiers[index].remove();
         }
     }
-    return atLeastOneFeatureWasActivated;
-}
 
-public void removeMod(string idMod) { //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
-    var index = this.modifiers.FindIndex(x => x.idModifier == idMod);
-    if (index != -1)
+    public FightLength fightDuration()
     {
-        this.modifiers[index].remove();
+        if (this.fight != null)
+        {
+            return this.fight.fightLength;
+        }
+        else
+        {
+            return FightLength.Long;
+        }
     }
-}
 
-public FightLength fightDuration()
-{
-    if (this.fight != null)
+    public void triggerInsideRing()
     {
-        return this.fight.fightLength;
+        this.isInTheRing = true;
     }
-    else
-    {
-        return FightLength.Long;
-    }
-}
-
-public void triggerInsideRing()
-{
-    this.isInTheRing = true;
-}
 
     public void triggerOutsideRing()
-{
-    this.isInTheRing = false;
-}
+    {
+        this.isInTheRing = false;
+    }
 
     public void triggerPermanentInsideRing()
-{
-    this.isInTheRing = false;
-    this.canMoveFromOrOffRing = false;
-}
+    {
+        this.isInTheRing = false;
+        this.canMoveFromOrOffRing = false;
+    }
 
     public void triggerPermanentOutsideRing()
-{
-    this.triggerOutsideRing();
-    this.canMoveFromOrOffRing = false;
-}
+    {
+        this.triggerOutsideRing();
+        this.canMoveFromOrOffRing = false;
+    }
 
-public abstract bool isTechnicallyOut(bool displayMessage = false)
+    public abstract bool isTechnicallyOut(bool displayMessage = false);
 
     public void requestDraw()
-{
-    this.wantsDraw = true;
-    this.fightStatus = FightStatus.Draw;
-}
+    {
+        this.wantsDraw = true;
+        this.fightStatus = FightStatus.Draw;
+    }
 
     public void unrequestDraw()
-{
-    this.wantsDraw = false;
-    this.fightStatus = FightStatus.Playing;
-}
+    {
+        this.wantsDraw = false;
+        this.fightStatus = FightStatus.Playing;
+    }
 
-    public bool isRequestingDraw() {
+    public bool isRequestingDraw()
+    {
         return this.wantsDraw;
     }
 
-public int getStunnedTier() {
-        var stunTier = -1;
-        foreach (var mod in this.modifiers) {
-    if (mod.receiver.name == this.name && mod.name == "Stun")
+    public int getStunnedTier()
     {
-        stunTier = mod.tier;
-    }
-}
+        var stunTier = -1;
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == this.name && mod.name == "Stun")
+            {
+                stunTier = mod.tier;
+            }
+        }
         return stunTier;
-}
+    }
 
-public bool isStunned() {
+    public bool isStunned()
+    {
         return this.getStunnedTier() >= 0;
     }
 
-public bool isApplyingHold() {
+    public bool isApplyingHold()
+    {
         var isApplyingHold = false;
-        foreach (var mod in this.modifiers) {
-    if (mod.receiver.name == this.name && mod.isAHold())
-    {
-        isApplyingHold = true;
-    }
-}
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == this.name && mod.isAHold())
+            {
+                isApplyingHold = true;
+            }
+        }
         return isApplyingHold;
-}
+    }
 
-public int isApplyingHoldOfTier() {
+    public int isApplyingHoldOfTier()
+    {
         var tier = -1;
-        foreach (var mod in this.modifiers) {
-    if (mod.receiver.name == this.name && mod.isAHold())
-    {
-        tier = mod.tier;
-    }
-}
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == this.name && mod.isAHold())
+            {
+                tier = mod.tier;
+            }
+        }
         return tier;
-}
-
-public bool isInHold() {
-        var isInHold = false;
-        foreach (var mod in this.modifiers) {
-    if (mod.receiver.name == this.name && mod.isAHold())
-    {
-        isInHold = true;
     }
-}
-        return isInHold;
-}
 
-//May have to move
-public bool isInSpecificHold(string holdType) {
-        var isInHold = false;
-        foreach(var mod in this.modifiers) {
-    if (mod.receiver.name == this.name && mod.isAHold() && mod.name == holdType)
+    public bool isInHold()
     {
-        isInHold = true;
-    }
-}
+        var isInHold = false;
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == this.name && mod.isAHold())
+            {
+                isInHold = true;
+            }
+        }
         return isInHold;
-}
+    }
 
-public bool isInHoldAppliedBy(string fighterName)  {
+    //May have to move
+    public bool isInSpecificHold(string holdType)
+    {
+        var isInHold = false;
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == this.name && mod.isAHold() && mod.name == holdType)
+            {
+                isInHold = true;
+            }
+        }
+        return isInHold;
+    }
+
+    public bool isInHoldAppliedBy(string fighterName)
+    {
         var isTrue = false;
-        foreach (var mod in this.modifiers) {
-    if (mod.receiver.name == fighterName && mod.isAHold())
-    {
-        isTrue = true;
-    }
-}
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == fighterName && mod.isAHold())
+            {
+                isTrue = true;
+            }
+        }
         return isTrue;
-}
+    }
 
-public int isInHoldOfTier() {
+    public int isInHoldOfTier()
+    {
         var tier = -1;
-        foreach (var mod in this.modifiers) {
-    if (mod.receiver.name == this.name && mod.isAHold())
-    {
-        tier = mod.tier;
-    }
-}
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.receiver.name == this.name && mod.isAHold())
+            {
+                tier = mod.tier;
+            }
+        }
         return tier;
-}
+    }
 
-public voidreleaseHoldsApplied()
-{
-    foreach (var mod in this.modifiers)
+    public void releaseHoldsApplied()
     {
-        if (mod.applier != null && mod.applier.name == this.name && mod.isAHold())
+        foreach (var mod in this.modifiers)
         {
-            mod.receiver.releaseHoldsAppliedBy(mod.applier.name);
+            if (mod.applier != null && mod.applier.name == this.name && mod.isAHold())
+            {
+                mod.receiver.releaseHoldsAppliedBy(mod.applier.name);
+            }
         }
     }
-}
 
-public void releaseHoldsAppliedBy(string fighterName)
-{
-    foreach (var mod in this.modifiers)
+    public void releaseHoldsAppliedBy(string fighterName)
     {
-        if (mod.applier != null && mod.applier.name == fighterName && mod.isAHold())
+        foreach (var mod in this.modifiers)
         {
-            this.removeMod(mod.idModifier);
+            if (mod.applier != null && mod.applier.name == fighterName && mod.isAHold())
+            {
+                this.removeMod(mod.idModifier);
+            }
         }
     }
-}
 
     public void escapeHolds()
-{
-    foreach (var mod in this.modifiers)
     {
-        if (mod.receiver.name == this.name && mod.isAHold())
+        foreach (var mod in this.modifiers)
         {
-            this.removeMod(mod.idModifier);
+            if (mod.receiver.name == this.name && mod.isAHold())
+            {
+                this.removeMod(mod.idModifier);
+            }
         }
     }
-}
 
-    public string getListOfActiveModifiers(){
+    public string getListOfActiveModifiers()
+    {
         var strMods = "";
-        foreach(var mod in this.modifiers){
-    strMods += mod.name + ", ";
-}
-strMods = strMods.Substring(0, strMods.Length - 2);
+        foreach (var mod in this.modifiers)
+        {
+            strMods += mod.name + ", ";
+        }
+        strMods = strMods.Substring(0, strMods.Length - 2);
         return strMods;
-}
+    }
 
-public string getStylizedName() {
+    public string getStylizedName()
+    {
         var modifierBeginning = "";
-var modifierEnding = "";
-        if (this.isTechnicallyOut()) {
-    modifierBeginning = "[s]";
-    modifierEnding = "[/s]";
-}
-        else if (!this.isInTheRing) {
-    modifierBeginning = "[i]";
-    modifierEnding = "[/i]";
-}
-        return "${modifierBeginning}[b][color=${Team[this.assignedTeam].toLowerCase()}]${this.name}[/color][/b]${modifierEnding}";
-}
+        var modifierEnding = "";
+        if (this.isTechnicallyOut())
+        {
+            modifierBeginning = "[s]";
+            modifierEnding = "[/s]";
+        }
+        else if (!this.isInTheRing)
+        {
+            modifierBeginning = "[i]";
+            modifierEnding = "[/i]";
+        }
+        return "${modifierBeginning}[b][color=${Team[this.assignedTeam].ToLower()}]${this.name}[/color][/b]${modifierEnding}";
+    }
 
-public bool isInRange(List<BaseFighterState<Modifier>> targets) {
+    public bool isInRange(List<BaseFighterState> targets)
+    {
         var result = true;
-        foreach(var target in targets){
-            if((target.distanceFromRingCenter - this.distanceFromRingCenter) > GameSettings.maximumDistanceToBeConsideredInRange){
-    result = false;
-}
-}
+        foreach (var target in targets)
+        {
+            if ((target.distanceFromRingCenter - this.distanceFromRingCenter) > GameSettings.maximumDistanceToBeConsideredInRange)
+            {
+                result = false;
+            }
+        }
         return result;
     }
 
     public abstract string outputStatus();
+
+    public abstract void save();
 }

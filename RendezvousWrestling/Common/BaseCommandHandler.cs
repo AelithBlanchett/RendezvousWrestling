@@ -62,7 +62,7 @@ public string = "Tina Armstrong"    debugImpersonatedCharacter {get; set;}
     }
 
     public async void addfeature(string args,IMsgEvent  data) {
-        var parsedFeatureArgs = Parser.parseArgs(2, [typeof("").toString(), typeof(1).toString()], args);
+        var parsedFeatureArgs = Parser.parseArgs(2, [typeof("").ToString(), typeof(1).ToString()], args);
         TUser fighter = await (await this.database()).findOne(this.User, data.character);
         if (fighter != undefined) {
             try {
@@ -127,7 +127,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
 
             }
             else{
-                this.fChatLibInstance.sendPrivMessage(string.Format(Messages.errorNotEnoughMoney, [GameSettings.restatCostInTokens.toString()]), data.character);
+                this.fChatLibInstance.sendPrivMessage(string.Format(Messages.errorNotEnoughMoney, [GameSettings.restatCostInTokens.ToString()]), data.character);
             }
 
 
@@ -448,7 +448,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
                     }
                 }
                 else{
-                    this.fChatLibInstance.sendPrivMessage(string.Format(Messages.errorNotEnoughMoney, [amount.toString()]), data.character);
+                    this.fChatLibInstance.sendPrivMessage(string.Format(Messages.errorNotEnoughMoney, [amount.ToString()]), data.character);
                 }
             }
             else{
@@ -461,7 +461,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
     };
 
     public async void removefeature(string args,IMsgEvent  data) {
-        var parsedFeatureArgs = Parser.parseArgs(1, [typeof("").toString()], args);
+        var parsedFeatureArgs = Parser.parseArgs(1, [typeof("").ToString()], args);
 
         try {
             TUser fighter = await (await this.database()).findOne(this.User, data.character);
@@ -537,7 +537,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
 
     public async void usedice(string args,IMsgEvent  data) {
         if (this.fChatLibInstance.isUserChatOP(data.character, data.channel)) {
-            var flag = (args.toLowerCase().IndexOf("no") != -1);
+            var flag = (args.ToLower().IndexOf("no") != -1);
             this.fight.setDiceLess(flag);
             return;
         }
@@ -545,7 +545,7 @@ public  " + fighter.featureFactory.getExistingFeatures().join(", "), data.charac
         TUser fighter = await (await this.database()).findOne(this.User, data.character);
 
         if (fighter != null) {
-            var flag = (args.toLowerCase().IndexOf("no") != -1);
+            var flag = (args.ToLower().IndexOf("no") != -1);
             this.fight.setDiceLess(flag);
         }
         else {
@@ -730,8 +730,8 @@ public IFChatLib//     fChatLibInstance {get; set;}
 //     var privHandler = new PrivateCommandHandler(parent);
 //
 //     var opts = {
-//         command: String(data.message.split(' ')[0]).replace('!', '').trim().toLowerCase(),
-//         argument: data.message.substring(String(data.message.split(' ')[0]).length).trim()
+//         command: String(data.message.split(' ')[0]).replace('!', '').trim().ToLower(),
+//         argument: data.message.substring(String(data.message.split(' ')[0]).Count).trim()
 //     };
 //
 //     if (typeof privHandler[opts.command] === 'function') {

@@ -43,7 +43,7 @@ public abstract class BaseFeature
     public string Trigger<OptionalParameterType>(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters)
     {
         var triggeredFeatureMessage = this.applyFeature(moment, @triggeringEvent, parameters);
-        var wasFeatureTriggered = (triggeredFeatureMessage.Length > 0);
+        var wasFeatureTriggered = (triggeredFeatureMessage.Count > 0);
 
         string messageAboutFeature = "";
 

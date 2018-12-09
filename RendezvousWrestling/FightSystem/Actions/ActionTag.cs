@@ -53,7 +53,7 @@ public class ActionTag extends RWAction {
     checkRequirements():void{
         super.checkRequirements();
         var turnsSinceLastTag = (this.attacker.lastTagTurn - this.fight.currentTurn);
-        var turnsToWait = (GameSettings.turnsToWaitBetweenTwoTags * this.fight.getAlivePlayers().filter(x => x.assignedTeam == this.attacker.assignedTeam).length) - turnsSinceLastTag;
+        var turnsToWait = (GameSettings.turnsToWaitBetweenTwoTags * this.fight.getAlivePlayers().filter(x => x.assignedTeam == this.attacker.assignedTeam).Count) - turnsSinceLastTag;
         if(turnsToWait > 0){
 public  ${turnsToWait}[/color][/b]")            throw new Error($"[b][color=red]You can't tag yet. Turns left {get; set;}
         }

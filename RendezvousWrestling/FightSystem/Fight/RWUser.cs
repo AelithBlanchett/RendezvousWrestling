@@ -41,7 +41,7 @@ public RWFighterStats    stats {get; set;}
     }
 
     restat(statArray:Array<int>){
-        for(var i = 0; i < statArray.length;  i++){
+        for(var i = 0; i < statArray.Count;  i++){
             this[Stats[i]] = statArray[i];
         }
     }

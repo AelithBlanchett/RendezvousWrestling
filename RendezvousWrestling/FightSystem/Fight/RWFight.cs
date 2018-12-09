@@ -21,7 +21,7 @@ public string    test {get; set;}
     }
 
     public async void nextTurn(){
-        for (var fighter of this.fighters) {
+        foreach (var fighter in this.fighters) {
             fighter.triggerMods(TriggerMoment.Any, Trigger.TurnChange);
             if(!fighter.isInHold()){
                 fighter.healFP(1);
@@ -37,7 +37,7 @@ public string    test {get; set;}
     }
 
     punishPlayerOnForfeit(fighter: RWFighterState) {
-        this.message.addHit(string.Format(Messages.forfeitItemApply, [fighter.getStylizedName(), fighter.maxBondageItemsOnSelf().toString()]));
+        this.message.addHit(string.Format(Messages.forfeitItemApply, [fighter.getStylizedName(), fighter.maxBondageItemsOnSelf().ToString()]));
         for(var i = 0; i < fighter.maxBondageItemsOnSelf(); i++){
             fighter.modifiers.Add(ModifierFactory.getModifier(ModifierType.Bondage, this, fighter, null));
         }

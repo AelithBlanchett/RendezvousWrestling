@@ -14,7 +14,7 @@ public class AchievementManager {
         return AchievementManager.getAll().FirstOrDefault(x => x.getName() == name);
     }
 
-    public static string[] checkAll(BaseUser fighter, BaseFighterState<BaseModifier> activeFighter, BaseFight<BaseFighterState<BaseModifier>, BaseModifier> fight = null){
+    public static List<string> checkAll(BaseUser fighter, BaseFighterState activeFighter, BaseFight fight = null){
         var addedInfo = new List<string>();
         var achievements = AchievementManager.getAll();
 
@@ -27,7 +27,7 @@ public class AchievementManager {
                 addedInfo.Add($"{ achievement.getDetailedDescription()} Reward: { achievement.getReward()} { GameSettings.currencyName}");
             }
         }
-        return addedInfo.ToArray();
+        return addedInfo;
     }
 }
 

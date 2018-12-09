@@ -1,4 +1,6 @@
-public interface IActionFactory<Fight, FighterState, Modifier> where Modifier : BaseModifier where FighterState : BaseFighterState<Modifier> where Fight : BaseFight<FighterState, Modifier>
+using System.Collections.Generic;
+
+public interface IActionFactory
 {
-    BaseActiveAction<Fight, FighterState, Modifier> GetAction(string actionName, Fight fight, FighterState attacker, FighterState[] defenders, int tier);   
+    BaseActiveAction GetAction(string actionName, BaseFight fight, BaseFighterState attacker, List<BaseFighterState> defenders, int tier);   
 }

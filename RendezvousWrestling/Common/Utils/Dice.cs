@@ -45,7 +45,7 @@ public class Dice
             result = this.getResult(times);
         }
         this.lastRolls.Add(result);
-        if (this.lastRolls.length > 3)
+        if (this.lastRolls.Count > 3)
         {
             this.lastRolls.shift();
         }
@@ -69,7 +69,7 @@ public class Dice
             this.refreshTmpMods();
         }
 
-        return res.length === 1 ? res[0] : res.reduce(function(a, b){ return a + b; });
+        return res.Count === 1 ? res[0] : res.reduce(function(a, b){ return a + b; });
     }
 
     // Mods

@@ -43,14 +43,14 @@ public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!read
 
 //            if (this.fight.currentPlayer.name == firstCharData.character)
 //            {
-//                var randomCommand = availableCommands[Utils.getRandomInt(0, availableCommands.length)].toLowerCase();
-//                var randomTier = availableTiers[Utils.getRandomInt(0, availableTiers.length)].toLowerCase();
+//                var randomCommand = availableCommands[Utils.getRandomInt(0, availableCommands.Count)].ToLower();
+//                var randomTier = availableTiers[Utils.getRandomInt(0, availableTiers.Count)].ToLower();
 //                await this[randomCommand].apply(this, [randomTier, firstCharData]);
 //            }
 //            else if (this.fight.currentPlayer.name == secondCharData.character)
 //            {
-//                var randomCommandTina = availableCommands[Utils.getRandomInt(0, availableCommands.length)].toLowerCase();
-//                var randomTierTina = availableTiers[Utils.getRandomInt(0, availableTiers.length)].toLowerCase();
+//                var randomCommandTina = availableCommands[Utils.getRandomInt(0, availableCommands.Count)].ToLower();
+//                var randomTierTina = availableTiers[Utils.getRandomInt(0, availableTiers.Count)].ToLower();
 //                await this[randomCommandTina].apply(this, [randomTierTina, secondCharData]);
 //            }
 
@@ -342,7 +342,7 @@ public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!read
 //{
 //    if (this.fChatLibInstance.isUserMaster(data.character) && this.fight.hasStarted && this.fight.debug)
 //    {
-//        for (var fighter of this.fight.fighters)
+//        foreach (var fighter in this.fight.fighters)
 //        {
 //            fighter.livesRemaining = fighter.maxLives(); //to prevent ending the fight this way
 //            fighter.consecutiveTurnsWithoutFocus = 0; //to prevent ending the fight this way

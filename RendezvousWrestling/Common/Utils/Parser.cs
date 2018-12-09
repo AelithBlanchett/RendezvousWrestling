@@ -35,7 +35,7 @@ public class Parser{
         if(error){
             var concatenatedTypes = "";
             for(var i = 0; i < nberAwaitedArgs; i++){
-                concatenatedTypes += " " + typeof(awaitedTypes[i]).toString().toUpperCase();
+                concatenatedTypes += " " + typeof(awaitedTypes[i]).ToString().toUpperCase();
             }
             throw new Error($"The command you executed received the wrong int of parameters, '!command${concatenatedTypes}'"  and/or the wrong type of parameters. Correct syntax is)
         }
@@ -44,9 +44,9 @@ public class Parser{
     public static join(args){
         var teams = Utils.getEnumList(Team);
         for(var teamId in teams){
-            teams[teamId] = teams[teamId].toLowerCase();
+            teams[teamId] = teams[teamId].ToLower();
         }
-        var indexOfTeam = teams.IndexOf(args.toLowerCase());
+        var indexOfTeam = teams.IndexOf(args.ToLower());
         if(indexOfTeam != -1){
             return Team[Team[indexOfTeam]];
         }
@@ -71,11 +71,11 @@ public class Parser{
         int statOverflow = intOfRequiredStatPoints - (intStatsToAssign * intOfDifferentStats);
 
         for(var i = 0; i < intOfDifferentStats - 1; i++){
-            exampleStats += intStatsToAssign.toString() + ",";
+            exampleStats += intStatsToAssign.ToString() + ",";
         }
-        exampleStats += (intStatsToAssign + statOverflow).toString();
+        exampleStats += (intStatsToAssign + statOverflow).ToString();
 
-        if (arrParam.length != intOfDifferentStats) {
+        if (arrParam.Count != intOfDifferentStats) {
 public  !register ${exampleStats}"           return "The int of parameters was incorrect. Example {get; set;}
         }
         else if (!arrParam.every(arg => Parser.isInt(arg))) {
@@ -108,7 +108,7 @@ public  null, amount: -1, message: null}        var result = {player {get; set;}
         var splittedArgs = args.split($" ");
         var amount = 0;
 
-        if(splittedArgs.length > 1){
+        if(splittedArgs.Count > 1){
             if(isNaN(splittedArgs[0]) || splittedArgs[0] <= GameSettings.tippingMinimum){
                 result.message = "The specified amount is invalid. It must be a int > ${GameSettings.tippingMinimum}.";
                 return result;
@@ -131,9 +131,9 @@ public  null, amount: -1, message: null}        var result = {player {get; set;}
     public static setFightType(args):FightType{
         var fightTypes = Utils.getEnumList(FightType);
         for(var fightTypeId in fightTypes){
-            fightTypes[fightTypeId] = fightTypes[fightTypeId].toLowerCase();
+            fightTypes[fightTypeId] = fightTypes[fightTypeId].ToLower();
         }
-        var indexOfFightType = fightTypes.IndexOf(args.toLowerCase());
+        var indexOfFightType = fightTypes.IndexOf(args.ToLower());
         if(indexOfFightType != -1){
             return FightType[FightType[indexOfFightType]];
         }
@@ -143,9 +143,9 @@ public  null, amount: -1, message: null}        var result = {player {get; set;}
     public static setFightLength(args):FightLength{
         var fightDurations = Utils.getEnumList(FightLength);
         for(var fightTypeId in fightDurations){
-            fightDurations[fightTypeId] = fightDurations[fightTypeId].toLowerCase();
+            fightDurations[fightTypeId] = fightDurations[fightTypeId].ToLower();
         }
-        var indexOfFightDuration = fightDurations.IndexOf(args.toLowerCase());
+        var indexOfFightDuration = fightDurations.IndexOf(args.ToLower());
         if(indexOfFightDuration != -1){
             return FightLength[FightLength[indexOfFightDuration]];
         }
