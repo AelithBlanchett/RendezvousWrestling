@@ -16,7 +16,7 @@ public class FightFinishers {
 
     public static string pick(){
         var finishers = FightFinishers.getAll();
-        return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Count)];
+        return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Count())];
     }
 }
 

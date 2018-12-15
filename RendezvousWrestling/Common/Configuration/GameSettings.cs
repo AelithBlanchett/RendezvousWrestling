@@ -7,7 +7,7 @@ public class GameSettings
     public static string currencyName { get; set; } = "tokens";
     public static int currentSeason { get; set; } = 1;
 
-    public static int intOfAvailableTeams { get; set; } = (Enum.GetValues(typeof(Team)).Count -2);
+    public static int intOfAvailableTeams { get; set; } = (Enum.GetValues(typeof(Team)).Length -2);
     public static int diceSides { get; set; } = 10;
     public static int diceCount { get; set; } = 2;
 

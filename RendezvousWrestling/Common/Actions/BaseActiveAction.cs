@@ -22,7 +22,7 @@ public abstract class BaseActiveAction : BaseAction
     public int DiceRequiredRoll { get; set; }
     public bool Missed { get; set; } = false;
 
-    public Modifier[] AppliedModifiers { get; set; } = new Modifier[0];
+    public List<BaseModifier> AppliedModifiers { get; set; } = new List<BaseModifier>();
 
     public Trigger Trigger { get; set; }
 
@@ -30,64 +30,64 @@ public abstract class BaseActiveAction : BaseAction
     public string[] TemporaryIdDefenders { get; set; }
     public string TemporaryIdFight { get; set; }
 
-    public BaseActiveAction(BaseFight Fight,
-BaseFighterState Attacker,
-BaseFighterState[] Defenders,
-string name,
- int tier,
- bool isHold,
-bool requiresRoll,
-bool keepActorsTurn,
-bool singleTarget,
-bool requiresBeingAlive,
-bool requiresBeingDead,
-bool requiresBeingInRing,
-bool requiresBeingOffRing,
-bool targetMustBeAlive,
-bool targetMustBeDead,
-bool targetMustBeInRing,
-bool targetMustBeOffRing,
-bool targetMustBeInRange,
-bool targetMustBeOffRange,
-bool requiresBeingInHold,
-bool requiresNotBeingInHold,
-bool targetMustBeInHold,
-bool targetMustNotBeInHold,
-bool usableOnSelf,
-bool usableOnAllies,
-bool usableOnEnemies,
-Trigger trigger,
-string explanation = null,
-                int? maxTargets = null) : base(name,
-              tier,
-              isHold,
-              requiresRoll,
-              keepActorsTurn,
-              singleTarget,
-              requiresBeingAlive,
-              requiresBeingDead,
-              requiresBeingInRing,
-              requiresBeingOffRing,
-              targetMustBeAlive,
-              targetMustBeDead,
-              targetMustBeInRing,
-              targetMustBeOffRing,
-              targetMustBeInRange,
-              targetMustBeOffRange,
-              requiresBeingInHold,
-              requiresNotBeingInHold,
-              targetMustBeInHold,
-              targetMustNotBeInHold,
-              usableOnSelf,
-              usableOnAllies,
-              usableOnEnemies,
-              trigger,
-              explanation,
-              maxTargets)
+    public BaseActiveAction(BaseFight fight,
+                            BaseFighterState attacker,
+                            List<BaseFighterState> defenders,
+                            string name,
+                             int tier,
+                             bool isHold,
+                            bool requiresRoll,
+                            bool keepActorsTurn,
+                            bool singleTarget,
+                            bool requiresBeingAlive,
+                            bool requiresBeingDead,
+                            bool requiresBeingInRing,
+                            bool requiresBeingOffRing,
+                            bool targetMustBeAlive,
+                            bool targetMustBeDead,
+                            bool targetMustBeInRing,
+                            bool targetMustBeOffRing,
+                            bool targetMustBeInRange,
+                            bool targetMustBeOffRange,
+                            bool requiresBeingInHold,
+                            bool requiresNotBeingInHold,
+                            bool targetMustBeInHold,
+                            bool targetMustNotBeInHold,
+                            bool usableOnSelf,
+                            bool usableOnAllies,
+                            bool usableOnEnemies,
+                            Trigger trigger,
+                            string explanation = null,
+                                            int? maxTargets = null) : base(name,
+                                          tier,
+                                          isHold,
+                                          requiresRoll,
+                                          keepActorsTurn,
+                                          singleTarget,
+                                          requiresBeingAlive,
+                                          requiresBeingDead,
+                                          requiresBeingInRing,
+                                          requiresBeingOffRing,
+                                          targetMustBeAlive,
+                                          targetMustBeDead,
+                                          targetMustBeInRing,
+                                          targetMustBeOffRing,
+                                          targetMustBeInRange,
+                                          targetMustBeOffRange,
+                                          requiresBeingInHold,
+                                          requiresNotBeingInHold,
+                                          targetMustBeInHold,
+                                          targetMustNotBeInHold,
+                                          usableOnSelf,
+                                          usableOnAllies,
+                                          usableOnEnemies,
+                                          trigger,
+                                          explanation,
+                                          maxTargets)
     {
-        this.Fight = Fight;
-        Attacker = Attacker;
-        Defenders = Defenders;
+        Fight = fight;
+        Attacker = attacker;
+        Defenders = defenders;
         AtTurn = this.Fight.currentTurn;
         DiceRollRawValue = 0;
         DiceRollBonusFromStat = 0;
@@ -97,7 +97,7 @@ string explanation = null,
         DifficultyExplanation = "";
         DiceRequiredRoll = 0;
         Missed = false;
-        AppliedModifiers = new Modifier[0];
+        AppliedModifiers = new List<BaseModifier>();
     }
 
     public BaseFighterState Defender
@@ -141,7 +141,7 @@ string explanation = null,
         this.applyDamage();
     }
 
-    public abstract void  applyDamage();
+    public abstract void applyDamage();
 
     public int roll()
     {

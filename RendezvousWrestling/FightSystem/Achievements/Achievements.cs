@@ -1,11 +1,3 @@
-import {IAchievement} from "../../Common/Achievements/IAchievement";
-import {BaseFighterState} from "../../Common/Fight/BaseFighterState";
-import {BaseFight} from "../../Common/Fight/BaseFight";
-import {RWFight} from "../Fight/RWFight";
-import {AchievementManager} from "../../Common/Achievements/AchievementManager";
-import {FightTier} from "../../Common/Constants/FightTier";
-import {BaseAchievement} from "../../Common/Achievements/BaseAchievement";
-import {BaseUser} from "../../Common/Fight/BaseUser";
 
 public class RookieAchievement extends BaseAchievement{
 public  DateTime    createdAt {get; set;}
