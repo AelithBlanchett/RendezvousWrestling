@@ -36,21 +36,21 @@ public class GameSettings
     public static int maximumDistanceToBeConsideredInRange { get; set; } = 10;
 
     //TODO CONFIG FILE LOADING
-//    public static void loadConfigFile(dynamic configJson)
-//    {
-//    for (var prop of Object.getOwnPropertyNames(configJson))
-//    {
-//        this[prop] = configJson[prop];
-//    }
-//}
+    public static void loadConfigFile(dynamic configJson)
+    {
+        //for (var prop of Object.getOwnPropertyNames(configJson))
+        //{
+        //    this[prop] = configJson[prop];
+        //}
+    }
 
-//static getJsonOutput() :string{
-//        any configJson = { };
+    //static getJsonOutput() :string{
+    //        any configJson = { };
 
-//        for(var prop of Object.getOwnPropertyNames(this)){
-//    configJson[prop] = this[prop];
-//}
+    //        for(var prop of Object.getOwnPropertyNames(this)){
+    //    configJson[prop] = this[prop];
+    //}
 
-//        return configJson;
-//}
+    //        return configJson;
+    //}
 }

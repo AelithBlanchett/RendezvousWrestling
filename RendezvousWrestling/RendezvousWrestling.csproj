@@ -12,6 +12,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="FightSystem\Actions\ActionBondage.cs" />
+    <Compile Include="FightSystem\Actions\RWAction.cs" />
+    <Compile Include="FightSystem\Actions\RWActionFactory.cs" />
+    <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
+    <Compile Include="FightSystem\Constants\Stats.cs" />
+    <Compile Include="FightSystem\Constants\Tiers.cs" />
+    <Compile Include="FightSystem\Fight\RWFight.cs" />
+    <Compile Include="FightSystem\Fight\RWFighterState.cs" />
+    <Compile Include="FightSystem\Fight\RWFighterStats.cs" />
+    <Compile Include="FightSystem\Fight\RWUser.cs" />
+    <Compile Include="FightSystem\RWConstants.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FChatSharpLib" Version="0.5.0" />
   </ItemGroup>
 

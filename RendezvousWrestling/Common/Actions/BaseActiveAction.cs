@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class BaseActiveAction : BaseAction
+public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where TFight : BaseFight where TFighterState : BaseFighterState
 {
 
-    public BaseFight Fight { get; set; }
+    public TFight Fight { get; set; }
 
-    public BaseFighterState Attacker { get; set; }
+    public TFighterState Attacker { get; set; }
 
-    public List<BaseFighterState> Defenders { get; set; }
+    public List<TFighterState> Defenders { get; set; }
 
     public int AtTurn { get; set; }
     public int DiceScore { get; set; }
@@ -30,9 +30,9 @@ public abstract class BaseActiveAction : BaseAction
     public string[] TemporaryIdDefenders { get; set; }
     public string TemporaryIdFight { get; set; }
 
-    public BaseActiveAction(BaseFight fight,
-                            BaseFighterState attacker,
-                            List<BaseFighterState> defenders,
+    public BaseActiveAction(TFight fight,
+                            TFighterState attacker,
+                            List<TFighterState> defenders,
                             string name,
                              int tier,
                              bool isHold,
@@ -100,7 +100,7 @@ public abstract class BaseActiveAction : BaseAction
         AppliedModifiers = new List<BaseModifier>();
     }
 
-    public BaseFighterState Defender
+    public TFighterState Defender
     {
         get
         {
@@ -175,7 +175,7 @@ public abstract class BaseActiveAction : BaseAction
     }
 
 
-    public abstract int SpecificRequiredDiceScore { get; set; }
+    public abstract int SpecificRequiredDiceScore { get; }
 
     public int addRequiredScoreWithExplanation(int value, string reason)
     {
@@ -257,11 +257,11 @@ public abstract class BaseActiveAction : BaseAction
         {
             throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetStillInRing));
         }
-        if (this.TargetMustBeInRange && !this.Attacker.isInRange(this.Defenders))
+        if (this.TargetMustBeInRange && !this.Attacker.isInRange(this.Defenders as List<BaseFighterState>))
         {
             throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeInRange));
         }
-        if (this.TargetMustBeOffRange && this.Attacker.isInRange(this.Defenders))
+        if (this.TargetMustBeOffRange && this.Attacker.isInRange(this.Defenders as List<BaseFighterState>))
         {
             throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeOffRange));
         }
@@ -315,7 +315,7 @@ public abstract class BaseActiveAction : BaseAction
     public void triggerBeforeEvent()
     {
         this.Attacker.triggerMods(TriggerMoment.Before, this.Trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter<BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
         if (this.Defender != null)
         {
             this.Defender.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));

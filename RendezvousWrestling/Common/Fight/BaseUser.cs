@@ -159,7 +159,7 @@ public abstract class BaseUser
     }
 
     public abstract string outputStats();
-    public abstract void restat(int[] statArray);
+    public abstract void restat(List<int> statArray);
     public abstract void saveTokenTransaction(string idFighter, int amount, TransactionType type, string fromFighter = null);
 
 }

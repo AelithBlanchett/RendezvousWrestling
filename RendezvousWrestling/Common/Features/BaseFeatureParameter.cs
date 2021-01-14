@@ -1,11 +1,11 @@
-public class BaseFeatureParameter
+public class BaseFeatureParameter<TFight, TFighterState, TAction> where TFight : BaseFight where TFighterState : BaseFighterState where TAction : BaseActiveAction<TFight, TFighterState>
 {
-    public BaseFight fight { get; set; }
-    public BaseFighterState fighter { get; set; }
-    public BaseFighterState target { get; set; }
-    public BaseActiveAction action { get; set; }
+    public TFight fight { get; set; }
+    public TFighterState fighter { get; set; }
+    public TFighterState target { get; set; }
+    public TAction action { get; set; }
 
-    public BaseFeatureParameter(BaseFight fight = null, BaseFighterState fighter = null, BaseFighterState target = null, BaseActiveAction action = null)
+    public BaseFeatureParameter(TFight fight = null, TFighterState fighter = null, TFighterState target = null, TAction action = null)
     {
         this.fight = fight;
         this.fighter = fighter;

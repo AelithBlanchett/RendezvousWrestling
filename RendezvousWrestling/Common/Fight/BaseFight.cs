@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 public abstract class BaseFight
 {
@@ -22,7 +23,7 @@ public abstract class BaseFight
     public bool deleted { get; set; } = false;
 
 
-    public List<BaseActiveAction> pastActions { get; set; }
+    public List<BaseActiveAction<BaseFight, BaseFighterState>> pastActions { get; set; }
     public List<BaseFighterState> fighters { get; set; }
 
     public string channel { get; set; }
@@ -40,7 +41,7 @@ public abstract class BaseFight
         this.fighters = new List<BaseFighterState>();
         this.stage = FightingStages.pick();
         this.fightType = FightType.Classic;
-        this.pastActions = new List<BaseActiveAction>();
+        this.pastActions = new List<BaseActiveAction<BaseFight, BaseFighterState>>();
         this.winnerTeam = Team.White;
         this.currentTurn = 0;
         this.season = GameSettings.currentSeason;
@@ -341,7 +342,7 @@ public abstract class BaseFight
         }
     }
 
-    public async void nextTurn()
+    public virtual async Task nextTurn()
     {
         this.currentTurn++;
 
@@ -549,7 +550,7 @@ public abstract class BaseFight
         }
     }
 
-    public void prepareAction(string attacker, string actionType, bool tierRequired, bool isCustomTargetInsteadOfTier, string args)
+    public async void prepareAction(string attacker, string actionType, bool tierRequired, bool isCustomTargetInsteadOfTier, string args)
     {
         var tier = -1;
         if (!this.isMatchInProgress())
@@ -618,7 +619,7 @@ public abstract class BaseFight
         }
         else if (!this.isOver())
         {
-            this.nextTurn();
+            await this.nextTurn();
         }
         else
         {
@@ -626,7 +627,7 @@ public abstract class BaseFight
         }
     }
 
-    public BaseActiveAction doAction(string actionName, BaseFighterState attacker, List<BaseFighterState> defenders, int tier)
+    public BaseActiveAction<BaseFight, BaseFighterState> doAction(string actionName, BaseFighterState attacker, List<BaseFighterState> defenders, int tier)
     {
         var action = this.actionFactory.GetAction(actionName, this, attacker, defenders, tier);
         action.execute();

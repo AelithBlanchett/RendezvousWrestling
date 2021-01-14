@@ -1,33 +1,29 @@
-import * as fs from "fs";
-import {GameSettings} from "../../Common/Configuration/GameSettings";
-import {Utils} from "../../Common/Utils/Utils";
-import {Team} from "../../Common/Constants/Team";
 
+public class RWGameSettings : GameSettings
+{
 
-public class RWGameSettings extends GameSettings {
+    public static decimal degradationFocusMultiplier { get; set; } = 1.66m;
+    public static int RequiredScoreForBondageAgainstBondageBunny { get; set; } = 10;
+    public static int maxBondageItemsOnSelf { get; set; } = 4;
+    public static int maxTurnsWithoutFocus { get; set; } = 6;
 
-public  int = 1.66    public static degradationFocusMultiplier {get; set;}
-public  int = 10    public static RequiredScoreForBondageAgainstBondageBunny {get; set;}
-public  int = 4    public static maxBondageItemsOnSelf {get; set;}
-public  int = 6    public static maxTurnsWithoutFocus {get; set;}
-    //Holds
-public  int = 5    public static initialintOfTurnsForHold {get; set;}
-public  int = 0.5    public static holdDamageMultiplier {get; set;}
-    //Rest
-public  int = 0.30    public static hpPercentageToHealOnRest {get; set;}
-public  int = 0.30    public static lpPercentageToHealOnRest {get; set;}
-public  int = 0.30    public static fpPercentageToHealOnRest {get; set;}
-    //Forced Lewd
-public  int = 4    public static forcedWorshipLPMultiplier {get; set;}
-    //HighRisk
-public  int = 2    public static multiplierHighRiskAttack {get; set;}
-    //Stun
-public  int = 0.33    public static stunHPDamageMultiplier {get; set;}
-public  int = 2    public static dicePenaltyMultiplierWhileStunned {get; set;}
+    public static int initialintOfTurnsForHold { get; set; } = 5;
+    public static int holdDamageMultiplier { get; set; } = 0;
 
-public  int = 10    public static passFpDamage {get; set;}
+    public static int hpPercentageToHealOnRest { get; set; } = 0;
+    public static int lpPercentageToHealOnRest { get; set; } = 0;
+    public static int fpPercentageToHealOnRest { get; set; } = 0;
 
-public  int = 2    public static fpHealOnNextTurn {get; set;}
+    public static int forcedWorshipLPMultiplier { get; set; } = 4;
 
-public int = 10    public static tapoutOnlyAfterTurnint {get; set;}
+    public static int multiplierHighRiskAttack { get; set; } = 2;
+
+    public static decimal stunHPDamageMultiplier { get; set; } = 0.33m;
+    public static int dicePenaltyMultiplierWhileStunned { get; set; } = 2;
+
+    public static int passFpDamage { get; set; } = 1;
+
+    public static int fpHealOnNextTurn { get; set; } = 2;
+
+    public static int tapoutOnlyAfterTurnint { get; set; } = 10;
 }

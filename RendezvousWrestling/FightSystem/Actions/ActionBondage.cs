@@ -1,11 +1,3 @@
-import {ActionExplanation, ActionType, RWAction} from "./RWAction";
-import {RWFighterState} from "../Fight/RWFighterState";
-import {RWFight} from "../Fight/RWFight";
-import {FeatureType, FocusDamageOnHit, FocusHealOnHit, ModifierType} from "../RWConstants";
-import {ModifierFactory} from "../Modifiers/ModifierFactory";
-import {Tiers} from "../Constants/Tiers";
-import {Trigger} from "../../Common/Constants/Trigger";
-import {RWGameSettings} from "../Configuration/RWGameSettings";
 
 public class ActionBondage extends RWAction {
 

@@ -1,28 +1,30 @@
 
-public class RookieAchievement extends BaseAchievement{
+using System;
+
+public class RookieAchievement : BaseAchievement{
 public  DateTime    createdAt {get; set;}
 
-    meetsRequirements( BaseUser user, BaseFighterState, fight?: BaseFight<BaseFighterState>  BaseActiveFighter?): bool {
+public bool meetsRequirements( BaseUser user, BaseFighterState activeFighter, BaseFight fight = null) {
         var flag = false;
         if(user != null){
-            flag = (user.statistics.fightsCount >= 1);
+            flag = (user.Statistics.fightsCount >= 1);
         }
         return flag;
     }
 
-    getDetailedDescription(): string {
+    public string getDetailedDescription() {
         return "Participate in your first fight!";
     }
 
-    getReward(): int {
-        return 3.5;
+    public decimal getReward() {
+        return 3.5m;
     }
 
-    getUniqueShortName(): string {
+    public string getUniqueShortName() {
         return "Rookie";
     }
 
-    getName():string{
+    public string getName(){
         return RookieAchievement.name;
     }
 }

@@ -1,89 +1,46 @@
-import "reflect-metadata";
-import {Utils} from "../../Common/Utils/Utils";
-import {BaseFighterState} from "../../Common/Fight/BaseFighterState";
-import {Parser} from "../../Common/Utils/Parser";
-import {Modifier} from "../Modifiers/Modifier";
-import {FeatureType, ModifierType} from "../RWConstants";
-import {GameSettings} from "../../Common/Configuration/GameSettings";
-import {FightLength} from "../../Common/Constants/FightLength";
-import {TriggerMoment} from "../../Common/Constants/TriggerMoment";
-import {Trigger} from "../../Common/Constants/Trigger";
-import {FightType} from "../../Common/Constants/FightType";
-import {TransactionType} from "../../Common/Constants/TransactionType";
-import {RWGameSettings} from "../Configuration/RWGameSettings";
-import {ChildEntity, Column, Entity, JoinColumn, OneToOne} from "typeorm";
-import {Stats} from "../Constants/Stats";
-import {BaseFight} from "../../Common/Fight/BaseFight";
-import {BaseUser} from "../../Common/Fight/BaseUser";
-import {RWFight} from "./RWFight";
-import {RWUser} from "./RWUser";
 
-@ChildEntity("rw")
-public class RWFighterState extends BaseFighterState{
+using System;
 
-    @Column()
-public int = 0    hp {get; set;}
-    @Column()
-public int = 0    lust {get; set;}
-    @Column()
-public int = 0    livesRemaining {get; set;}
-    @Column()
-public int = 0    focus {get; set;}
-    @Column()
-public int    consecutiveTurnsWithoutFocus {get; set;}
+public class RWFighterState : BaseFighterState
+{
 
-    @Column()
-public int    startingPower {get; set;}
-    @Column()
-public int    startingSensuality {get; set;}
-    @Column()
-public int    startingToughness {get; set;}
-    @Column()
-public int    startingEndurance {get; set;}
-    @Column()
-public int    startingDexterity {get; set;}
-    @Column()
-public int    startingWillpower {get; set;}
-    @Column()
-public int    powerDelta {get; set;}
-    @Column()
-public int    sensualityDelta {get; set;}
-    @Column()
-public int    toughnessDelta {get; set;}
-    @Column()
-public int    enduranceDelta {get; set;}
-    @Column()
-public int    dexterityDelta {get; set;}
-    @Column()
-public int    willpowerDelta {get; set;}
+    public int hp { get; set; } = 0;
+    public int lust { get; set; } = 0;
+    public int livesRemaining { get; set; } = 0;
+    public int focus { get; set; } = 0;
+    public int consecutiveTurnsWithoutFocus { get; set; }
 
-    @Column()
-public  int = 0    hpDamageLastRound {get; set;}
-    @Column()
-public  int = 0    lpDamageLastRound {get; set;}
-    @Column()
-public  int = 0    fpDamageLastRound {get; set;}
-    @Column()
-public  int = 0    hpHealLastRound {get; set;}
-    @Column()
-public  int = 0    lpHealLastRound {get; set;}
-    @Column()
-public  int = 0    fpHealLastRound {get; set;}
-    @Column()
-public  int = 0    heartsDamageLastRound {get; set;}
-    @Column()
-public  int = 0    orgasmsDamageLastRound {get; set;}
-    @Column()
-public  int = 0    heartsHealLastRound {get; set;}
-    @Column()
-public  int = 0    orgasmsHealLastRound {get; set;}
+    public int startingPower { get; set; }
+    public int startingSensuality { get; set; }
+    public int startingToughness { get; set; }
+    public int startingEndurance { get; set; }
+    public int startingDexterity { get; set; }
+    public int startingWillpower { get; set; }
+    public int powerDelta { get; set; }
+    public int sensualityDelta { get; set; }
+    public int toughnessDelta { get; set; }
+    public int enduranceDelta { get; set; }
+    public int dexterityDelta { get; set; }
+    public int willpowerDelta { get; set; }
 
-public Modifier[]    modifiers {get; set;}
+    public int hpDamageLastRound { get; set; } = 0;
+    public int lpDamageLastRound { get; set; } = 0;
+    public int fpDamageLastRound { get; set; } = 0;
+    public int hpHealLastRound { get; set; } = 0;
+    public int lpHealLastRound { get; set; } = 0;
+    public int fpHealLastRound { get; set; } = 0;
+    public int heartsDamageLastRound { get; set; } = 0;
+    public int orgasmsDamageLastRound { get; set; } = 0;
+    public int heartsHealLastRound { get; set; } = 0;
+    public int orgasmsHealLastRound { get; set; } = 0;
 
-public RWUser    user {get; set;}
+    public BaseModifier[] modifiers { get; set; }
 
-    constructor(RWFight fight,RWUser  user){
-        super(fight, user);
+    public RWUser user { get; set; }
+
+    public RWFighterState(RWFight fight, RWUser user) : base(fight, user)
+    {
+
         this.startingToughness = user.toughness;
         this.startingEndurance = user.endurance;
         this.startingWillpower = user.willpower;
@@ -116,69 +73,81 @@ public RWUser    user {get; set;}
         this.orgasmsHealLastRound = 0;
     }
 
-    initialFocus():int{
+    public int initialFocus()
+    {
         return this.maxFocus();
     }
 
-    maxFocus():int {
+    public int maxFocus()
+    {
         return 30 + this.focusResistance();
     }
 
-    totalHp():int{
-        var hp = 130;
-        if (this.currentToughness > 10) {
+    public decimal totalHp()
+    {
+        var hp = 130m;
+        if (this.currentToughness > 10)
+        {
             hp += (this.currentToughness - 10);
         }
-        switch (this.fightDuration()){
+        switch (this.fightDuration())
+        {
             case FightLength.Epic:
-                hp = hp * 1.33;
+                hp = hp * 1.33m;
                 break;
             case FightLength.Long:
-                hp = hp * 1.00;
+                hp = hp * 1.00m;
                 break;
             case FightLength.Medium:
-                hp = hp * 0.66;
+                hp = hp * 0.66m;
                 break;
             case FightLength.Short:
-                hp = hp * 0.33;
+                hp = hp * 0.33m;
                 break;
         }
         return hp;
     }
 
-    hpPerHeart():int {
-        return Math.ceil(this.totalHp() / this.maxLives());
+    public int hpPerHeart()
+    {
+        return (int)Math.Ceiling(this.totalHp() / this.maxLives() * 1m);
     }
 
-    totalLust():int{
-        var lust = 130;
-        if (this.currentEndurance > 10) {
+    public decimal totalLust()
+    {
+        decimal lust = 130m;
+        if (this.currentEndurance > 10)
+        {
             lust += (this.currentEndurance - 10);
         }
-        switch (this.fightDuration()){
+        switch (this.fightDuration())
+        {
             case FightLength.Epic:
-                lust = lust * 1.33;
+                lust = lust * 1.33m;
                 break;
             case FightLength.Long:
-                lust = lust * 1.00;
+                lust = lust * 1.00m;
                 break;
             case FightLength.Medium:
-                lust = lust * 0.66;
+                lust = lust * 0.66m;
                 break;
             case FightLength.Short:
-                lust = lust * 0.33;
+                lust = lust * 0.33m;
                 break;
         }
         return lust;
     }
 
-    lustPerOrgasm():int {
-        return Math.ceil(this.totalLust() / this.maxLives());
+    public int lustPerOrgasm()
+    {
+        return (int)Math.Ceiling(this.totalLust() / this.maxLives() * 1m);
     }
 
-    maxLives():int {
+    public int maxLives()
+    {
         var maxLives = -1;
-        switch (this.fightDuration()){
+        switch (this.fightDuration())
+        {
             case FightLength.Epic:
                 maxLives = 4;
                 break;
@@ -195,21 +164,26 @@ public RWUser    user {get; set;}
         return maxLives;
     }
 
-    minFocus():int {
+    public int minFocus()
+    {
         return 0;
     }
 
-    focusResistance():int{
+    public int focusResistance()
+    {
         var resistance = 30;
-        if (this.currentWillpower > 10) {
+        if (this.currentWillpower > 10)
+        {
             resistance += (this.currentWillpower - 10);
         }
         return resistance;
     }
 
-    maxBondageItemsOnSelf():int {
+    public int maxBondageItemsOnSelf()
+    {
         var maxBondageItemsOnSelf = -1;
-        switch (this.fightDuration()){
+        switch (this.fightDuration())
+        {
             case FightLength.Epic:
                 maxBondageItemsOnSelf = 5;
                 break;
@@ -226,13 +200,15 @@ public RWUser    user {get; set;}
         return maxBondageItemsOnSelf;
     }
 
-    getStatsInString():string{
+    public string getStatsInString()
+    {
         return "${this.user.power},${this.user.sensuality},${this.user.toughness},${this.user.endurance},${this.user.dexterity},${this.user.willpower}";
     }
 
     //fight is "mistakenly" set as optional to be compatible with the super.init
-    initialize():void {
-        super.initialize();
+    public void initialize()
+    {
+        base.initialize();
         this.startingToughness = this.user.toughness;
         this.startingEndurance = this.user.endurance;
         this.startingWillpower = this.user.willpower;
@@ -253,85 +229,142 @@ public RWUser    user {get; set;}
         this.willpowerDelta = 0;
     }
 
-    validateStats():string{
+    public override string validateStats()
+    {
         var statsInString = this.getStatsInString();
-        return Parser.checkIfValidStats(statsInString, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
+        //TODO
+        return "invaliddddd";
+        //return Parser.checkIfValidStats(statsInString, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
     }
 
-    get currentPower():int{
-        return this.startingPower + this.powerDelta;
-    }
-
-    set currentPower(delta:int){
-        this.powerDelta += delta;
-    }
-
-    get currentSensuality():int{
-        return this.startingSensuality + this.sensualityDelta;
-    }
-
-    set currentSensuality(delta:int){
-        this.sensualityDelta += delta;
-    }
-
-    get currentToughness():int{
-        return this.startingToughness + this.toughnessDelta;
-    }
-
-    set currentToughness(delta:int){
-        this.toughnessDelta += delta;
-    }
-
-    get currentEndurance():int{
-        return this.startingEndurance + this.enduranceDelta;
-    }
-
-    set currentEndurance(delta:int){
-        this.enduranceDelta += delta;
-    }
-
-    get currentDexterity():int{
-        return this.startingDexterity + this.dexterityDelta;
-    }
-
-    set currentDexterity(delta:int){
-        this.dexterityDelta += delta;
-    }
-
-    get currentWillpower():int{
-        return this.startingWillpower + this.willpowerDelta;
-    }
-
-    set currentWillpower(delta:int){
-        this.willpowerDelta += delta;
-    }
-
-    get livesDamageLastRound():int{
-        return this.heartsDamageLastRound + this.orgasmsDamageLastRound;
-    }
-
-    get livesHealLastRound():int{
-        return this.heartsHealLastRound + this.orgasmsHealLastRound;
-    }
-
-    get displayRemainingLives():string{
-        var str = "";
-        for(var i = 1; i <= this.maxLives(); i++){
-            if(i < this.livesRemaining){
-                str += "❤️";
-            }
-            else if(i == this.livesRemaining){
-                str += "💓";
-            }
-            else{
-                str += "🖤";
-            }
+    public int currentPower
+    {
+        get
+        {
+            return this.startingPower + this.powerDelta;
         }
-        return str;
+        set
+        {
+            this.powerDelta += value;
+        }
+
     }
 
-    nextRound(){
-        super.nextRound();
+
+    public int currentSensuality
+    {
+        get
+        {
+            return this.startingSensuality + this.sensualityDelta;
+        }
+        set
+        {
+            this.sensualityDelta += value;
+        }
+    }
+
+
+
+    public int currentToughness
+    {
+        get
+        {
+            return this.startingToughness + this.toughnessDelta;
+        }
+        set
+        {
+            this.toughnessDelta += value;
+        }
+    }
+
+
+
+
+    public int currentEndurance
+    {
+        get
+        {
+            return this.startingEndurance + this.enduranceDelta;
+        }
+        set
+        {
+            this.enduranceDelta += value;
+        }
+    }
+
+
+
+    public int currentDexterity
+    {
+        get
+        {
+            return this.startingDexterity + this.dexterityDelta;
+        }
+        set
+        {
+            this.dexterityDelta += value;
+        }
+    }
+
+
+
+    public int currentWillpower
+    {
+        get
+        {
+            return this.startingWillpower + this.willpowerDelta;
+        }
+        set
+        {
+            this.willpowerDelta += value;
+        }
+    }
+
+
+
+    public int livesDamageLastRound
+    {
+        get
+        {
+            return this.heartsDamageLastRound + this.orgasmsDamageLastRound;
+        }
+    }
+
+    public int livesHealLastRound
+    {
+        get
+        {
+            return this.heartsHealLastRound + this.orgasmsHealLastRound;
+        }
+    }
+
+    public string displayRemainingLives
+    {
+        get
+        {
+            var str = "";
+            for (var i = 1; i <= this.maxLives(); i++)
+            {
+                if (i < this.livesRemaining)
+                {
+                    str += "❤️";
+                }
+                else if (i == this.livesRemaining)
+                {
+                    str += "💓";
+                }
+                else
+                {
+                    str += "🖤";
+                }
+            }
+            return str;
+        }
+    }
+
+    public override void nextRound()
+    {
+        base.nextRound();
         this.hpDamageLastRound = 0;
         this.lpDamageLastRound = 0;
         this.fpDamageLastRound = 0;
@@ -345,101 +378,127 @@ public RWUser    user {get; set;}
         this.orgasmsHealLastRound = 0;
     }
 
-    healHP(int hp,bool = true  triggerMods) {
-        hp = Math.floor(hp);
-        if (hp < 1) {
+    public void healHP(decimal hp, bool triggerMods = true)
+    {
+        hp = (int)Math.Floor(hp);
+        if (hp < 1)
+        {
             hp = 1;
         }
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.MainBarHealing);
         }
-        if (this.hp + hp > this.hpPerHeart()) {
+        if (this.hp + hp > this.hpPerHeart())
+        {
             hp = this.hpPerHeart() - this.hp; //reduce the int if it overflows the bar
         }
-        this.hp += hp;
-        this.hpHealLastRound += hp;
-        if (triggerMods) {
+        this.hp += (int)hp;
+        this.hpHealLastRound += (int)hp;
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.After, Trigger.MainBarHealing);
         }
     }
 
-    healLP(int lust,bool = true  triggerMods) {
-        lust = Math.floor(lust);
-        if (lust < 1) {
+    public void healLP(decimal lust, bool triggerMods = true)
+    {
+        lust = (int)Math.Floor(lust);
+        if (lust < 1)
+        {
             lust = 1;
         }
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.SecondaryBarHealing);
         }
-        if (this.lust - lust < 0) {
+        if (this.lust - lust < 0)
+        {
             lust = this.lust; //reduce the int if it overflows the bar
         }
-        this.lust -= lust;
-        this.lpHealLastRound += lust;
-        if (triggerMods) {
+        this.lust -= (int)lust;
+        this.lpHealLastRound += (int)lust;
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.After, Trigger.SecondaryBarHealing);
         }
     }
 
-    healFP(int focus,bool = true  triggerMods) {
-        focus = Math.floor(focus);
-        if (focus < 1) {
+    public void healFP(int focus, bool triggerMods = true)
+    {
+        focus = (int)Math.Floor(focus * 1m);
+        if (focus < 1)
+        {
             focus = 1;
         }
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.UtilitaryBarHealing);
         }
-        if (this.focus + focus > this.maxFocus()) {
+        if (this.focus + focus > this.maxFocus())
+        {
             focus = this.maxFocus() - this.focus; //reduce the int if it overflows the bar
         }
         this.focus += focus;
         this.fpHealLastRound += focus;
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.After, Trigger.UtilitaryBarHealing);
         }
     }
 
-    hitHP(int hp,bool = true  triggerMods) {
-        hp = Math.floor(hp);
-        if (hp < 1) {
+    public void hitHP(int hp, bool triggerMods = true)
+    {
+        hp = (int)Math.Floor(hp * 1m);
+        if (hp < 1)
+        {
             hp = 1;
         }
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.MainBarDamage);
         }
         this.hp -= hp;
         this.hpDamageLastRound += hp;
-        if (this.hp <= 0) {
+        if (this.hp <= 0)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.MainBarDepleted);
             this.hp = 0;
             //this.heartsRemaining--;
             this.livesRemaining--;
             this.heartsDamageLastRound += 1;
             this.fight.message.addHit($"[b][color=red]Heart broken![/color][/b] ${this.name} has ${this.livesRemaining} lives left.");
-            if (this.livesRemaining > 0) {
+            if (this.livesRemaining > 0)
+            {
                 this.hp = this.hpPerHeart();
             }
-            else if (this.livesRemaining == 1) {
+            else if (this.livesRemaining == 1)
+            {
                 this.fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.name}!");
             }
             this.triggerMods(TriggerMoment.After, Trigger.MainBarDepleted);
         }
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.After, Trigger.MainBarDamage);
         }
     }
 
-    hitLP(int lust,bool = true  triggerMods) {
-        lust = Math.floor(lust);
-        if (lust < 1) {
+    public void hitLP(int lust, bool triggerMods = true)
+    {
+        lust = (int)Math.Floor(lust * 1m);
+        if (lust < 1)
+        {
             lust = 1;
         }
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.SecondaryBarDamage);
         }
         this.lust += lust;
         this.lpDamageLastRound += lust;
-        if (this.lust >= this.lustPerOrgasm()) {
+        if (this.lust >= this.lustPerOrgasm())
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.SecondaryBarDepleted);
             this.lust = 0;
             //this.orgasmsRemaining--;
@@ -447,65 +506,88 @@ public RWUser    user {get; set;}
             this.orgasmsDamageLastRound += 1;
             this.fight.message.addHit($"[b][color=pink]Orgasm on the mat![/color][/b] ${this.name} has ${this.livesRemaining} lives left.");
             this.lust = 0;
-            if (triggerMods) {
+            if (triggerMods)
+            {
                 this.triggerMods(TriggerMoment.After, Trigger.SecondaryBarDepleted);
             }
-            if (this.livesRemaining == 1) {
+            if (this.livesRemaining == 1)
+            {
                 this.fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.name}!");
             }
         }
         this.triggerMods(TriggerMoment.After, Trigger.SecondaryBarDamage);
     }
 
-    hitFP(int focusDamage,bool = true  triggerMods) {
-        if (focusDamage <= 0) {
+    public void hitFP(int focusDamage, bool triggerMods = true)
+    {
+        if (focusDamage <= 0)
+        {
             return;
         }
-        focusDamage = Math.floor(focusDamage);
-        if (triggerMods) {
+        focusDamage = (int)Math.Floor(focusDamage * 1m);
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.Before, Trigger.UtilitaryBarDamage);
         }
         this.focus -= focusDamage;
         this.fpDamageLastRound += focusDamage;
-        if (triggerMods) {
+        if (triggerMods)
+        {
             this.triggerMods(TriggerMoment.After, Trigger.UtilitaryBarDamage);
         }
     }
 
-    isDead(displayMessage:bool = false):bool {
+    public bool isDead(bool displayMessage = false)
+    {
         var condition = (this.livesRemaining == 0);
-        if(condition && displayMessage){
+        if (condition && displayMessage)
+        {
             this.fight.message.addHit($"${this.getStylizedName()} couldn't take it anymore! They're out!");
         }
         return condition;
     }
 
-    isSexuallyExhausted(displayMessage:bool = false):bool {
+    public bool isSexuallyExhausted(bool displayMessage = false)
+    {
         var condition = (this.livesRemaining == 0);
-        if(condition && displayMessage){
+        if (condition && displayMessage)
+        {
             this.fight.message.addHit($"${this.getStylizedName()} got wrecked sexually! They're out!");
         }
         return condition;
     }
 
-    isBroken(displayMessage:bool = false):bool {
-        var condition = (this.consecutiveTurnsWithoutFocus >= RWGameSettings.maxTurnsWithoutFocus);
-        if(condition && displayMessage){
+    public bool isBroken(bool displayMessage = false)
+    {
+        //var condition = (this.consecutiveTurnsWithoutFocus >= RWGameSettings.maxTurnsWithoutFocus);
+        //TODO 
+        var condition = false;
+        if (condition && displayMessage)
+        {
             this.fight.message.addHit($"${this.getStylizedName()} completely lost their focus! They're out!");
         }
         return condition;
     }
 
-    isCompletelyBound(displayMessage:bool = false):bool {
+    public bool isCompletelyBound(bool displayMessage = false)
+    {
         var condition = (this.bondageItemsOnSelf() >= this.maxBondageItemsOnSelf());
-        if(condition && displayMessage){
+        if (condition && displayMessage)
+        {
             this.fight.message.addHit($"${this.getStylizedName()} is completely bound! They're out!");
         }
         return condition;
     }
 
-    isTechnicallyOut(displayMessage = false):bool {
-        switch (this.fight.fightType) {
+    public override void save()
+    {
+        //throw new NotImplementedException();
+    }
+
+    public override bool isTechnicallyOut(bool displayMessage = false)
+    {
+        switch (this.fight.fightType)
+        {
             case FightType.Classic:
             case FightType.Tag:
                 return (
@@ -527,27 +609,39 @@ public RWUser    user {get; set;}
 
     }
 
-    bondageItemsOnSelf():int {
+    public int bondageItemsOnSelf()
+    {
         var bondageModCount = 0;
-        foreach (var mod in this.modifiers) {
-            if (mod.name == ModifierType.Bondage) {
+        foreach (var mod in this.modifiers)
+        {
+            if (mod.name == ModifierType.Bondage)
+            {
                 bondageModCount++;
             }
         }
         return bondageModCount;
     }
 
-    outputStatus() {
-public "        var nameLine = "${this.getStylizedName()} {get; set;}
-public  "[color=green]")} (${Utils.getSignedint(-this.hpDamageLastRound + this.hpHealLastRound)})[/color]" : "")}|${this.hpPerHeart()}[/color] "         ${this.hp}${((this.hpDamageLastRound > 0 || this.hpHealLastRound > 0) ? "${(((-this.hpDamageLastRound + this.hpHealLastRound) < 0) ? "[colorhpLine = "  [color=yellow]hit points =red]"  {get; set;}
-public  "[color=green]")} (${Utils.getSignedint(this.lpDamageLastRound - this.lpHealLastRound)})[/color]" : "")}|${this.lustPerOrgasm()}[/color] "         ${this.lust}${((this.lpDamageLastRound > 0 || this.lpHealLastRound > 0) ? "${(((-this.lpDamageLastRound + this.lpHealLastRound) < 0) ? "[colorlpLine = "  [color=pink]lust points =red]"  {get; set;}
-public  "[color=green]")} (${Utils.getSignedint(-this.orgasmsDamageLastRound + this.orgasmsHealLastRound)} orgasm(s))[/color]" : "")}${((this.heartsDamageLastRound > 0 || this.heartsHealLastRound > 0) ? "${(((-this.heartsDamageLastRound + this.heartsHealLastRound) < 0) ? "[color=red]" : "[color=green]")}  (${Utils.getSignedint(-this.heartsDamageLastRound + this.heartsHealLastRound)} heart(s))[/color]" : "")}(${this.livesRemaining}|${this.maxLives()})[/color] "         ${this.displayRemainingLives}${((this.orgasmsDamageLastRound > 0 || this.orgasmsHealLastRound > 0) ? "${(((-this.orgasmsDamageLastRound + this.orgasmsHealLastRound) < 0) ? "[colorlivesLine = "  [color=red]lives =red]"  {get; set;}
-public [/color] [b][colorfocusLine = "  [color=orange]${this.user.hasFeature(FeatureType.DomSubLover) ? "submissiveness"  =${(this.focus <= 0 ? "red" : "orange")}]${this.focus}[/color][/b]${(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? "${(((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} (${Utils.getSignedint(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]" : "")}|[color=green]${this.maxFocus()}[/color] "         "focus"} {get; set;}
-public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] "        var turnsFocusLine = "  [color=orange]turns ${this.user.hasFeature(FeatureType.DomSubLover) ? "being too submissive"  {get; set;}
-        var bondageLine = "  [color=purple]bondage items ${this.bondageItemsOnSelf()}|${RWGameSettings.maxBondageItemsOnSelf}[/color] ";
-public  ${this.getListOfActiveModifiers()}[/color] "        var modifiersLine = "  [color=cyan]affected by {get; set;}
-        var targetLine = "  [color=red]target( " + ((this.targets != null && this.targets.Count > 0) ? "${this.targets.join(" s), "None set yet! (!targets charactername)" ").ToString()}" ) + "[/color]";
+    public override string outputStatus()
+    {
+        //public "        var nameLine = "${this.getStylizedName()} {get; set;}
+        //public  "[color=green]")} (${Utils.getSignedint(-this.hpDamageLastRound + this.hpHealLastRound)})[/color]" : "")}|${this.hpPerHeart()}[/color] "         ${this.hp}${((this.hpDamageLastRound > 0 || this.hpHealLastRound > 0) ? "${(((-this.hpDamageLastRound + this.hpHealLastRound) < 0) ? "[colorhpLine = "  [color=yellow]hit points =red]"  {get; set;}
+        //public  "[color=green]")} (${Utils.getSignedint(this.lpDamageLastRound - this.lpHealLastRound)})[/color]" : "")}|${this.lustPerOrgasm()}[/color] "         ${this.lust}${((this.lpDamageLastRound > 0 || this.lpHealLastRound > 0) ? "${(((-this.lpDamageLastRound + this.lpHealLastRound) < 0) ? "[colorlpLine = "  [color=pink]lust points =red]"  {get; set;}
+        //public  "[color=green]")} (${Utils.getSignedint(-this.orgasmsDamageLastRound + this.orgasmsHealLastRound)}
+        //orgasm(s))[/color]" : "")}${((this.heartsDamageLastRound > 0 || this.heartsHealLastRound > 0) ? "${(((-this.heartsDamageLastRound + this.heartsHealLastRound) < 0) ? "[color=red]" : "[color=green]")}
+        //(${Utils.getSignedint(-this.heartsDamageLastRound + this.heartsHealLastRound)}
+        //heart(s))[/color]" : "")}(${this.livesRemaining}|${this.maxLives()})[/color] "         ${this.displayRemainingLives}${((this.orgasmsDamageLastRound > 0 || this.orgasmsHealLastRound > 0) ? "${(((-this.orgasmsDamageLastRound + this.orgasmsHealLastRound) < 0) ? "[colorlivesLine = "  [color=red]lives =red]"  {get; set;}
+        //public [/ color][b][colorfocusLine = "  [color=orange]${this.user.hasFeature(FeatureType.DomSubLover) ? "submissiveness"  =${(this.focus <= 0 ? "red" : "orange")}]${this.focus}[/color][/b]${(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? "${(((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")}
+        //(${Utils.getSignedint(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]" : "")}|[color=green]${this.maxFocus()}[/color] "         "focus"} {get; set;}
+        //public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] "        var turnsFocusLine = "  [color=orange] turns ${this.user.hasFeature(FeatureType.DomSubLover)? "being too submissive"  {get; set;}
+        //var bondageLine = "  [color=purple]bondage items ${this.bondageItemsOnSelf()}|${RWGameSettings.maxBondageItemsOnSelf}[/color] ";
+        //public  ${this.getListOfActiveModifiers()}
+        //[/color] "        var modifiersLine = "  [color=cyan] affected by { get; set; }
+        //var targetLine = "  [color=red]target( " + ((this.targets != null && this.targets.Count > 0) ? "${this.targets.join(" s), "None set yet! (!targets charactername)" ").ToString()}" ) + "[/color]";
 
-        return "${Utils.pad(50, ""  nameLine, "-")} ${hpLine} ${lpLine} ${livesLine} ${focusLine} ${turnsFocusLine} ${bondageLine} ${(this.getListOfActiveModifiers().Count > 0 ? modifiersLine )} ${targetLine}";
+        //        return "${Utils.pad(50, ""  nameLine, "-")} ${hpLine} ${lpLine} ${livesLine} ${focusLine} ${turnsFocusLine} ${bondageLine} ${(this.getListOfActiveModifiers().Count > 0 ? modifiersLine )} ${targetLine}";
+        //    }
+        //TODO
+        return "this is supposed to be the status";
     }
 }

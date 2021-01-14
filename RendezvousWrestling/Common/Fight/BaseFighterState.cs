@@ -130,7 +130,7 @@ public abstract class BaseFighterState
         return result;
     }
 
-    public void nextRound() { }
+    public virtual void nextRound() { }
 
     public bool triggerMods(TriggerMoment moment, Trigger @triggeringEvent, dynamic objFightAction = null)
     {
@@ -147,20 +147,6 @@ public abstract class BaseFighterState
         return atLeastOneModWasActivated;
     }
 
-    public bool triggerFeatures<OptionalParameterType>(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters)
-    {
-        bool atLeastOneFeatureWasActivated = false;
-        foreach (var feat in this.user.Features)
-        {
-            var message = feat.Trigger(moment, @triggeringEvent, parameters);
-            if (!string.IsNullOrEmpty(message))
-            {
-                this.fight.message.addSpecial(message);
-                atLeastOneFeatureWasActivated = true;
-            }
-        }
-        return atLeastOneFeatureWasActivated;
-    }
 
     public void removeMod(string idMod)
     { //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
@@ -398,4 +384,29 @@ public abstract class BaseFighterState
     public abstract string outputStatus();
 
     public abstract void save();
+    public bool triggerFeatures<TFight, TFighterState, TAction>(TriggerMoment before, Trigger trigger, BaseFeatureParameter<TFight, TFighterState, TAction> baseFeatureParameter)
+        where TFight : BaseFight
+        where TFighterState : BaseFighterState
+        where TAction : BaseActiveAction<TFight, TFighterState>
+    {
+        bool atLeastOneFeatureWasActivated = false;
+        foreach (var feat in this.user.Features)
+        {
+            var message = feat.Trigger(before, trigger, baseFeatureParameter);
+            if (!string.IsNullOrEmpty(message))
+            {
+                this.fight.message.addSpecial(message);
+                atLeastOneFeatureWasActivated = true;
+            }
+        }
+        return atLeastOneFeatureWasActivated;
+    }
+
+    internal void triggerFeatures<TFight, TFighterState, TAction>(TriggerMoment before, Trigger trigger, BaseFeatureParameter<TFight, TFighterState, TAction> baseFeatureParameter)
+        where TFight : BaseFight
+        where TFighterState : BaseFighterState
+        where TAction : BaseActiveAction<TFight, TFighterState>
+    {
+        throw new NotImplementedException();
+    }
 }
