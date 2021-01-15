@@ -401,12 +401,4 @@ public abstract class BaseFighterState
         }
         return atLeastOneFeatureWasActivated;
     }
-
-    internal void triggerFeatures<TFight, TFighterState, TAction>(TriggerMoment before, Trigger trigger, BaseFeatureParameter<TFight, TFighterState, TAction> baseFeatureParameter)
-        where TFight : BaseFight
-        where TFighterState : BaseFighterState
-        where TAction : BaseActiveAction<TFight, TFighterState>
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -1,19 +1,10 @@
-import * as BaseConstants from "../../Common/Constants/BaseConstants";
-import {Modifier} from "./Modifier";
-import {Utils} from "../../Common/Utils/Utils";
-import {BaseFight} from "../../Common/Fight/BaseFight";
-import {BaseFighterState} from "../../Common/Fight/BaseFighterState";
-import {Tiers} from "../Constants/Tiers";
-import {ModifierType} from "../RWConstants";
-import * as modifiersList from "./modifiers.json";
-import {Trigger} from "../../Common/Constants/Trigger";
-import {TriggerMoment} from "../../Common/Constants/TriggerMoment";
+using System;
 
 public class ModifierFactory{
 
-    static checkAndInitializeDefaultValues(int indexOfSearchedModifier,string, parameters:any  modifierName){
-        if(ModifierType[modifierName] == null){
-            throw new Error("This modifier doesn't exist in the ModifierType list.");
+    public static dynamic checkAndInitializeDefaultValues(int indexOfSearchedModifier,string modifierName, dynamic parameters){
+        if(!Enum.TryParse(typeof(ModifierType), modifierName, out var modifier)){
+            throw new Exception("This modifier doesn't exist in the ModifierType list.");
         }
 
         if(parameters == null){
@@ -70,7 +61,7 @@ public class ModifierFactory{
         return parameters;
     }
 
-    static getModifier(ModifierType modifierName,BaseFight, receiver:BaseFighterState, applier?:BaseFighterState, inputParameters?:any  fight):Modifier{
+    public static RWModifier getModifier(ModifierType modifierName,BaseFight fight, BaseFighterState receiver, BaseFighterState applier = null, dynamic inputParameters = null ){
         Modifier modifier = null;
         if(inputParameters == null){
             inputParameters = {};

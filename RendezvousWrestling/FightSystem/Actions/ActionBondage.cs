@@ -1,5 +1,5 @@
 
-public class ActionBondage extends RWAction {
+public class ActionBondage : RWAction {
 
     constructor(RWFight fight,RWFighterState, defenders:RWFighterState[]  attacker) {
         super(fight,

@@ -1,19 +1,14 @@
-import {ActionExplanation, ActionType, RWAction} from "./RWAction";
-import * as Constants from "../../Common/Constants/BaseConstants";
-import {RWFighterState} from "../Fight/RWFighterState";
-import {RWFight} from "../Fight/RWFight";
-import {Tiers} from "../Constants/Tiers";
-import {Trigger} from "../../Common/Constants/Trigger";
-import {RWGameSettings} from "../Configuration/RWGameSettings";
 
-public class ActionPass extends RWAction {
+using System.Collections.Generic;
 
-    constructor(RWFight fight,RWFighterState, defenders:RWFighterState[]  attacker) {
-        super(fight,
+public class ActionPass : RWAction {
+
+    public ActionPass(RWFight fight, RWFighterState attacker, List<RWFighterState> defenders)
+        : base(fight,
             attacker,
             defenders,
-            ActionType.Pass,
-            Tiers.None,
+            nameof(ActionType.Pass),
+            (int)Tiers.None,
             false, //isHold
             false,  //requiresRoll
             false, //keepActorsTurn
@@ -36,10 +31,12 @@ public class ActionPass extends RWAction {
             false,  //usableOnAllies
             false, //usableOnEnemies
             Trigger.Pass,
-            ActionExplanation[ActionType.Pass]);
+            ActionExplanation.Pass)
+    {
+        
     }
 
-    onHit(): void {
+    public override void onHit() {
         this.fpDamageToAtk = RWGameSettings.passFpDamage;
     }
 }

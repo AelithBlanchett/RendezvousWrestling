@@ -292,7 +292,7 @@ public abstract class BaseFight
             this.fighters[i].fightStatus = FightStatus.Playing;
             int fightCost = GameSettings.tokensCostToFight;
             this.fighters[i].user.removeTokens(fightCost, TransactionType.FightStart);
-            this.fighters[i].triggerFeatures(TriggerMoment.After, Trigger.InitiationRoll, new BaseFeatureParameter(this, this.fighters[i]));
+            this.fighters[i].triggerFeatures(TriggerMoment.After, Trigger.InitiationRoll, new BaseFeatureParameter<BaseFight, BaseFighterState, BaseActiveAction<BaseFight, BaseFighterState>>(this, this.fighters[i]));
         }
 
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public interface IActionFactory
+public interface IActionFactory<TAction, TFight, TFighterState> where TAction : BaseActiveAction<TFight, TFighterState> where TFight : BaseFight where TFighterState : BaseFighterState
 {
-    BaseActiveAction GetAction(string actionName, BaseFight fight, BaseFighterState attacker, List<BaseFighterState> defenders, int tier);   
+    TAction GetAction(int actionType, TFight fight, TFighterState attacker, List<TFighterState> defenders, int tier);   
 }

@@ -13,7 +13,7 @@ public abstract class BaseAchievement
 
     public abstract string getName();
 
-    public abstract decimal getReward();
+    public abstract int getReward();
 
     public abstract string getUniqueShortName();
 

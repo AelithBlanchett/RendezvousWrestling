@@ -146,7 +146,23 @@ public enum SelfDebaseFpDamage
     Heavy = 24
 }
 
-public class ModifierType
+public enum ModifierType
+{
+    SubHoldBrawlBonus = 0,
+    SubHold = 1,
+    SexHoldLustBonus = 2,
+    SexHold = 3,
+    Bondage = 4,
+    HumHold = 5,
+    DegradationMalus = 6,
+    ItemPickupBonus = 7,
+    SextoyPickupBonus = 8,
+    Stun = 9,
+    StrapToy = 10,
+    DummyModifier = 11
+}
+
+public class ModifierTypeDescription
 {
     public static readonly string SubHoldBrawlBonus = "Accuracy++ on brawl (submission hold)";
     public static readonly string SubHold = "submission hold";

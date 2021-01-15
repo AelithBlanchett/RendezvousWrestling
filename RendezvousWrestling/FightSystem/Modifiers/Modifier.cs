@@ -1,16 +1,13 @@
-import * as BaseConstants from "../../Common/Constants/BaseConstants";
-import {RWFighterState} from "../Fight/RWFighterState";
-import {RWFight} from "../Fight/RWFight";
-import {BaseModifier} from "../../Common/Modifiers/BaseModifier";
-import {IModifier} from "./IModifier";
-import {ModifierType} from "../RWConstants";
-import {Utils} from "../../Common/Utils/Utils";
-import {TriggerMoment} from "../../Common/Constants/TriggerMoment";
-import {Trigger} from "../../Common/Constants/Trigger";
+using System.Collections.Generic;
 
-public class Modifier extends BaseModifier implements IModifier{
+public class RWModifier : BaseModifier{
+    public RWModifier(string name, RWFight fight, RWFighterState receive, RWFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null) :
+        base(name, fight, receive, applier, tier, uses, timeToTrigger, triggeringEvent, parentActionIds)
+    {
 
-public  int    hpDamage {get; set;}
+    }
+
+    public  int    hpDamage {get; set;}
 public  int    lustDamage {get; set;}
 public  int    focusDamage {get; set;}
 public  int    hpHeal {get; set;}
@@ -22,14 +19,14 @@ public RWFighterState    applier {get; set;}
 public RWFighterState    receiver {get; set;}
 
 
-    isAHold():bool{
+    public override bool isAHold() {
         return (this.name == ModifierType.SubHold || this.name == ModifierType.SexHold || this.name == ModifierType.HumHold);
     }
 
-    applyModifierOnReceiver( TriggerMoment moment,Trigger  triggeringEvent){
+    public override string applyModifierOnReceiver( TriggerMoment moment,Trigger triggeringEvent){
         var messageAboutModifier = "";
         if(this.hpDamage > 0){
-            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, triggeringEvent))
+            var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, triggeringEvent));
             messageAboutModifier += " losing ${this.hpDamage} HP,";
             this.receiver.hitHP(this.hpDamage, flagTriggerMods);
         }
@@ -71,7 +68,8 @@ public RWFighterState    receiver {get; set;}
         return messageAboutModifier;
     }
 
-    applyModifierOnAction( TriggerMoment moment,Trigger, objFightAction:any  triggeringEvent){
+    public override string applyModifierOnAction( TriggerMoment moment, Trigger triggeringEvent, dynamic objFightAction)
+    {
         var messageAboutModifier = "";
         if(this.hpDamage > 0){
             if(this.areDamageMultipliers){

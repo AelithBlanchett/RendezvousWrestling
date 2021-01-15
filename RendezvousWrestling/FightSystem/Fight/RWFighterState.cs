@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 
 public class RWFighterState : BaseFighterState
 {
@@ -34,7 +35,7 @@ public class RWFighterState : BaseFighterState
     public int heartsHealLastRound { get; set; } = 0;
     public int orgasmsHealLastRound { get; set; } = 0;
 
-    public BaseModifier[] modifiers { get; set; }
+    public List<RWModifier> modifiers { get; set; }
 
     public RWUser user { get; set; }
 

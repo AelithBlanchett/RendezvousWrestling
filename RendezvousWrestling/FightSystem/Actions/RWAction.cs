@@ -22,11 +22,11 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
     public int diceScoreStatDifference { get; set; }
     public int diceScoreBonusPoints { get; set; }
 
-    public List<BaseModifier> appliedModifiers { get; set; } = new List<BaseModifier>();
+    public List<RWModifier> appliedModifiers { get; set; } = new List<RWModifier>();
 
-    public RWAction(BaseFight fight,
-                            BaseFighterState attacker,
-                            List<BaseFighterState> defenders,
+    public RWAction(RWFight fight,
+                            RWFighterState attacker,
+                            List<RWFighterState> defenders,
                             string name,
                              int tier,
                              bool isHold,
@@ -299,38 +299,40 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
 
             if (this.Tier != -1)
             {
-                scoreRequired += this.addRequiredScoreWithExplanation(TierDifficulty[Tiers[this.Tier]], "TIER");
+                var name = Enum.GetName(typeof(Tiers), ((Tiers)this.Tier));
+                var score = (int)Enum.Parse(typeof(TierDifficulty), name);
+                scoreRequired += this.addRequiredScoreWithExplanation(score, "TIER");
             }
 
-            scoreRequired += this.addRequiredScoreWithExplanation((Constants.Fight.Action.Globals.difficultyIncreasePerBondageItem * this.Attacker.bondageItemsOnSelf()), "BDG");
+            scoreRequired += this.addRequiredScoreWithExplanation((int)(Action.Globals.difficultyIncreasePerBondageItem * this.Attacker.bondageItemsOnSelf()), "BDG");
 
             //No effects apply if it's a multi-target action. Should we have any?
-            if (this.SingleTarget && this.Defender)
+            if (this.SingleTarget && this.Defender != null)
             {
-                scoreRequired += this.addRequiredScoreWithExplanation(-(Constants.Fight.Action.Globals.difficultyIncreasePerBondageItem * this.Defender.bondageItemsOnSelf()), "BDG");
-                scoreRequired += this.addRequiredScoreWithExplanation(Math.floor((this.Defender.currentDexterity - this.Attacker.currentDexterity) / 15), "DEXDIFF");
+                scoreRequired += this.addRequiredScoreWithExplanation(-(int)(Action.Globals.difficultyIncreasePerBondageItem * this.Defender.bondageItemsOnSelf()), "BDG");
+                scoreRequired += this.addRequiredScoreWithExplanation((int)Math.Floor((this.Defender.currentDexterity - this.Attacker.currentDexterity) / 15f), "DEXDIFF");
 
                 if (this.Defender.focus >= 0)
                 {
-                    scoreRequired += this.addRequiredScoreWithExplanation(Math.floor((this.Defender.focus - this.Attacker.focus) / 15), "FPDIFF");
+                    scoreRequired += this.addRequiredScoreWithExplanation((int)Math.Floor((this.Defender.focus - this.Attacker.focus) / 15f), "FPDIFF");
                 }
                 if (this.Defender.focus < 0)
                 {
-                    scoreRequired += this.addRequiredScoreWithExplanation(Math.floor(this.Defender.focus / 10) - 1, "FPZERO");
+                    scoreRequired += this.addRequiredScoreWithExplanation((int)Math.Floor(this.Defender.focus / 10f) - 1, "FPZERO");
                 }
 
                 var DefenderStunnedTier = this.Defender.getStunnedTier();
-                if (DefenderStunnedTier >= Tiers.Light)
+                if (DefenderStunnedTier >= (int)Tiers.Light)
                 {
                     switch (DefenderStunnedTier)
                     {
-                        case Tiers.Light:
+                        case (int)Tiers.Light:
                             scoreRequired += this.addRequiredScoreWithExplanation(-2, "L-STUN");
                             break;
-                        case Tiers.Medium:
+                        case (int)Tiers.Medium:
                             scoreRequired += this.addRequiredScoreWithExplanation(-4, "M-STUN");
                             break;
-                        case Tiers.Heavy:
+                        case (int)Tiers.Heavy:
                             scoreRequired += this.addRequiredScoreWithExplanation(-6, "H-STUN");
                             break;
                     }
@@ -343,7 +345,8 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
 
     public override void onMiss()
     {
-        this.Attacker.hitFP(FocusDamageOnMiss[Tiers[this.tier]]);
+        var name = Enum.GetName(typeof(Tiers), ((Tiers)this.Tier));
+        this.Attacker.hitFP((int)Enum.Parse(typeof(FocusDamageOnMiss), name));
     }
 
     public override void applyDamage()
@@ -444,10 +447,10 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
                 foreach (var defender in this.Defenders)
                 {
                     //START
-                    var indexOfAlreadyExistantHoldForDefender = Defender.modifiers.FindIndex(x => x.isAHold());
-                    if (indexOfAlreadyExistantHoldForDefender != -1)
+                    var existantHoldForDefender = Defender.modifiers.First(x => x.isAHold());
+                    if (existantHoldForDefender != null)
                     {
-                        var idOfFormerHold = Defender.modifiers[indexOfAlreadyExistantHoldForDefender].idModifier;
+                        var idOfFormerHold = existantHoldForDefender.idModifier;
                         foreach (var mod in Defender.modifiers)
                         {
                             //we updated the children and parent's damage and turns
@@ -461,7 +464,7 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
                                 mod.focusDamage += this.appliedModifiers[indexOfNewHold].focusDamage;
                                 //Did not add the dice/escape score modifications, if needed, implement here
                             }
-                            else if (mod.idParentActions && mod.idParentActions.IndexOf(idOfFormerHold) != -1)
+                            else if (mod.idParentActions != null && mod.idParentActions.IndexOf(idOfFormerHold) != -1)
                             {
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                             }
@@ -469,7 +472,7 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
                         foreach (var mod in this.Attacker.modifiers)
                         {
                             //upDateTime the bonus appliedModifiers length
-                            if (mod.idParentActions && mod.idParentActions.IndexOf(idOfFormerHold) != -1)
+                            if (mod.idParentActions != null && mod.idParentActions.IndexOf(idOfFormerHold) != -1)
                             {
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                             }
@@ -520,7 +523,7 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
 public class EmptyAction : RWAction
 {
 
-    public EmptyAction(BaseFight fight, BaseFighterState defender, BaseFighterState attacker) : base(fight, attacker, new List<BaseFighterState>() { defender }, "actionName", -1, false, false, false, true, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, false, true, Trigger.None, "no explanation", 1)
+    public EmptyAction(RWFight fight, RWFighterState defender, RWFighterState attacker) : base(fight, attacker, new List<RWFighterState>() { defender }, "actionName", -1, false, false, false, true, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, false, true, Trigger.None, "no explanation", 1)
     {
 
 
@@ -532,31 +535,31 @@ public class EmptyAction : RWAction
     }
 }
 
-public class ActionType
+public enum ActionType
 {
-    public static string Brawl = "Brawl";
-    public static string Tease = "Tease";
-    public static string Tag = "Tag";
-    public static string Rest = "Rest";
-    public static string SubHold = "SubHold";
-    public static string SexHold = "SexHold";
-    public static string Bondage = "Bondage";
-    public static string HumHold = "HumHold";
-    public static string ItemPickup = "ItemPickup";
-    public static string SextoyPickup = "SextoyPickup";
-    public static string Degradation = "Degradation";
-    public static string ForcedWorship = "ForcedWorship";
-    public static string HighRisk = "HighRisk";
-    public static string RiskyLewd = "RiskyLewd";
-    public static string Stun = "Stun";
-    public static string Escape = "Escape";
-    public static string Submit = "Submit";
-    public static string StrapToy = "StrapToy";
-    public static string Finisher = "Finisher";
-    public static string Masturbate = "Masturbate";
-    public static string Pass = "Pass";
-    public static string ReleaseHold = "ReleaseHold";
-    public static string SelfDebase = "SelfDebase";
+    Brawl = 0,
+    Tease = 1,
+    Tag = 2,
+    Rest = 3,
+    SubHold = 4,
+    SexHold = 5,
+    Bondage = 6,
+    HumHold = 7,
+    ItemPickup = 8,
+    SextoyPickup = 9,
+    Degradation = 10,
+    ForcedWorship = 11,
+    HighRisk = 12,
+    RiskyLewd = 13,
+    Stun = 14,
+    Escape = 15,
+    Submit = 16,
+    StrapToy = 17,
+    Finisher = 18,
+    Masturbate = 19,
+    Pass = 20,
+    ReleaseHold = 21,
+    SelfDebase = 22
 }
 
 public class ActionExplanation

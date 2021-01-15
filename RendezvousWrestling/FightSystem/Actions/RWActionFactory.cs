@@ -2,12 +2,17 @@
 using System;
 using System.Collections.Generic;
 
-public class RWActionFactory : IActionFactory //<RWFight, RWFighterState>
+public class RWActionFactory : IActionFactory<RWAction, RWFight, RWFighterState>
 {
     public RWAction action { get; set; }
-    public BaseActiveAction GetAction(string actionName, BaseFight fight, BaseFighterState attacker, List<BaseFighterState> defenders, int tier)
+    public RWAction GetAction(int actionType, RWFight fight, RWFighterState attacker, List<RWFighterState> defenders, int tier)
     {
-        switch (actionName)
+        if(!Enum.TryParse(typeof(ActionType), actionType.ToString(), out var parsedActionType))
+        {
+            throw new Exception($"The action ${actionType} doesn't exist!");
+        }
+
+        switch (parsedActionType)
         {
             //case ActionType.Brawl:
             //    action = new ActionBrawl(fight, attacker, defenders, tier);
@@ -75,11 +80,11 @@ public class RWActionFactory : IActionFactory //<RWFight, RWFighterState>
             //case ActionType.Bondage:
             //    action = new ActionBondage(fight, attacker, defenders);
             //    break;
-            //case ActionType.Pass:
-            //    action = new ActionPass(fight, attacker, defenders);
-            //    break;
+            case ActionType.Pass:
+                action = new ActionPass(fight, attacker, defenders);
+                break;
             default:
-                throw new Exception($"The ${actionName} action doesn't exist!");
+                throw new Exception($"The action ${actionType} doesn't exist!");
         }
 
         return action;

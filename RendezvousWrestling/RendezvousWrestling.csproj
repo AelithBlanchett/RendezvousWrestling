@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="FightSystem\Actions\ActionBondage.cs" />
+    <Compile Include="FightSystem\Actions\ActionPass.cs" />
     <Compile Include="FightSystem\Actions\RWAction.cs" />
     <Compile Include="FightSystem\Actions\RWActionFactory.cs" />
     <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
@@ -22,7 +22,12 @@
     <Compile Include="FightSystem\Fight\RWFighterState.cs" />
     <Compile Include="FightSystem\Fight\RWFighterStats.cs" />
     <Compile Include="FightSystem\Fight\RWUser.cs" />
+    <Compile Include="FightSystem\Modifiers\Modifier.cs" />
     <Compile Include="FightSystem\RWConstants.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="FightSystem\Modifiers\modifiers.json" />
   </ItemGroup>
 
   <ItemGroup>

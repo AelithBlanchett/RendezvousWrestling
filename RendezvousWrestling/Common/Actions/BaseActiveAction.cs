@@ -315,29 +315,29 @@ public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where
     public void triggerBeforeEvent()
     {
         this.Attacker.triggerMods(TriggerMoment.Before, this.Trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter<BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
         if (this.Defender != null)
         {
-            this.Defender.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
+            this.Defender.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Defender, this.Attacker, this));
         }
     }
 
     public void triggerAfterEvent()
     {
         this.Attacker.triggerMods(TriggerMoment.After, this.Trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
         if (this.Defender != null)
         {
-            this.Defender.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
+            this.Defender.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Defender, this.Attacker, this));
         }
 
         if (this.IsHold)
         {
             this.Attacker.triggerMods(TriggerMoment.After, Trigger.GrapplingHold);
-            this.Attacker.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter(this.Fight, this.Attacker, this.Defender, this));
+            this.Attacker.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
             if (this.Defender != null)
             {
-                this.Defender.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter(this.Fight, this.Defender, this.Attacker, this));
+                this.Defender.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Defender, this.Attacker, this));
             }
         }
     }
