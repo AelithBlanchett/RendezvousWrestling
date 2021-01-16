@@ -2,21 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class AchievementManager {
+public class AchievementManager<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TUser : BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFight : BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFighterState : BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActiveAction : BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+{
 
-    public static BaseAchievement[] EnabledAchievements { get; set; } = new BaseAchievement[0];
+    public static TAchievement[] EnabledAchievements { get; set; } = new TAchievement[0];
 
-    public static BaseAchievement[] getAll(){
+    public static TAchievement[] getAll(){
         return EnabledAchievements;
     }
 
-    public static BaseAchievement get(string name){
-        return AchievementManager.getAll().FirstOrDefault(x => x.getName() == name);
+    public static TAchievement get(string name){
+        return getAll().FirstOrDefault(x => x.getName() == name);
     }
 
-    public static List<string> checkAll(BaseUser fighter, BaseFighterState activeFighter, BaseFight fight = null){
+    public static List<string> checkAll(TUser fighter, TFighterState activeFighter, TFight fight = null){
         var addedInfo = new List<string>();
-        var achievements = AchievementManager.getAll();
+        var achievements = getAll();
 
         foreach(var achievement in achievements){
             if(fighter.Achievements.FindIndex(x => x.getName() == achievement.getName()) == -1 && achievement.meetsRequirements(fighter, activeFighter, fight)){

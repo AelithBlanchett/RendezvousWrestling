@@ -1,6 +1,9 @@
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
 using System.Collections.Generic;
 
-public class RWModifier : BaseModifier{
+public class RWModifier : BaseModifier<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+{
     public RWModifier(string name, RWFight fight, RWFighterState receive, RWFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null) :
         base(name, fight, receive, applier, tier, uses, timeToTrigger, triggeringEvent, parentActionIds)
     {

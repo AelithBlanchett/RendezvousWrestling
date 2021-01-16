@@ -1,7 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public abstract class BaseFighterState
+public abstract class BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TUser : BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFight : BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFighterState : BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActiveAction : BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
 {
 
     public Team assignedTeam { get; set; } = Team.White;
@@ -18,15 +29,15 @@ public abstract class BaseFighterState
     public bool deleted { get; set; } = false;
     public FightStatus fightStatus { get; set; }
 
-    public BaseFight fight { get; set; }
-    public BaseUser user { get; set; }
-    public List<BaseModifier> modifiers { get; set; }
+    public TFight fight { get; set; }
+    public TUser user { get; set; }
+    public List<TModifier> modifiers { get; set; }
 
     public Dice dice { get; set; }
 
     public string name { get { return this.user.Name; } }
 
-    public BaseFighterState(BaseFight fight, BaseUser fighter)
+    public BaseFighterState(TFight fight, TUser fighter)
     {
         this.fight = fight;
         this.user = fighter;
@@ -40,7 +51,7 @@ public abstract class BaseFighterState
         this.lastTagTurn = 9999999;
         this.distanceFromRingCenter = 0;
         this.wantsDraw = false;
-        this.modifiers = new List<BaseModifier>();
+        this.modifiers = new List<TModifier>();
         this.targets = new List<string>();
 
         this.dice = new Dice(GameSettings.diceSides);
@@ -48,14 +59,14 @@ public abstract class BaseFighterState
         this.lastDiceRoll = 0;
     }
 
-    public void assignFight(BaseFight fight)
+    public void assignFight(TFight fight)
     {
         this.fight = fight;
     }
 
-    public List<BaseFighterState> getTargets()
+    public List<TFighterState> getTargets()
     {
-        var fighters = new List<BaseFighterState>();
+        var fighters = new List<TFighterState>();
         foreach (var name in this.targets)
         {
             var fighter = this.fight.getFighterByName(name);
@@ -67,10 +78,10 @@ public abstract class BaseFighterState
         return fighters;
     }
 
-    public string checkAchievements(BaseFight fight = null)
+    public string checkAchievements(TFight fight = null)
     {
         var strBase = "[color=yellow][b]Achievements unlocked for ${this.name}![/b][/color]\n";
-        var added = AchievementManager.checkAll(this.user, this, fight);
+        var added = AchievementManager<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>.checkAll(this.user, (TFighterState)this, fight);
 
         if (added.Count > 0)
         {
@@ -132,13 +143,13 @@ public abstract class BaseFighterState
 
     public virtual void nextRound() { }
 
-    public bool triggerMods(TriggerMoment moment, Trigger @triggeringEvent, dynamic objFightAction = null)
+    public bool triggerMods(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType objFightAction = null)
     {
         bool atLeastOneModWasActivated = false;
         foreach (var mod in this.modifiers)
         {
             var message = mod.trigger(moment, @triggeringEvent, objFightAction);
-            if (message.Count > 0)
+            if (message.Length > 0)
             {
                 this.fight.message.addSpecial(message);
                 atLeastOneModWasActivated = true;
@@ -149,12 +160,9 @@ public abstract class BaseFighterState
 
 
     public void removeMod(string idMod)
-    { //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
-        var index = this.modifiers.FindIndex(x => x.idModifier == idMod);
-        if (index != -1)
-        {
-            this.modifiers[index].remove();
-        }
+    { 
+        //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
+        var index = this.modifiers.RemoveAll(x => x.idModifier == idMod);
     }
 
     public FightLength fightDuration()
@@ -368,7 +376,7 @@ public abstract class BaseFighterState
         return "${modifierBeginning}[b][color=${Team[this.assignedTeam].ToLower()}]${this.name}[/color][/b]${modifierEnding}";
     }
 
-    public bool isInRange(List<BaseFighterState> targets)
+    public bool isInRange(List<TFighterState> targets)
     {
         var result = true;
         foreach (var target in targets)
@@ -384,10 +392,7 @@ public abstract class BaseFighterState
     public abstract string outputStatus();
 
     public abstract void save();
-    public bool triggerFeatures<TFight, TFighterState, TAction>(TriggerMoment before, Trigger trigger, BaseFeatureParameter<TFight, TFighterState, TAction> baseFeatureParameter)
-        where TFight : BaseFight
-        where TFighterState : BaseFighterState
-        where TAction : BaseActiveAction<TFight, TFighterState>
+    public bool triggerFeatures(TriggerMoment before, Trigger trigger, OptionalParameterType baseFeatureParameter)
     {
         bool atLeastOneFeatureWasActivated = false;
         foreach (var feat in this.user.Features)

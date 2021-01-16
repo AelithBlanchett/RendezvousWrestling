@@ -1,7 +1,17 @@
 using System;
 using System.Collections.Generic;
 
-public abstract class BaseModifier
+public abstract class BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TUser : BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFight : BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFighterState : BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActiveAction : BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
 {
     public string idModifier { get; set; }
     public int tier { get; set; }
@@ -15,15 +25,15 @@ public abstract class BaseModifier
     public TriggerMoment timeToTrigger { get; set; }
     public List<string> idParentActions { get; set; }
 
-    public BaseFight fight { get; set; }
-    public BaseFighterState applier { get; set; }
-    public BaseFighterState receiver { get; set; }
+    public TFight fight { get; set; }
+    public TFighterState applier { get; set; }
+    public TFighterState receiver { get; set; }
 
     public DateTime createdAt { get; set; }
     public DateTime updatedAt { get; set; }
     public DateTime deletedAt { get; set; }
 
-    public BaseModifier(string name, BaseFight fight, BaseFighterState receive, BaseFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null)
+    public BaseModifier(string name, TFight fight, TFighterState receive, TFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null)
     {
         this.idModifier = Guid.NewGuid().ToString();
         this.receiver = receiver;

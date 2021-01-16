@@ -1,8 +1,10 @@
 
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
 using System;
 using System.Collections.Generic;
 
-public class RWFighterState : BaseFighterState
+public class RWFighterState : BaseFighterState<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
 
     public int hp { get; set; } = 0;

@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 
-public class ActionPass : RWAction {
+public class ActionPass : RWActiveAction {
 
     public ActionPass(RWFight fight, RWFighterState attacker, List<RWFighterState> defenders)
         : base(fight,

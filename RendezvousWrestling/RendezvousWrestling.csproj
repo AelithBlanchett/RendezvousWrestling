@@ -12,12 +12,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="FightSystem\Achievements\RWAchievement.cs" />
     <Compile Include="FightSystem\Actions\ActionPass.cs" />
-    <Compile Include="FightSystem\Actions\RWAction.cs" />
+    <Compile Include="FightSystem\Actions\RWActiveAction.cs" />
     <Compile Include="FightSystem\Actions\RWActionFactory.cs" />
     <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
     <Compile Include="FightSystem\Constants\Stats.cs" />
     <Compile Include="FightSystem\Constants\Tiers.cs" />
+    <Compile Include="FightSystem\Features\Enabled\BondageBunnyFeature.cs" />
+    <Compile Include="FightSystem\Features\RWFeatureFactory.cs" />
+    <Compile Include="FightSystem\Features\RWFeature.cs" />
+    <Compile Include="FightSystem\Features\RWFeatureParameter.cs" />
     <Compile Include="FightSystem\Fight\RWFight.cs" />
     <Compile Include="FightSystem\Fight\RWFighterState.cs" />
     <Compile Include="FightSystem\Fight\RWFighterStats.cs" />
@@ -27,6 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="FightSystem\Configuration\RWGameSettings.json" />
+    <Content Include="FightSystem\Features\features.json" />
     <Content Include="FightSystem\Modifiers\modifiers.json" />
   </ItemGroup>
 

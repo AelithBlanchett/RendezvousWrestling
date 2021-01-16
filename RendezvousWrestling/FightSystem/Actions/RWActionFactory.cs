@@ -1,13 +1,15 @@
 
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
 using System;
 using System.Collections.Generic;
 
-public class RWActionFactory : IActionFactory<RWAction, RWFight, RWFighterState>
+public class RWActionFactory : IActionFactory<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
-    public RWAction action { get; set; }
-    public RWAction GetAction(int actionType, RWFight fight, RWFighterState attacker, List<RWFighterState> defenders, int tier)
+    public RWActiveAction action { get; set; }
+    public RWActiveAction GetAction(string actionType, RWFight fight, RWFighterState attacker, List<RWFighterState> defenders, int tier)
     {
-        if(!Enum.TryParse(typeof(ActionType), actionType.ToString(), out var parsedActionType))
+        if(!Enum.TryParse(typeof(ActionType), actionType, out var parsedActionType)) //TODO THIS PROBABLY ISNT WORKING!!!
         {
             throw new Exception($"The action ${actionType} doesn't exist!");
         }

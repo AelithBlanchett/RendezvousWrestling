@@ -1,6 +1,8 @@
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
 using System.Threading.Tasks;
 
-public class RWFight : BaseFight
+public class RWFight : BaseFight<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 { //<RWFighterState>{
 
     public string test { get; set; }
@@ -35,7 +37,7 @@ public class RWFight : BaseFight
         await base.nextTurn();
     }
 
-    public override void punishPlayerOnForfeit(BaseFighterState fighter)
+    public override void punishPlayerOnForfeit(RWFighterState fighter)
     {
         //TODO TODO
         //this.message.addHit(string.Format(Messages.forfeitItemApply, [fighter.getStylizedName(), fighter.maxBondageItemsOnSelf().ToString()]));

@@ -2,7 +2,17 @@
 using System;
 using System.Collections.Generic;
 
-public abstract class BaseUser
+public abstract class BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TUser : BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFight : BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFighterState : BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActiveAction : BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
 {
     public string Name { get; set; } = "";
     public bool AreStatsPrivate { get; set; } = true;
@@ -12,14 +22,14 @@ public abstract class BaseUser
     public DateTime UpdatedAt { get; set; }
     public bool Deleted { get; set; } = false;
 
-    public List<BaseAchievement> Achievements { get; set; }
+    public List<TAchievement> Achievements { get; set; }
     public BaseFighterStats Statistics { get; set; }
-    public List<BaseFeature> Features { get; set; }
+    public List<TFeature> Features { get; set; }
     //public List<BaseFighterState<Modifier>>    FightStates {get; set;}
 
-    public IFeatureFactory FeatureFactory { get; set; }
+    public IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> FeatureFactory { get; set; }
 
-    public BaseUser(string name, IFeatureFactory featureFactory)
+    public BaseUser(string name, IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> featureFactory)
     {
         Name = name;
         FeatureFactory = featureFactory;
@@ -69,7 +79,7 @@ public abstract class BaseUser
 
     public int addFeature(string type, int matches)
     {
-        var feature = this.FeatureFactory.getFeature(type, this, matches);
+        var feature = this.FeatureFactory.getFeature(type, (TUser)this, matches);
 
         if (feature == null)
         {
@@ -104,7 +114,7 @@ public abstract class BaseUser
 
     public void clearFeatures()
     {
-        this.Features = new List<BaseFeature>();
+        this.Features = new List<TFeature>();
     }
 
     public bool hasFeature(string featureType)

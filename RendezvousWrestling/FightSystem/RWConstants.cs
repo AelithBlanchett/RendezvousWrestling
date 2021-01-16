@@ -192,14 +192,14 @@ public class Feature
 
 public class FeatureType
 {
-    public static readonly string KickStart = "Kick Start feature";
-    public static readonly string SexyKickStart = "Sexy Kick Start feature";
-    public static readonly string Sadist = "Sadist feature";
-    public static readonly string CumSlut = "Cum Slut feature";
-    public static readonly string RyonaEnthusiast = "Ryona Enthusiast feature";
-    public static readonly string DomSubLover = "D/s Lover feature";
-    public static readonly string BondageBunny = "Bondage Bunny feature";
-    public static readonly string BondageHandicap = "Bondage Handicap feature";
+    public const string KickStart = "Kick Start feature";
+    public const string SexyKickStart = "Sexy Kick Start feature";
+    public const string Sadist = "Sadist feature";
+    public const string CumSlut = "Cum Slut feature";
+    public const string RyonaEnthusiast = "Ryona Enthusiast feature";
+    public const string DomSubLover = "D/s Lover feature";
+    public const string BondageBunny = "Bondage Bunny feature";
+    public const string BondageHandicap = "Bondage Handicap feature";
 }
 
 public class FeatureEffect

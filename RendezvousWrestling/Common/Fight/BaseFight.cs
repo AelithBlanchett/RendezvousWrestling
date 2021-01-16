@@ -3,7 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-public abstract class BaseFight
+public abstract class BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TUser : BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFight : BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFighterState : BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActiveAction : BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
 {
 
     public string idFight { get; set; }
@@ -23,25 +33,25 @@ public abstract class BaseFight
     public bool deleted { get; set; } = false;
 
 
-    public List<BaseActiveAction<BaseFight, BaseFighterState>> pastActions { get; set; }
-    public List<BaseFighterState> fighters { get; set; }
+    public List<TActiveAction> pastActions { get; set; }
+    public List<TFighterState> fighters { get; set; }
 
     public string channel { get; set; }
     public FightMessage message { get; set; }
     public FChatSharpLib.BaseBot fChatLibInstance { get; set; }
-    public IActionFactory actionFactory { get; set; }
+    public TActionFactory actionFactory { get; set; }
 
     public bool debug { get; set; } = false;
     public int forcedDiceRoll { get; set; } = 0;
     public bool diceLess { get; set; } = false;
 
-    public BaseFight(IActionFactory actionFactory)
+    public BaseFight(TActionFactory actionFactory)
     {
         this.idFight = Guid.NewGuid().ToString();
-        this.fighters = new List<BaseFighterState>();
+        this.fighters = new List<TFighterState>();
         this.stage = FightingStages.pick();
         this.fightType = FightType.Classic;
-        this.pastActions = new List<BaseActiveAction<BaseFight, BaseFighterState>>();
+        this.pastActions = new List<TActiveAction>();
         this.winnerTeam = Team.White;
         this.currentTurn = 0;
         this.season = GameSettings.currentSeason;
@@ -160,7 +170,7 @@ public abstract class BaseFight
         {
             if (this.getFighterByName(fighterName) == null)
             { //find user by its name property instead of comparing objects, which doesn't work.
-                BaseFighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName);//TODO fix this
+                TFighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName);//TODO fix this
                 if (activeFighter == null)
                 {
                     throw new Exception(Messages.errorNotRegistered);
@@ -174,7 +184,7 @@ public abstract class BaseFight
                 {
                     throw new Exception(areStatsValid);
                 }
-                activeFighter.assignFight(this);
+                activeFighter.assignFight((TFight)this);
                 activeFighter.initialize();
                 activeFighter.fightStatus = FightStatus.Joined;
                 if (team != Team.White)
@@ -292,7 +302,7 @@ public abstract class BaseFight
             this.fighters[i].fightStatus = FightStatus.Playing;
             int fightCost = GameSettings.tokensCostToFight;
             this.fighters[i].user.removeTokens(fightCost, TransactionType.FightStart);
-            this.fighters[i].triggerFeatures(TriggerMoment.After, Trigger.InitiationRoll, new BaseFeatureParameter<BaseFight, BaseFighterState, BaseActiveAction<BaseFight, BaseFighterState>>(this, this.fighters[i]));
+            this.fighters[i].triggerFeatures(TriggerMoment.After, Trigger.InitiationRoll, (OptionalParameterType)new BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>((TFight)this, this.fighters[i]));
         }
 
 
@@ -348,7 +358,7 @@ public abstract class BaseFight
 
         foreach (var fighter in this.fighters)
         {
-            var strAchievements = fighter.checkAchievements(this);
+            var strAchievements = fighter.checkAchievements((TFight)this);
             if (strAchievements != "")
             {
                 this.message.addSpecial(strAchievements);
@@ -437,7 +447,7 @@ public abstract class BaseFight
         }
     }
 
-    public BaseFighterState currentPlayer
+    public TFighterState currentPlayer
     {
         get
         {
@@ -445,7 +455,7 @@ public abstract class BaseFight
         }
     }
 
-    public BaseFighterState nextPlayer
+    public TFighterState nextPlayer
     {
         get
         {
@@ -487,7 +497,7 @@ public abstract class BaseFight
         }
     }
 
-    public List<BaseFighterState> currentTarget
+    public List<TFighterState> currentTarget
     {
         get
         {
@@ -503,15 +513,15 @@ public abstract class BaseFight
         }
     }
 
-    public void assignRandomTargetToFighter(BaseFighterState fighter)
+    public void assignRandomTargetToFighter(TFighterState fighter)
     {
         fighter.targets.Add(this.getRandomFighterNotInTeam(fighter.assignedTeam).name);
     }
 
     //Dice rolling
-    public List<BaseFighterState> rollAllDice(Trigger triggeringEvent)
+    public List<TFighterState> rollAllDice(Trigger triggeringEvent)
     {
-        var arrSortedFightersByInitiative = new List<BaseFighterState>();
+        var arrSortedFightersByInitiative = new List<TFighterState>();
         foreach (var player in this.getAlivePlayers())
         {
             player.lastDiceRoll = player.roll(10, triggeringEvent);
@@ -527,7 +537,7 @@ public abstract class BaseFight
         return arrSortedFightersByInitiative;
     }
 
-    public BaseFighterState rollAllGetWinner(Trigger triggeringEvent)
+    public TFighterState rollAllGetWinner(Trigger triggeringEvent)
     {
         return this.rollAllDice(triggeringEvent)[0];
     }
@@ -576,7 +586,7 @@ public abstract class BaseFight
         }
         if (isCustomTargetInsteadOfTier)
         {
-            BaseFighterState customTarget = this.getFighterByName(args);
+            TFighterState customTarget = this.getFighterByName(args);
             if (customTarget == null)
             {
                 throw new Exception("The character to tag with is required and wasn't found.");
@@ -607,7 +617,7 @@ public abstract class BaseFight
 
         this.waitingForAction = false;
         var action = this.doAction(actionType, this.currentPlayer, this.currentTarget, tier);
-        var allInvolvedActors = new List<BaseFighterState>();
+        var allInvolvedActors = new List<TFighterState>();
         allInvolvedActors.Add(action.Attacker);
         allInvolvedActors.AddRange(action.Defenders);
         this.displayDeathMessagesIfNeedBe(allInvolvedActors);
@@ -627,16 +637,16 @@ public abstract class BaseFight
         }
     }
 
-    public BaseActiveAction<BaseFight, BaseFighterState> doAction(string actionName, BaseFighterState attacker, List<BaseFighterState> defenders, int tier)
+    public TActiveAction doAction(string actionName, TFighterState attacker, List<TFighterState> defenders, int tier)
     {
-        var action = this.actionFactory.GetAction(actionName, this, attacker, defenders, tier);
+        var action = this.actionFactory.GetAction(actionName, (TFight)this, attacker, defenders, tier);
         action.execute();
         action.save();
         this.pastActions.Add(action);
         return action;
     }
 
-    public void displayDeathMessagesIfNeedBe(List<BaseFighterState> involvedActors)
+    public void displayDeathMessagesIfNeedBe(List<TFighterState> involvedActors)
     {
         foreach (var actor in involvedActors)
         {
@@ -838,7 +848,7 @@ public abstract class BaseFight
                 this.message.addInfo($"Awarded ${tokensToGiveToLosers} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
                 fighter.user.giveTokens(tokensToGiveToLosers, TransactionType.FightReward, GameSettings.botName);
             }
-            this.message.addInfo(fighter.checkAchievements(this));
+            this.message.addInfo(fighter.checkAchievements((TFight)this));
             fighter.save();
         }
 
@@ -847,7 +857,7 @@ public abstract class BaseFight
         this.save();
     }
 
-    public void reorderFightersByInitiative(List<BaseFighterState> arrFightersSortedByInitiative)
+    public void reorderFightersByInitiative(List<TFighterState> arrFightersSortedByInitiative)
     {
         var index = 0;
         foreach (var fighter in arrFightersSortedByInitiative)
@@ -860,9 +870,9 @@ public abstract class BaseFight
         }
     }
 
-    public List<BaseFighterState> getAlivePlayers()
+    public List<TFighterState> getAlivePlayers()
     {
-        var arrPlayers = new List<BaseFighterState>();
+        var arrPlayers = new List<TFighterState>();
         foreach (var player in this.fighters)
         {
             if (!player.isTechnicallyOut() && player.isInTheRing)
@@ -873,9 +883,9 @@ public abstract class BaseFight
         return arrPlayers;
     }
 
-    public BaseFighterState getFighterByName(string name)
+    public TFighterState getFighterByName(string name)
     {
-        BaseFighterState fighter = null;
+        TFighterState fighter = null;
         foreach (var player in this.fighters)
         {
             if (player.name == name)
@@ -913,9 +923,9 @@ public abstract class BaseFight
         return index;
     }
 
-    public List<BaseFighterState> getTeam(Team teamToSearch)
+    public List<TFighterState> getTeam(Team teamToSearch)
     {
-        var teamList = new List<BaseFighterState>();
+        var teamList = new List<TFighterState>();
         foreach (var player in this.fighters)
         {
             if (player.assignedTeam == teamToSearch)
@@ -1063,15 +1073,15 @@ public abstract class BaseFight
         return teamToUse;
     }
 
-    public BaseFighterState getRandomFighter()
+    public TFighterState getRandomFighter()
     {
         return this.getAlivePlayers()[Utils.getRandomInt(0, this.getAlivePlayers().Count)];
     }
 
-    public BaseFighterState getRandomFighterNotInTeam(Team Teams)
+    public TFighterState getRandomFighterNotInTeam(Team Teams)
     {
         var tries = 0;
-        BaseFighterState fighter = null;
+        TFighterState fighter = null;
         while (tries < 99 && (fighter == null || fighter.assignedTeam == Team.White || fighter.assignedTeam == Teams))
         {
             fighter = this.getRandomFighter();
@@ -1097,7 +1107,7 @@ public abstract class BaseFight
         }
     }
 
-    public abstract void punishPlayerOnForfeit(BaseFighterState fighter);
+    public abstract void punishPlayerOnForfeit(TFighterState fighter);
     public abstract void save();
 
 }

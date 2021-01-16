@@ -2,7 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where TFight : BaseFight where TFighterState : BaseFighterState
+public abstract class BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseAction
+    where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TUser : BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFight : BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TFighterState : BaseFighterState<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TActiveAction : BaseActiveAction<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+    where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
 {
 
     public TFight Fight { get; set; }
@@ -22,7 +32,7 @@ public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where
     public int DiceRequiredRoll { get; set; }
     public bool Missed { get; set; } = false;
 
-    public List<BaseModifier> AppliedModifiers { get; set; } = new List<BaseModifier>();
+    public List<TModifier> AppliedModifiers { get; set; } = new List<TModifier>();
 
     public Trigger Trigger { get; set; }
 
@@ -97,7 +107,7 @@ public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where
         DifficultyExplanation = "";
         DiceRequiredRoll = 0;
         Missed = false;
-        AppliedModifiers = new List<BaseModifier>();
+        AppliedModifiers = new List<TModifier>();
     }
 
     public TFighterState Defender
@@ -257,11 +267,11 @@ public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where
         {
             throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetStillInRing));
         }
-        if (this.TargetMustBeInRange && !this.Attacker.isInRange(this.Defenders as List<BaseFighterState>))
+        if (this.TargetMustBeInRange && !this.Attacker.isInRange(this.Defenders as List<TFighterState>))
         {
             throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeInRange));
         }
-        if (this.TargetMustBeOffRange && this.Attacker.isInRange(this.Defenders as List<BaseFighterState>))
+        if (this.TargetMustBeOffRange && this.Attacker.isInRange(this.Defenders as List<TFighterState>))
         {
             throw new System.Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeOffRange));
         }
@@ -315,29 +325,34 @@ public abstract class BaseActiveAction<TFight, TFighterState> : BaseAction where
     public void triggerBeforeEvent()
     {
         this.Attacker.triggerMods(TriggerMoment.Before, this.Trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerFeatures(TriggerMoment.Before, this.Trigger, GetFeatureParameter(this.Fight, this.Attacker, this.Defender, (TActiveAction)this));
         if (this.Defender != null)
         {
-            this.Defender.triggerFeatures(TriggerMoment.Before, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Defender, this.Attacker, this));
+            this.Defender.triggerFeatures(TriggerMoment.Before, this.Trigger, GetFeatureParameter(this.Fight, this.Defender, this.Attacker, (TActiveAction)this));
         }
+    }
+
+    public OptionalParameterType GetFeatureParameter(TFight fight = null, TFighterState fighter = null, TFighterState target = null, TActiveAction action = null)
+    {
+        return (OptionalParameterType)new BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>(fight, fighter, target, action);
     }
 
     public void triggerAfterEvent()
     {
         this.Attacker.triggerMods(TriggerMoment.After, this.Trigger);
-        this.Attacker.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
+        this.Attacker.triggerFeatures(TriggerMoment.After, this.Trigger, GetFeatureParameter(this.Fight, this.Attacker, this.Defender, (TActiveAction)this));
         if (this.Defender != null)
         {
-            this.Defender.triggerFeatures(TriggerMoment.After, this.Trigger, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Defender, this.Attacker, this));
+            this.Defender.triggerFeatures(TriggerMoment.After, this.Trigger, GetFeatureParameter(this.Fight, this.Defender, this.Attacker, (TActiveAction)this));
         }
 
         if (this.IsHold)
         {
             this.Attacker.triggerMods(TriggerMoment.After, Trigger.GrapplingHold);
-            this.Attacker.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Attacker, this.Defender, this));
+            this.Attacker.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, GetFeatureParameter(this.Fight, this.Attacker, this.Defender, (TActiveAction)this));
             if (this.Defender != null)
             {
-                this.Defender.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, new BaseFeatureParameter<TFight, TFighterState, BaseActiveAction<TFight, TFighterState>>(this.Fight, this.Defender, this.Attacker, this));
+                this.Defender.triggerFeatures(TriggerMoment.After, Trigger.GrapplingHold, GetFeatureParameter(this.Fight, this.Defender, this.Attacker, (TActiveAction)this));
             }
         }
     }

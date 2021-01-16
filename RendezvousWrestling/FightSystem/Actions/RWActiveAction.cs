@@ -1,8 +1,10 @@
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
+public abstract class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
 
     public List<int> hpDamageToDefs { get; set; } = new List<int>();
@@ -24,7 +26,7 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
 
     public List<RWModifier> appliedModifiers { get; set; } = new List<RWModifier>();
 
-    public RWAction(RWFight fight,
+    public RWActiveAction(RWFight fight,
                             RWFighterState attacker,
                             List<RWFighterState> defenders,
                             string name,
@@ -520,7 +522,7 @@ public abstract class RWAction : BaseActiveAction<RWFight, RWFighterState>
 
 }
 
-public class EmptyAction : RWAction
+public class EmptyAction : RWActiveAction
 {
 
     public EmptyAction(RWFight fight, RWFighterState defender, RWFighterState attacker) : base(fight, attacker, new List<RWFighterState>() { defender }, "actionName", -1, false, false, false, true, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, false, true, Trigger.None, "no explanation", 1)
