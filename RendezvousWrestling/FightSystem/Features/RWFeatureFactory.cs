@@ -5,6 +5,11 @@ using System;
 public class RWFeatureFactory : IFeatureFactory<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
 
+    public RWFeatureFactory()
+    {
+
+    }
+
     public RWFeature getFeature(string featureName, RWUser receiver, int uses, string id = null){
         RWFeature feature = null;
 

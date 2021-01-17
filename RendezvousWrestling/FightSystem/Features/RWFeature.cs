@@ -5,11 +5,27 @@ using System.Text;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
-    public abstract class RWFeature : BaseFeature<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+    public class RWFeature : BaseFeature<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
     {
-        protected RWFeature(string featureType, RWUser receiver, int uses, string id = null) : base(featureType, receiver, uses, id)
+
+        public RWFeature() : base()
         {
 
+        }
+
+        public RWFeature(string featureType, RWUser receiver, int uses, string id = null) : base(featureType, receiver, uses, id)
+        {
+
+        }
+
+        public override string applyFeature(TriggerMoment moment, Trigger triggeringEvent, RWFeatureParameter parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int getCost()
+        {
+            throw new NotImplementedException();
         }
     }
 }

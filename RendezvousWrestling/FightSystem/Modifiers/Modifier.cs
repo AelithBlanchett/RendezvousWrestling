@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class RWModifier : BaseModifier<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
+    public RWModifier() : base()
+    {
+
+    }
+
     public RWModifier(string name, RWFight fight, RWFighterState receive, RWFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null) :
         base(name, fight, receive, applier, tier, uses, timeToTrigger, triggeringEvent, parentActionIds)
     {
@@ -23,7 +28,7 @@ public RWFighterState    receiver {get; set;}
 
 
     public override bool isAHold() {
-        return (this.name == ModifierType.SubHold || this.name == ModifierType.SexHold || this.name == ModifierType.HumHold);
+        return (this.type == (int)ModifierType.SubHold || this.type == (int)ModifierType.SexHold || this.type == (int)ModifierType.HumHold);
     }
 
     public override string applyModifierOnReceiver( TriggerMoment moment,Trigger triggeringEvent){

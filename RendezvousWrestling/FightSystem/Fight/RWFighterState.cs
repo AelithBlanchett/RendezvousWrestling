@@ -41,6 +41,11 @@ public class RWFighterState : BaseFighterState<RWAchievement, RWActionFactory, R
 
     public RWUser user { get; set; }
 
+    public RWFighterState() : base()
+    {
+
+    }
+
     public RWFighterState(RWFight fight, RWUser user) : base(fight, user)
     {
 
@@ -617,7 +622,7 @@ public class RWFighterState : BaseFighterState<RWAchievement, RWActionFactory, R
         var bondageModCount = 0;
         foreach (var mod in this.modifiers)
         {
-            if (mod.name == ModifierType.Bondage)
+            if (mod.type == (int)ModifierType.Bondage)
             {
                 bondageModCount++;
             }

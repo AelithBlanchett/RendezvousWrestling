@@ -6,6 +6,10 @@ using System.Collections.Generic;
 
 public class RWActionFactory : IActionFactory<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
+    public RWActionFactory() : base()
+    {
+
+    }
     public RWActiveAction action { get; set; }
     public RWActiveAction GetAction(string actionType, RWFight fight, RWFighterState attacker, List<RWFighterState> defenders, int tier)
     {

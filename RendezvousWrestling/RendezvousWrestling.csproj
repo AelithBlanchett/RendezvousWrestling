@@ -28,6 +28,7 @@
     <Compile Include="FightSystem\Fight\RWFighterStats.cs" />
     <Compile Include="FightSystem\Fight\RWUser.cs" />
     <Compile Include="FightSystem\Modifiers\Modifier.cs" />
+    <Compile Include="FightSystem\RendezVousWrestling.cs" />
     <Compile Include="FightSystem\RWConstants.cs" />
   </ItemGroup>
 
@@ -38,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FChatSharpLib" Version="0.5.0" />
+    <ProjectReference Include="..\..\FChatSharpLib\FChatSharpLib\FChatSharpLib.csproj" />
   </ItemGroup>
 
 </Project>

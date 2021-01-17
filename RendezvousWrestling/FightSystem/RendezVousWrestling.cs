@@ -1,14 +1,33 @@
-import * as RWGameSettingsJson from "./Configuration/RWGameSettings.json"
-import {RWFighterState} from "./Fight/RWFighterState";
-import {RWFight} from "./Fight/RWFight";
-import {IFChatLib} from "fchatlib/dist/src/Interfaces/IFChatLib";
-import {CommandHandler} from "./CommandHandler";
-import {RWGameSettings} from "./Configuration/RWGameSettings";
-import {RWUser} from "./Fight/RWUser";
+using RendezvousWrestling.Common.Bot;
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
+using System.Collections.Generic;
 
-public class RendezVousWrestling extends CommandHandler{
-    constructor(IFChatLib fChatLib,string  channel) {
-        super(RWFight, RWUser, RWFighterState, fChatLib, channel);
-        RWGameSettings.loadConfigFile(RWGameSettingsJson);
+public class RendezVousWrestling : BaseFightingGame<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+{
+    public RendezVousWrestling() : base()
+    {
+
+    }
+
+    public RendezVousWrestling(string channel) : base(channel)
+    {
+        var myCommand = new StatusCommand<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>();
+    }
+
+    public RendezVousWrestling(List<string> channels) : base(channels)
+    {
+    }
+
+    public RendezVousWrestling(bool debug) : base(debug)
+    {
+    }
+
+    public RendezVousWrestling(string channel, bool debug = false) : base(channel, debug)
+    {
+    }
+
+    public RendezVousWrestling(IEnumerable<string> channels, bool debug = false) : base(channels, debug)
+    {
     }
 }

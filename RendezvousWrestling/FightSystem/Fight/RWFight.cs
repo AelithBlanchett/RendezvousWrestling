@@ -3,11 +3,11 @@ using RendezvousWrestling.FightSystem.Features;
 using System.Threading.Tasks;
 
 public class RWFight : BaseFight<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
-{ //<RWFighterState>{
+{ 
 
     public string test { get; set; }
 
-    public RWFight() : base(null /*new RWActionFactory()*/)
+    public RWFight() : base()
     {
     }
 

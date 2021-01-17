@@ -21,6 +21,11 @@ public class RWUser : BaseUser<RWAchievement, RWActionFactory, RWActiveAction, R
         return;
     }
 
+    public RWUser() : base()
+    {
+
+    }
+
     public RWUser(string name, RWFeatureFactory featureFactory) : base(name, featureFactory)
     {
 

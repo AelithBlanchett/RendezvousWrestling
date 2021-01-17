@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+public class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
 {
 
     public List<int> hpDamageToDefs { get; set; } = new List<int>();
@@ -25,6 +25,11 @@ public abstract class RWActiveAction : BaseActiveAction<RWAchievement, RWActionF
     public int diceScoreBonusPoints { get; set; }
 
     public List<RWModifier> appliedModifiers { get; set; } = new List<RWModifier>();
+
+    public RWActiveAction() : base()
+    {
+
+    }
 
     public RWActiveAction(RWFight fight,
                             RWFighterState attacker,
@@ -520,6 +525,10 @@ public abstract class RWActiveAction : BaseActiveAction<RWAchievement, RWActionF
         }
     }
 
+    public override void onHit()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class EmptyAction : RWActiveAction

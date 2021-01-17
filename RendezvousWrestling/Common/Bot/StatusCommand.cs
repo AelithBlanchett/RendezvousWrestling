@@ -1,7 +1,11 @@
-using FChatSharpLib.Entities.Plugin;
+﻿using FChatSharpLib.Entities.Plugin.Commands;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
-public class BaseFightingGame<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BasePlugin
+namespace RendezvousWrestling.Common.Bot
+{
+    public class StatusCommand<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseCommand<TFightingGame>
     where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
@@ -12,42 +16,20 @@ public class BaseFightingGame<TAchievement, TActionFactory, TActiveAction, TFeat
     where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
-{
+    where TFightingGame : BaseFightingGame<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
 
-    public TFight Fight { get; set; }
-    public TFighterState FighterState { get; set; }
-
-    public BaseFightingGame() : base(true)
     {
-
-    }
-
-    public BaseFightingGame(string channel) : base(channel)
-    {
-
-    }
-
-    public BaseFightingGame(List<string> channels) : base(channels)
-    {
-
-    }
-
-    public BaseFightingGame(bool debug) : base(debug)
-    {
-    }
-
-    public BaseFightingGame(string channel, bool debug = false) : base(channel, debug)
-    {
-    }
-
-    public BaseFightingGame(IEnumerable<string> channels, bool debug = false) : base(channels, debug)
-    {
-    }
-
-
-    public void Initialize()
-    {
-        this.Fight = new TFight();
+        public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
+        {
+            Console.WriteLine("ok");
+            //if (this.Plugin.Fight == undefined || this.fight.hasEnded || !this.fight.hasStarted)
+            //{
+            //    this.Plugin.FChatClient.SendPrivateMessage("There is no match going on right now.", characterCalling);
+            //}
+            //else
+            //{
+            //    this.fight.resendFightMessage();
+            //}
+        }
     }
 }
-
