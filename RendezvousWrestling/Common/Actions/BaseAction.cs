@@ -1,6 +1,7 @@
+using RendezvousWrestling.Common.DataContext;
 using System;
 
-public abstract class BaseAction
+public abstract class BaseAction : BaseEntity
 {
 
     public string IdAction { get; set; }

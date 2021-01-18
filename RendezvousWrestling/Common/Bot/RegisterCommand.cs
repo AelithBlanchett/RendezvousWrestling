@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class StatusCommand<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseCommand<TFightingGame>
+    public class RegisterCommand<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseCommand<TFightingGame>
     where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
@@ -21,13 +21,39 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.Fight == null || this.Plugin.Fight.hasEnded || !this.Plugin.Fight.hasStarted)
+            TUser fighter = new TUser(); // await(await this.database()).findOne(this.User, characterCalling); //TODO DATABASE
+
+            if (fighter == null)
             {
-                this.Plugin.FChatClient.SendPrivateMessage("There is no match going on right now.", characterCalling);
+                var parserPassed = Parser.checkIfValidStats(args, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
+                if (parserPassed != "")
+                {
+                    this.Plugin.FChatClient.SendPrivateMessage($"[color=red]${parserPassed}[/color]", characterCalling);
+                    return;
+                }
+                var arrParam = new List<int>() { };
+
+                foreach (var nbr in args)
+                {
+                    arrParam.Add(int.Parse(nbr));
+                }
+
+                try
+                {
+                    var newFighter = new TUser();
+                    newFighter.Name = characterCalling;
+                    newFighter.restat(arrParam);
+                    //await newFighter.save(); //TODO DATABASE
+                    this.Plugin.FChatClient.SendPrivateMessage(Messages.registerWelcomeMessage, characterCalling);
+                }
+                catch (Exception ex)
+                {
+                    this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                }
             }
             else
             {
-                this.Plugin.Fight.resendFightMessage();
+                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorAlreadyRegistered, characterCalling);
             }
         }
     }

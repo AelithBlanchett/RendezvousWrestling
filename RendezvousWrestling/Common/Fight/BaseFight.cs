@@ -1,9 +1,10 @@
+using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-public abstract class BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+public abstract class BaseFight<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseEntity
     where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
@@ -152,7 +153,7 @@ public abstract class BaseFight<TAchievement, TActionFactory, TActiveAction, TFe
 
     //Pre-fight utils
 
-    public void leave(string fighterName)
+    public bool leave(string fighterName)
     {
         if (!this.hasStarted)
         {
@@ -161,8 +162,11 @@ public abstract class BaseFight<TAchievement, TActionFactory, TActiveAction, TFe
             {
                 var fighter = this.fighters[index];
                 this.fighters.RemoveAt(index);
+                return true;
             }
         }
+
+        return false;
     }
 
     public Team join(string fighterName, Team team)
@@ -171,7 +175,7 @@ public abstract class BaseFight<TAchievement, TActionFactory, TActiveAction, TFe
         {
             if (this.getFighterByName(fighterName) == null)
             { //find user by its name property instead of comparing objects, which doesn't work.
-                TFighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName);//TODO fix this
+                TFighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName); //TODO DATABASE
                 if (activeFighter == null)
                 {
                     throw new Exception(Messages.errorNotRegistered);

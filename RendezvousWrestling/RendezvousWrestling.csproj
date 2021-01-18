@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +19,7 @@
     <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
     <Compile Include="FightSystem\Constants\Stats.cs" />
     <Compile Include="FightSystem\Constants\Tiers.cs" />
+    <Compile Include="FightSystem\DataContext\RWDataContext.cs" />
     <Compile Include="FightSystem\Features\Enabled\BondageBunnyFeature.cs" />
     <Compile Include="FightSystem\Features\RWFeatureFactory.cs" />
     <Compile Include="FightSystem\Features\RWFeature.cs" />
@@ -36,6 +37,19 @@
     <Content Include="FightSystem\Configuration\RWGameSettings.json" />
     <Content Include="FightSystem\Features\features.json" />
     <Content Include="FightSystem\Modifiers\modifiers.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
   </ItemGroup>
 
   <ItemGroup>

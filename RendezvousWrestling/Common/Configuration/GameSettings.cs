@@ -25,7 +25,7 @@ public class GameSettings
 
     public static int intOfDifferentStats { get; set; } = 6;
     public static int intOfRequiredStatPoints { get; set; } = 230;
-    public static int pminStatLimit { get; set; } = 10;
+    public static int minStatLimit { get; set; } = 10;
     public static int maxStatLimit { get; set; } = 100;
     public static int restatCostInTokens { get; set; } = 5;
     public static int tierRequiredToBreakHold = -1;

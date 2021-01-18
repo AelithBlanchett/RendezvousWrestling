@@ -8,7 +8,7 @@ namespace RendezvousWrestling.Tests.Fakes
     {
         public BaseActiveAction GetAction(string actionName, BaseFight fight, BaseFighterState attacker, List<BaseFighterState> defenders, int tier)
         {
-            return new BaseActiveAction
+            return null;
         }
     }
 }

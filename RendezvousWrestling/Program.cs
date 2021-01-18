@@ -8,6 +8,7 @@ namespace RendezvousWrestling
         {
             Console.WriteLine("Hello World!");
             var plugin = new RendezVousWrestling(true);
+            plugin.Initialize();
             plugin.Run();
         }
     }

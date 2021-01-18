@@ -16,6 +16,7 @@ public class BaseFightingGame<TAchievement, TActionFactory, TActiveAction, TFeat
 
     public TFight Fight { get; set; }
     public TFighterState FighterState { get; set; }
+    public string DebugImpersonatedCharacter { get; set; }
 
     public BaseFightingGame() : base(true)
     {
@@ -48,6 +49,50 @@ public class BaseFightingGame<TAchievement, TActionFactory, TActiveAction, TFeat
     public void Initialize()
     {
         this.Fight = new TFight();
+        this.Fight.build(this.FChatClient, Channel);
+    }
+
+    public bool isInFight(string character, bool displayIfNotInFight = false, bool displayIfInFight = false)
+    {
+        if (this.isFightGoingOn(character, false, false) || (this.Fight.fighters != null && this.Fight.fighters.FindIndex(x => x.name == character) == -1))
+        {
+            if (displayIfNotInFight)
+            {
+                this.FChatClient.SendPrivateMessage("[color=red]There isn't any fight going on, or you're not participating in it.[/color]", character);
+            }
+            return false;
+        }
+        else
+        {
+            if (displayIfInFight)
+            {
+                this.FChatClient.SendPrivateMessage("[color=red]You're participating in this fight.[/color]", character);
+            }
+            return true;
+        }
+    }
+
+    public bool isFightGoingOn(string character, bool displayIfNoFight = false, bool displayIfFight = false)
+    {
+        var result = false;
+        if (this.Fight == null || !this.Fight.hasStarted || this.Fight.hasEnded)
+        {
+            if (displayIfNoFight)
+            {
+                this.FChatClient.SendPrivateMessage("[color=red]There isn't any fight going on.[/color]", character);
+            }
+            result = false;
+        }
+        else
+        {
+            if (displayIfFight)
+            {
+                this.FChatClient.SendPrivateMessage("[color=red]There's already a fight going on.[/color]", character);
+            }
+            result = true;
+        }
+
+        return result;
     }
 }
 

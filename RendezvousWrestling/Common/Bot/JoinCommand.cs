@@ -1,8 +1,12 @@
-using RendezvousWrestling.Common.DataContext;
+﻿using FChatSharpLib.Entities.Plugin.Commands;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-public abstract class BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseEntity
+namespace RendezvousWrestling.Common.Bot
+{
+    public class JoinCommand<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseCommand<TFightingGame>
     where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
@@ -13,66 +17,38 @@ public abstract class BaseFeature<TAchievement, TActionFactory, TActiveAction, T
     where OptionalParameterType : BaseFeatureParameter<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TAchievement : BaseAchievement<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TModifier : BaseModifier<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
-{
+    where TFightingGame : BaseFightingGame<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
 
-    public string Id;
-    public string Type;
-    public int Uses;
-    public bool Permanent;
-    public TUser Receiver;
-    public DateTime CreatedAt;
-    public DateTime UpdatedAt;
-    public bool Deleted;
-
-    public BaseFeature()
     {
-    }
-
-    public BaseFeature(string featureType, TUser receiver, int uses, string id = null)
-    {
-        if (id != null)
+        public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            Id = id.ToString();
-        }
-        else
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
-        Receiver = receiver;
-
-        Type = featureType;
-    }
-
-    public bool isExpired()
-    {
-        if (!this.Permanent)
-        {
-            if (this.Uses <= 0)
+            if (this.Plugin.Fight == null || this.Plugin.Fight.hasEnded)
             {
-                return true;
+                this.Plugin.Fight = new TFight();
+                this.Plugin.Fight.build(this.Plugin.FChatClient, channel);
+            }
+
+            var chosenTeam = Team.White;
+            object parsedTeamObject = Team.White;
+
+            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), out parsedTeamObject)){
+                this.Plugin.FChatClient.SendPrivateMessage("[color=red]" + "This team doesn't exist." + "[/color]", channel);
+                return;
+            }
+            else
+            {
+                chosenTeam = (Team)parsedTeamObject;
+            }
+
+            try
+            {
+                var assignedTeam = this.Plugin.Fight.join(characterCalling, chosenTeam);
+                this.Plugin.FChatClient.SendMessageInChannel($"[color=green]${characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
+            }
+            catch (Exception ex)
+            {
+                this.Plugin.FChatClient.SendPrivateMessage("[color=red]" + ex.Message + "[/color]", channel);
             }
         }
-        return false;
     }
-
-    public string Trigger(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters)
-    {
-        var triggeredFeatureMessage = this.applyFeature(moment, @triggeringEvent, parameters);
-        var wasFeatureTriggered = (triggeredFeatureMessage.Count() > 0);
-
-        string messageAboutFeature = "";
-
-        if (wasFeatureTriggered)
-        {
-            messageAboutFeature = "${this.receiver.name} is affected by the ${this.type}, ${triggeredFeatureMessage}";
-        }
-
-        return messageAboutFeature;
-    }
-
-    public abstract int getCost();
-
-    public abstract string applyFeature(TriggerMoment moment, Trigger @triggeringEvent, OptionalParameterType parameters);
-
 }

@@ -1,8 +1,10 @@
 
+using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public abstract class BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>
+public abstract class BaseUser<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> : BaseEntity
     where TActionFactory : IActionFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeature : BaseFeature<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
     where TFeatureFactory : IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType>, new()
@@ -18,16 +20,16 @@ public abstract class BaseUser<TAchievement, TActionFactory, TActiveAction, TFea
     public bool AreStatsPrivate { get; set; } = true;
     public int Tokens { get; set; } = 50;
     public int TokensSpent { get; set; } = 0;
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-    public bool Deleted { get; set; } = false;
 
-    public List<TAchievement> Achievements { get; set; }
-    public BaseFighterStats Statistics { get; set; }
-    public List<TFeature> Features { get; set; }
+    public virtual List<TAchievement> Achievements { get; set; }
+    public virtual BaseFighterStats Statistics { get; set; }
+    public virtual List<TFeature> Features { get; set; }
+
     //public List<BaseFighterState<Modifier>>    FightStates {get; set;}
 
+    [NotMapped]
     public IFeatureFactory<TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TModifier, TUser, OptionalParameterType> FeatureFactory { get; set; }
+    
     public BaseUser()
     {
     }

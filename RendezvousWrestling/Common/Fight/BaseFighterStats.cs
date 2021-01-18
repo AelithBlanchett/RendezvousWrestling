@@ -1,4 +1,6 @@
-public abstract class BaseFighterStats
+using RendezvousWrestling.Common.DataContext;
+
+public abstract class BaseFighterStats : BaseEntity
 {
 
     public string statsId { get; set; }
