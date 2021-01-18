@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\Bot\BaseCommandHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="FightSystem\Achievements\RWAchievement.cs" />
     <Compile Include="FightSystem\Actions\ActionPass.cs" />
     <Compile Include="FightSystem\Actions\RWActiveAction.cs" />

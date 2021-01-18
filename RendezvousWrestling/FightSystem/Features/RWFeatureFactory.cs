@@ -2,7 +2,7 @@ using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
 using RendezvousWrestling.FightSystem.Features.Enabled;
 using System;
-public class RWFeatureFactory : IFeatureFactory<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+public class RWFeatureFactory : IFeatureFactory<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
 {
 
     public RWFeatureFactory()

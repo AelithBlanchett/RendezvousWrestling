@@ -1,8 +1,9 @@
 
-public class RWFighterStats : BaseFighterStats
-{
+using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Features;
 
-    public RWUser fighter { get; set; }
+public class RWFighterStats : BaseFighterStats<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+{
 
     public int brawlAtksCount { get; set; }
 

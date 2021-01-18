@@ -4,7 +4,7 @@ using RendezvousWrestling.FightSystem.Features;
 using System;
 using System.Collections.Generic;
 
-public class RWFighterState : BaseFighterState<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
 {
 
     public int hp { get; set; } = 0;

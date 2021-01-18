@@ -3,7 +3,7 @@ using RendezvousWrestling.FightSystem.Features;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class RWUser : BaseUser<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+public class RWUser : BaseUser<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
 {
 
 

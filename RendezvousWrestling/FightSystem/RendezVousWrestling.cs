@@ -3,7 +3,7 @@ using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
 using System.Collections.Generic;
 
-public class RendezVousWrestling : BaseFightingGame<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+public class RendezVousWrestling : BaseFightingGame<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
 {
     public RendezVousWrestling() : base()
     {
@@ -12,7 +12,7 @@ public class RendezVousWrestling : BaseFightingGame<RWAchievement, RWActionFacto
 
     public RendezVousWrestling(string channel) : base(channel)
     {
-        var myCommand = new StatusCommand<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>();
+        var myCommand = new StatusCommand<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>();
     }
 
     public RendezVousWrestling(List<string> channels) : base(channels)

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace RendezvousWrestling.Common.DataContext
 {
-    public class RWDataContext : BaseDataContext<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+    public class RWDataContext : BaseDataContext<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
     {
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseInMemoryDatabase("RW");

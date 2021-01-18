@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
-    public class RWFeature : BaseFeature<RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWModifier, RWUser, RWFeatureParameter>
+    public class RWFeature : BaseFeature<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
     {
 
         public RWFeature() : base()
