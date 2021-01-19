@@ -214,9 +214,9 @@ public abstract class BaseActiveAction<TFightingGame, TAchievement, TActionFacto
     {
         foreach (var defender in this.Defenders)
         {
-            if (this.Tier == GameSettings.tierRequiredToBreakHold && this.Attacker.isInHoldAppliedBy(defender.name))
+            if (this.Tier == GameSettings.tierRequiredToBreakHold && this.Attacker.isInHoldAppliedBy(defender.Name))
             {
-                this.Attacker.releaseHoldsAppliedBy(defender.name);
+                this.Attacker.releaseHoldsAppliedBy(defender.Name);
                 this.Fight.message.addHit(string.Format(Messages.ForcedHoldRelease, this.Attacker.getStylizedName(), defender.getStylizedName()));
             }
             else if (this.Tier == GameSettings.tierRequiredToBreakHold && defender.isApplyingHold())

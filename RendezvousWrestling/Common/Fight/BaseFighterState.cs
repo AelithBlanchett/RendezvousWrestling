@@ -1,6 +1,8 @@
 using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> : BaseEntity
@@ -18,6 +20,10 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     where TFightingGame : BaseFightingGame<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
 {
 
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; }
+
     public Team assignedTeam { get; set; } = Team.White;
     public List<string> targets { get; set; } = new List<string>();
     public bool isReady { get; set; } = false;
@@ -27,18 +33,34 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     public int lastTagTurn { get; set; } = 9999999;
     public bool wantsDraw { get; set; } = false;
     public int distanceFromRingCenter { get; set; }
-    public DateTime createdAt { get; set; }
-    public DateTime updatedAt { get; set; }
-    public bool deleted { get; set; } = false;
     public FightStatus fightStatus { get; set; }
 
-    public TFight fight { get; set; }
-    public TUser user { get; set; }
-    public List<TModifier> modifiers { get; set; }
+    [ForeignKey("Fight")]
+    public string FightId { get; set; }
+    public TFight Fight { get; set; }
 
+    [ForeignKey("User")]
+    public string UserId { get; set; }
+    public TUser User { get; set; }
+
+    [NotMapped]
+    public List<TModifier> modifiers
+    {
+        get
+        {
+            return (List<TModifier>)ReceivedModifiers.Union(AppliedModifiers);
+        }
+    }
+
+    public virtual List<TModifier> ReceivedModifiers { get; set; } = new List<TModifier>();
+
+    public virtual List<TModifier> AppliedModifiers { get; set; } = new List<TModifier>();
+
+    [NotMapped]
     public Dice dice { get; set; }
 
-    public string name { get { return this.user.Name; } }
+    [NotMapped]
+    public string Name { get { return this.User.Id; } }
 
     public BaseFighterState()
     {
@@ -46,8 +68,8 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
 
     public BaseFighterState(TFight fight, TUser fighter)
     {
-        this.fight = fight;
-        this.user = fighter;
+        this.Fight = fight;
+        this.User = fighter;
         this.assignedTeam = Team.White;
         this.targets = null;
         this.isReady = false;
@@ -57,8 +79,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         this.canMoveFromOrOffRing = true;
         this.lastTagTurn = 9999999;
         this.distanceFromRingCenter = 0;
-        this.wantsDraw = false;
-        this.modifiers = new List<TModifier>();
+        this.wantsDraw = false;;
         this.targets = new List<string>();
 
         this.dice = new Dice(GameSettings.diceSides);
@@ -68,7 +89,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
 
     public void assignFight(TFight fight)
     {
-        this.fight = fight;
+        this.Fight = fight;
     }
 
     public List<TFighterState> getTargets()
@@ -76,7 +97,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var fighters = new List<TFighterState>();
         foreach (var name in this.targets)
         {
-            var fighter = this.fight.getFighterByName(name);
+            var fighter = this.Fight.getFighterByName(name);
             if (fighter != null)
             {
                 fighters.Add(fighter);
@@ -88,7 +109,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     public string checkAchievements(TFight fight = null)
     {
         var strBase = "[color=yellow][b]Achievements unlocked for ${this.name}![/b][/color]\n";
-        var added = AchievementManager<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>.checkAll(this.user, (TFighterState)this, fight);
+        var added = AchievementManager<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>.checkAll(this.User, (TFighterState)this, fight);
 
         if (added.Count > 0)
         {
@@ -114,9 +135,9 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     {
         get
         {
-            if (this.fight != null)
+            if (this.Fight != null)
             {
-                return this.fight.debug;
+                return this.Fight.debug;
             }
             else
             {
@@ -139,9 +160,9 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
             result = this.dice.roll(GameSettings.diceCount * times);
         }
 
-        if (this.isInDebug && this.fight.forcedDiceRoll > 0)
+        if (this.isInDebug && this.Fight.forcedDiceRoll > 0)
         {
-            result = this.fight.forcedDiceRoll;
+            result = this.Fight.forcedDiceRoll;
         }
 
         this.triggerMods(TriggerMoment.After, @triggeringEvent);
@@ -158,7 +179,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
             var message = mod.trigger(moment, @triggeringEvent, objFightAction);
             if (message.Length > 0)
             {
-                this.fight.message.addSpecial(message);
+                this.Fight.message.addSpecial(message);
                 atLeastOneModWasActivated = true;
             }
         }
@@ -169,14 +190,14 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     public void removeMod(string idMod)
     { 
         //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
-        var index = this.modifiers.RemoveAll(x => x.idModifier == idMod);
+        var index = this.modifiers.RemoveAll(x => x.Id == idMod);
     }
 
     public FightLength fightDuration()
     {
-        if (this.fight != null)
+        if (this.Fight != null)
         {
-            return this.fight.fightLength;
+            return this.Fight.fightLength;
         }
         else
         {
@@ -230,7 +251,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var stunTier = -1;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.name == "Stun")
+            if (mod.Receiver.Name == this.Name && mod.name == "Stun")
             {
                 stunTier = mod.tier;
             }
@@ -248,7 +269,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var isApplyingHold = false;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.isAHold())
+            if (mod.Receiver.Name == this.Name && mod.isAHold())
             {
                 isApplyingHold = true;
             }
@@ -261,7 +282,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var tier = -1;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.isAHold())
+            if (mod.Receiver.Name == this.Name && mod.isAHold())
             {
                 tier = mod.tier;
             }
@@ -274,7 +295,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var isInHold = false;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.isAHold())
+            if (mod.Receiver.Name == this.Name && mod.isAHold())
             {
                 isInHold = true;
             }
@@ -288,7 +309,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var isInHold = false;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.isAHold() && mod.name == holdType)
+            if (mod.Receiver.Name == this.Name && mod.isAHold() && mod.name == holdType)
             {
                 isInHold = true;
             }
@@ -301,7 +322,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var isTrue = false;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == fighterName && mod.isAHold())
+            if (mod.Receiver.Name == fighterName && mod.isAHold())
             {
                 isTrue = true;
             }
@@ -314,7 +335,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
         var tier = -1;
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.isAHold())
+            if (mod.Receiver.Name == this.Name && mod.isAHold())
             {
                 tier = mod.tier;
             }
@@ -326,9 +347,9 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     {
         foreach (var mod in this.modifiers)
         {
-            if (mod.applier != null && mod.applier.name == this.name && mod.isAHold())
+            if (mod.Applier != null && mod.Applier.Name == this.Name && mod.isAHold())
             {
-                mod.receiver.releaseHoldsAppliedBy(mod.applier.name);
+                mod.Receiver.releaseHoldsAppliedBy(mod.Applier.Name);
             }
         }
     }
@@ -337,9 +358,9 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     {
         foreach (var mod in this.modifiers)
         {
-            if (mod.applier != null && mod.applier.name == fighterName && mod.isAHold())
+            if (mod.Applier != null && mod.Applier.Name == fighterName && mod.isAHold())
             {
-                this.removeMod(mod.idModifier);
+                this.removeMod(mod.Id);
             }
         }
     }
@@ -348,9 +369,9 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     {
         foreach (var mod in this.modifiers)
         {
-            if (mod.receiver.name == this.name && mod.isAHold())
+            if (mod.Receiver.Name == this.Name && mod.isAHold())
             {
-                this.removeMod(mod.idModifier);
+                this.removeMod(mod.Id);
             }
         }
     }
@@ -402,12 +423,12 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     public bool triggerFeatures(TriggerMoment before, Trigger trigger, OptionalParameterType baseFeatureParameter)
     {
         bool atLeastOneFeatureWasActivated = false;
-        foreach (var feat in this.user.Features)
+        foreach (var feat in this.User.Features)
         {
             var message = feat.Trigger(before, trigger, baseFeatureParameter);
             if (!string.IsNullOrEmpty(message))
             {
-                this.fight.message.addSpecial(message);
+                this.Fight.message.addSpecial(message);
                 atLeastOneFeatureWasActivated = true;
             }
         }

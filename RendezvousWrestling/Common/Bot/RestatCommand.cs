@@ -48,11 +48,11 @@ namespace RendezvousWrestling.Common.Bot
                         fighter.removeTokens(cost, TransactionType.Restat);
                         fighter.restat(arrParam);
                         //await fighter.save(); //TODO DATABASE
-                        this.Plugin.FChatClient.SendPrivateMessage(Messages.statChangeSuccessful, fighter.Name);
+                        this.Plugin.FChatClient.SendPrivateMessage(Messages.statChangeSuccessful, fighter.Id);
                     }
                     catch (Exception ex)
                     {
-                        this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), fighter.Name);
+                        this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), fighter.Id);
                     }
 
                 }

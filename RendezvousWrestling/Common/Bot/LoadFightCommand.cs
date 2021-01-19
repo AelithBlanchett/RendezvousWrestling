@@ -30,7 +30,7 @@ namespace RendezvousWrestling.Common.Bot
                     if (args.Any())
                     {
                         TFight theFight = new TFight(); // await(await this.database()).findOne(this.Plugin.Fight, args); //TODO LOAD DATABASE
-                        if (theFight != null && (this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel) || theFight.fighters.FindIndex(x => x.name == characterCalling) != -1))
+                        if (theFight != null && (this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel) || theFight.Fighters.FindIndex(x => x.Name == characterCalling) != -1))
                         {
                             this.Plugin.Fight = theFight;
                             this.Plugin.Fight.build(this.Plugin.FChatClient, channel);

@@ -1,5 +1,7 @@
 using RendezvousWrestling.Common.DataContext;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 public abstract class BaseFeature<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> : BaseEntity
@@ -17,14 +19,17 @@ public abstract class BaseFeature<TFightingGame, TAchievement, TActionFactory, T
     where TFightingGame : BaseFightingGame<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
 {
 
-    public string Id;
-    public string Type;
-    public int Uses;
-    public bool Permanent;
-    public TUser Receiver;
-    public DateTime CreatedAt;
-    public DateTime UpdatedAt;
-    public bool Deleted;
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; }
+
+    public string Type { get; set; }
+    public int Uses { get; set; }
+    public bool Permanent { get; set; }
+
+    [ForeignKey("Receiver")]
+    public string ReceiverId { get; set; }
+    public TUser Receiver { get; set; }
 
     public BaseFeature()
     {

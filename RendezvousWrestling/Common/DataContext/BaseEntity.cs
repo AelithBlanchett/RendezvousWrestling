@@ -10,6 +10,7 @@ namespace RendezvousWrestling.Common.DataContext
     {
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public bool Deleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

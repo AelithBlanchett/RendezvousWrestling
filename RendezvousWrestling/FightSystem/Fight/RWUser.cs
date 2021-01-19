@@ -14,7 +14,6 @@ public class RWUser : BaseUser<RendezVousWrestling, RWAchievement, RWActionFacto
     public int endurance { get; set; } = 1;
     public int willpower { get; set; } = 1;
 
-    public virtual RWFighterStats stats { get; set; }
 
     public override void saveTokenTransaction(string idFighter, int amount, TransactionType type, string fromFighter = null)
     {
@@ -49,11 +48,11 @@ public class RWUser : BaseUser<RendezVousWrestling, RWAchievement, RWActionFacto
 
     public override string outputStats()
     {
-        return "[b]" + this.Name + "[/b]'s stats" + "\n" +
+        return "[b]" + this.Id + "[/b]'s stats" + "\n" +
             "[b][color=red]Power[/color][/b]:  " + this.power + "      " + "\n" +
             "[b][color=purple]Sensuality[/color][/b]:  " + this.sensuality + "\n" +
             "[b][color=orange]Toughness[/color][/b]: " + this.toughness + "\n" +
-            "[b][color=cyan]Endurance[/color][/b]: " + this.endurance + "      " + "[b][color=green]Win[/color]/[color=red]Loss[/color] record[/b]: " + this.stats.wins + " - " + this.stats.losses + "\n" +
+            "[b][color=cyan]Endurance[/color][/b]: " + this.endurance + "      " + "[b][color=green]Win[/color]/[color=red]Loss[/color] record[/b]: " + this.Stats.wins + " - " + this.Stats.losses + "\n" +
             "[b][color=green]Dexterity[/color][/b]: " + this.dexterity + "\n" +
             "[b][color=brown]Willpower[/color][/b]: " + this.willpower + "      " + "[b][color=orange]Tokens[/color][/b]: " + this.Tokens + "         [b][color=orange]Total spent[/color][/b]: " + this.TokensSpent + "\n" +
             "[b][color=red]Features[/color][/b]: [b]" + this.getFeaturesList() + "[/b]\n" +

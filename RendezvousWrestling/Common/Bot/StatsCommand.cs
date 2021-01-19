@@ -26,7 +26,7 @@ namespace RendezvousWrestling.Common.Bot
 
             if (fighter != null)
             {
-                this.Plugin.FChatClient.SendPrivateMessage(fighter.outputStats(), fighter.Name);
+                this.Plugin.FChatClient.SendPrivateMessage(fighter.outputStats(), fighter.Id);
             }
             else
             {

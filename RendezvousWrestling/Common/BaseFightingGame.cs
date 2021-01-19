@@ -56,7 +56,7 @@ public class BaseFightingGame<TFightingGame, TAchievement, TActionFactory, TActi
 
     public bool isInFight(string character, bool displayIfNotInFight = false, bool displayIfInFight = false)
     {
-        if (this.isFightGoingOn(character, false, false) || (this.Fight.fighters != null && this.Fight.fighters.FindIndex(x => x.name == character) == -1))
+        if (this.isFightGoingOn(character, false, false) || (this.Fight.Fighters != null && this.Fight.Fighters.FindIndex(x => x.Name == character) == -1))
         {
             if (displayIfNotInFight)
             {

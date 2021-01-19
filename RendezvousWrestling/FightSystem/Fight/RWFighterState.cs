@@ -37,10 +37,6 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
     public int heartsHealLastRound { get; set; } = 0;
     public int orgasmsHealLastRound { get; set; } = 0;
 
-    public List<RWModifier> modifiers { get; set; }
-
-    public RWUser user { get; set; }
-
     public RWFighterState() : base()
     {
 
@@ -210,19 +206,19 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
 
     public string getStatsInString()
     {
-        return "${this.user.power},${this.user.sensuality},${this.user.toughness},${this.user.endurance},${this.user.dexterity},${this.user.willpower}";
+        return "${this.User.power},${this.User.sensuality},${this.User.toughness},${this.User.endurance},${this.User.dexterity},${this.User.willpower}";
     }
 
     //fight is "mistakenly" set as optional to be compatible with the super.init
     public void initialize()
     {
         base.initialize();
-        this.startingToughness = this.user.toughness;
-        this.startingEndurance = this.user.endurance;
-        this.startingWillpower = this.user.willpower;
-        this.startingSensuality = this.user.sensuality;
-        this.startingPower = this.user.power;
-        this.startingDexterity = this.user.dexterity;
+        this.startingToughness = this.User.toughness;
+        this.startingEndurance = this.User.endurance;
+        this.startingWillpower = this.User.willpower;
+        this.startingSensuality = this.User.sensuality;
+        this.startingPower = this.User.power;
+        this.startingDexterity = this.User.dexterity;
 
         this.hp = this.hpPerHeart();
         this.lust = 0;
@@ -475,14 +471,14 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
             //this.heartsRemaining--;
             this.livesRemaining--;
             this.heartsDamageLastRound += 1;
-            this.fight.message.addHit($"[b][color=red]Heart broken![/color][/b] ${this.name} has ${this.livesRemaining} lives left.");
+            this.Fight.message.addHit($"[b][color=red]Heart broken![/color][/b] ${this.Name} has ${this.livesRemaining} lives left.");
             if (this.livesRemaining > 0)
             {
                 this.hp = this.hpPerHeart();
             }
             else if (this.livesRemaining == 1)
             {
-                this.fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.name}!");
+                this.Fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.Name}!");
             }
             this.triggerMods(TriggerMoment.After, Trigger.MainBarDepleted);
         }
@@ -512,7 +508,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
             //this.orgasmsRemaining--;
             this.livesRemaining--;
             this.orgasmsDamageLastRound += 1;
-            this.fight.message.addHit($"[b][color=pink]Orgasm on the mat![/color][/b] ${this.name} has ${this.livesRemaining} lives left.");
+            this.Fight.message.addHit($"[b][color=pink]Orgasm on the mat![/color][/b] ${this.Name} has ${this.livesRemaining} lives left.");
             this.lust = 0;
             if (triggerMods)
             {
@@ -520,7 +516,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
             }
             if (this.livesRemaining == 1)
             {
-                this.fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.name}!");
+                this.Fight.message.addHit($"[b][color=red]Last life[/color][/b] for ${this.Name}!");
             }
         }
         this.triggerMods(TriggerMoment.After, Trigger.SecondaryBarDamage);
@@ -550,7 +546,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
         var condition = (this.livesRemaining == 0);
         if (condition && displayMessage)
         {
-            this.fight.message.addHit($"${this.getStylizedName()} couldn't take it anymore! They're out!");
+            this.Fight.message.addHit($"${this.getStylizedName()} couldn't take it anymore! They're out!");
         }
         return condition;
     }
@@ -560,7 +556,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
         var condition = (this.livesRemaining == 0);
         if (condition && displayMessage)
         {
-            this.fight.message.addHit($"${this.getStylizedName()} got wrecked sexually! They're out!");
+            this.Fight.message.addHit($"${this.getStylizedName()} got wrecked sexually! They're out!");
         }
         return condition;
     }
@@ -572,7 +568,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
         var condition = false;
         if (condition && displayMessage)
         {
-            this.fight.message.addHit($"${this.getStylizedName()} completely lost their focus! They're out!");
+            this.Fight.message.addHit($"${this.getStylizedName()} completely lost their focus! They're out!");
         }
         return condition;
     }
@@ -582,7 +578,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
         var condition = (this.bondageItemsOnSelf() >= this.maxBondageItemsOnSelf());
         if (condition && displayMessage)
         {
-            this.fight.message.addHit($"${this.getStylizedName()} is completely bound! They're out!");
+            this.Fight.message.addHit($"${this.getStylizedName()} is completely bound! They're out!");
         }
         return condition;
     }
@@ -594,7 +590,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
 
     public override bool isTechnicallyOut(bool displayMessage = false)
     {
-        switch (this.fight.fightType)
+        switch (this.Fight.fightType)
         {
             case FightType.Classic:
             case FightType.Tag:
@@ -639,9 +635,9 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
         //orgasm(s))[/color]" : "")}${((this.heartsDamageLastRound > 0 || this.heartsHealLastRound > 0) ? "${(((-this.heartsDamageLastRound + this.heartsHealLastRound) < 0) ? "[color=red]" : "[color=green]")}
         //(${Utils.getSignedint(-this.heartsDamageLastRound + this.heartsHealLastRound)}
         //heart(s))[/color]" : "")}(${this.livesRemaining}|${this.maxLives()})[/color] "         ${this.displayRemainingLives}${((this.orgasmsDamageLastRound > 0 || this.orgasmsHealLastRound > 0) ? "${(((-this.orgasmsDamageLastRound + this.orgasmsHealLastRound) < 0) ? "[colorlivesLine = "  [color=red]lives =red]"  {get; set;}
-        //public [/ color][b][colorfocusLine = "  [color=orange]${this.user.hasFeature(FeatureType.DomSubLover) ? "submissiveness"  =${(this.focus <= 0 ? "red" : "orange")}]${this.focus}[/color][/b]${(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? "${(((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")}
+        //public [/ color][b][colorfocusLine = "  [color=orange]${this.User.hasFeature(FeatureType.DomSubLover) ? "submissiveness"  =${(this.focus <= 0 ? "red" : "orange")}]${this.focus}[/color][/b]${(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? "${(((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")}
         //(${Utils.getSignedint(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]" : "")}|[color=green]${this.maxFocus()}[/color] "         "focus"} {get; set;}
-        //public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] "        var turnsFocusLine = "  [color=orange] turns ${this.user.hasFeature(FeatureType.DomSubLover)? "being too submissive"  {get; set;}
+        //public  "without focus"}: ${this.consecutiveTurnsWithoutFocus}|${RWGameSettings.maxTurnsWithoutFocus}[/color] "        var turnsFocusLine = "  [color=orange] turns ${this.User.hasFeature(FeatureType.DomSubLover)? "being too submissive"  {get; set;}
         //var bondageLine = "  [color=purple]bondage items ${this.bondageItemsOnSelf()}|${RWGameSettings.maxBondageItemsOnSelf}[/color] ";
         //public  ${this.getListOfActiveModifiers()}
         //[/color] "        var modifiersLine = "  [color=cyan] affected by { get; set; }

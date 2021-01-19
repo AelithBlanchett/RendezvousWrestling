@@ -42,7 +42,7 @@ namespace RendezvousWrestling.Common.Bot
                 try
                 {
                     var newFighter = new TUser();
-                    newFighter.Name = characterCalling;
+                    newFighter.Id = characterCalling;
                     newFighter.restat(arrParam);
                     //await newFighter.save(); //TODO DATABASE
                     this.Plugin.FChatClient.SendPrivateMessage(Messages.registerWelcomeMessage, characterCalling);

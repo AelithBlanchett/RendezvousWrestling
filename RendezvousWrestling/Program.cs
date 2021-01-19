@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 
 namespace RendezvousWrestling
 {
@@ -6,7 +7,6 @@ namespace RendezvousWrestling
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             var plugin = new RendezVousWrestling(true);
             plugin.Initialize();
             plugin.Run();

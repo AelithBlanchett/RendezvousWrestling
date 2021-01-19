@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,6 +21,47 @@ namespace RendezvousWrestling.Common.DataContext
     where TFighterStats : BaseFighterStats<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
     where TFightingGame : BaseFightingGame<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
     {
+        public DbSet<TFight> Fights { get; set; }
+
         public DbSet<TUser> Users { get; set; }
+
+        public DbSet<TFighterState> FighterStates { get; set; }
+
+        public DbSet<TFeature> Features { get; set; }
+
+        //public DbSet<TActiveAction> Actions { get; set; }
+
+        public DbSet<TAchievement> Achievements { get; set; }
+
+        public DbSet<TModifier> Modifiers { get; set; }
+
+        public DbSet<TFighterStats> Stats { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TFighterState>()
+            .HasOne(p => p.Fight)
+            .WithMany(b => b.Fighters);
+
+            modelBuilder.Entity<TModifier>()
+            .HasOne(p => p.Receiver)
+            .WithMany(b => b.ReceivedModifiers);
+
+            modelBuilder.Entity<TModifier>()
+            .HasOne(p => p.Applier)
+            .WithMany(b => b.AppliedModifiers);
+
+            modelBuilder.Entity<TFighterState>()
+                        .Property(b => b.targets)
+                        .HasConversion(
+                            v => JsonConvert.SerializeObject(v),
+                            v => JsonConvert.DeserializeObject<List<string>>(v));
+
+            modelBuilder.Entity<TModifier>()
+                        .Property(b => b.idParentActions)
+                        .HasConversion(
+                            v => JsonConvert.SerializeObject(v),
+                            v => JsonConvert.DeserializeObject<List<string>>(v));
+        }
     }
 }

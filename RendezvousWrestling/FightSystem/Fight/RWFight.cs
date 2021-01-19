@@ -18,7 +18,7 @@ public class RWFight : BaseFight<RendezVousWrestling, RWAchievement, RWActionFac
 
     public override async Task nextTurn()
     {
-        foreach (var fighter in this.fighters)
+        foreach (var fighter in this.Fighters)
         {
             //fighter.triggerMods(TriggerMoment.Any, Trigger.TurnChange);
             //if (!fighter.isInHold())

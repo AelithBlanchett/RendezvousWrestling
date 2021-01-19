@@ -27,7 +27,7 @@ namespace RendezvousWrestling.Common.Bot
 
             TUser fighter = new TUser(); //await(await this.database()).findOne(this.User, characterCalling); //TODO DATABASE
 
-            if (fighter != null && (fighter.Name == characterCalling || (fighter.Name == characterCalling && !fighter.AreStatsPrivate) || this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel)))
+            if (fighter != null && (fighter.Id == characterCalling || (fighter.Id == characterCalling && !fighter.AreStatsPrivate) || this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel)))
             {
                 this.Plugin.FChatClient.SendPrivateMessage(fighter.outputStats(), characterCalling);
             }

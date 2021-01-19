@@ -457,11 +457,11 @@ public class RWActiveAction : BaseActiveAction<RendezVousWrestling, RWAchievemen
                     var existantHoldForDefender = Defender.modifiers.First(x => x.isAHold());
                     if (existantHoldForDefender != null)
                     {
-                        var idOfFormerHold = existantHoldForDefender.idModifier;
+                        var idOfFormerHold = existantHoldForDefender.Id;
                         foreach (var mod in Defender.modifiers)
                         {
                             //we updated the children and parent's damage and turns
-                            if (mod.idModifier == idOfFormerHold)
+                            if (mod.Id == idOfFormerHold)
                             {
                                 mod.name = this.appliedModifiers[indexOfNewHold].name;
                                 mod.triggeringEvent = this.appliedModifiers[indexOfNewHold].triggeringEvent;
@@ -494,11 +494,11 @@ public class RWActiveAction : BaseActiveAction<RendezVousWrestling, RWAchievemen
                     {
                         foreach (var mod in this.appliedModifiers)
                         {
-                            if (mod.receiver.name == Defender.name)
+                            if (mod.Receiver.Name == Defender.Name)
                             {
                                 Defender.modifiers.Add(mod);
                             }
-                            else if (mod.receiver.name == this.Attacker.name)
+                            else if (mod.Receiver.Name == this.Attacker.Name)
                             {
                                 this.Attacker.modifiers.Add(mod);
                             }
@@ -512,13 +512,13 @@ public class RWActiveAction : BaseActiveAction<RendezVousWrestling, RWAchievemen
             {
                 foreach (var mod in this.appliedModifiers)
                 {
-                    if (mod.receiver == this.Attacker)
+                    if (mod.Receiver == this.Attacker)
                     {
                         this.Attacker.modifiers.Add(mod);
                     }
-                    else if (this.Defenders.FindIndex(x => x.name == mod.receiver.name) != -1)
+                    else if (this.Defenders.FindIndex(x => x.Name == mod.Receiver.Name) != -1)
                     {
-                        this.Defenders.First(x => x.name == mod.receiver.name).modifiers.Add(mod);
+                        this.Defenders.First(x => x.Name == mod.Receiver.Name).modifiers.Add(mod);
                     }
                 }
             }

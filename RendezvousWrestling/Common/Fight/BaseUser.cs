@@ -2,6 +2,7 @@
 using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> : BaseEntity
@@ -18,16 +19,16 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
     where TFighterStats : BaseFighterStats<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
     where TFightingGame : BaseFightingGame<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
 {
-    public string Name { get; set; } = "";
+    [Key]
+    public string Id { get; set; } = "";
     public bool AreStatsPrivate { get; set; } = true;
     public int Tokens { get; set; } = 50;
     public int TokensSpent { get; set; } = 0;
 
     public virtual List<TAchievement> Achievements { get; set; }
-    public virtual TFighterStats Statistics { get; set; }
+    public TFighterStats Stats { get; set; }
     public virtual List<TFeature> Features { get; set; }
-
-    //public List<BaseFighterState<Modifier>>    FightStates {get; set;}
+    public virtual List<TFighterState> FighterStates {get; set;}
 
     [NotMapped]
     public IFeatureFactory<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> FeatureFactory { get; set; }
@@ -38,7 +39,7 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
 
     public BaseUser(string name, IFeatureFactory<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> featureFactory)
     {
-        Name = name;
+        Id = name;
         FeatureFactory = featureFactory;
     }
 
@@ -132,7 +133,7 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
     public void giveTokens(int amount, TransactionType transactionType, string fromFighter = "")
     {
         this.Tokens += amount;
-        this.saveTokenTransaction(this.Name, amount, transactionType, fromFighter);
+        this.saveTokenTransaction(this.Id, amount, transactionType, fromFighter);
     }
 
     public void removeTokens(int amount, TransactionType transactionType, string fromFighter = "")
@@ -143,7 +144,7 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
         {
             this.Tokens = 0;
         }
-        this.saveTokenTransaction(this.Name, amount, transactionType, fromFighter);
+        this.saveTokenTransaction(this.Id, amount, transactionType, fromFighter);
     }
 
     public bool canPayAmount(int amount)
@@ -153,19 +154,19 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
 
     public FightTier getFightTier()
     {
-        if (this.Statistics == null)
+        if (this.Stats == null)
         {
             return FightTier.Bronze;
         }
-        if (this.Statistics.wins < (int)FightTierWinRequirements.Silver)
+        if (this.Stats.wins < (int)FightTierWinRequirements.Silver)
         {
             return FightTier.Bronze;
         }
-        else if (this.Statistics.wins < (int)FightTierWinRequirements.Gold)
+        else if (this.Stats.wins < (int)FightTierWinRequirements.Gold)
         {
             return FightTier.Silver;
         }
-        else if (this.Statistics.wins >= (int)FightTierWinRequirements.Gold)
+        else if (this.Stats.wins >= (int)FightTierWinRequirements.Gold)
         {
             return FightTier.Gold;
         }

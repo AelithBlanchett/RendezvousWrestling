@@ -25,9 +25,9 @@ namespace RendezvousWrestling.Common.Bot
         {
             if (this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
-                if (this.Plugin.Fight != null && !string.IsNullOrEmpty(this.Plugin.Fight.idFight))
+                if (this.Plugin.Fight != null && !string.IsNullOrEmpty(this.Plugin.Fight.Id))
                 {
-                    this.Plugin.Fight.deleted = true;
+                    this.Plugin.Fight.IsDeleted = true;
                     this.Plugin.Fight.save();
                 }
                 this.Plugin.Fight = new TFight();

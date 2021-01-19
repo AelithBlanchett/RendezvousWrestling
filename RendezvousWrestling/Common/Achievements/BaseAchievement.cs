@@ -1,5 +1,7 @@
 using RendezvousWrestling.Common.DataContext;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public abstract class BaseAchievement<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> : BaseEntity
     where TActionFactory : IActionFactory<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
@@ -21,9 +23,12 @@ public abstract class BaseAchievement<TFightingGame, TAchievement, TActionFactor
 
     }
 
-    public string AchievementId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    [ForeignKey("User")]
+    public string UserName { get; set; }
 
     public TUser User { get; set; }
 

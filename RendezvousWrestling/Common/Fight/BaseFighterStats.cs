@@ -18,9 +18,9 @@ public abstract class BaseFighterStats<TFightingGame, TAchievement, TActionFacto
 {
 
     [Key, ForeignKey("User")]
-    public string UserName { get; set; }
+    public string UserId { get; set; }
 
-    public virtual TUser User { get; set; }
+    public TUser User { get; set; }
 
     public int fightsCount { get; set; }
     public int fightsCountCS { get; set; }
