@@ -35,7 +35,12 @@ public abstract class BaseFeature<TFightingGame, TAchievement, TActionFactory, T
     {
     }
 
-    public BaseFeature(string featureType, TUser receiver, int uses, string id = null)
+    public BaseFeature(TUser receiver, int uses, string id = null)
+    {
+        this.initialize(receiver, uses, id);
+    }
+
+    public void initialize(TUser receiver, int uses, string id = null)
     {
         if (id != null)
         {
@@ -48,7 +53,7 @@ public abstract class BaseFeature<TFightingGame, TAchievement, TActionFactory, T
 
         Receiver = receiver;
 
-        Type = featureType;
+        //Type = featureType; //TODO WE REMOVED FEATURE NAMES TOO!
     }
 
     public bool isExpired()
@@ -72,7 +77,7 @@ public abstract class BaseFeature<TFightingGame, TAchievement, TActionFactory, T
 
         if (wasFeatureTriggered)
         {
-            messageAboutFeature = "${this.receiver.name} is affected by the ${this.type}, ${triggeredFeatureMessage}";
+            messageAboutFeature = $"{this.Receiver.Id} is affected by the {this.Type}, {triggeredFeatureMessage}";
         }
 
         return messageAboutFeature;

@@ -364,7 +364,7 @@ public abstract class BaseFight<TFightingGame, TAchievement, TActionFactory, TAc
         }
     }
 
-    public virtual async Task nextTurn()
+    public virtual void nextTurn()
     {
         this.currentTurn++;
 
@@ -635,13 +635,13 @@ public abstract class BaseFight<TFightingGame, TAchievement, TActionFactory, TAc
         this.displayDeathMessagesIfNeedBe(allInvolvedActors);
         if (action.KeepActorsTurn && action.Missed == false)
         {
-            this.message.addHint($"[b]This is still your turn ${action.Attacker.getStylizedName()}![/b]");
+            this.message.addHint($"[b]This is still your turn {action.Attacker.getStylizedName()}![/b]");
             this.sendFightMessage();
             this.waitingForAction = true;
         }
         else if (!this.isOver())
         {
-            await this.nextTurn();
+            this.nextTurn();
         }
         else
         {
@@ -790,7 +790,7 @@ public abstract class BaseFight<TFightingGame, TAchievement, TActionFactory, TAc
         }
     }
 
-    public async void endFight(int tokensToGiveToWinners, int tokensToGiveToLosers, Team? forceWinner = null)
+    public void endFight(int tokensToGiveToWinners, int tokensToGiveToLosers, Team? forceWinner = null)
     {
         this.hasEnded = true;
         this.hasStarted = false;
@@ -842,7 +842,7 @@ public abstract class BaseFight<TFightingGame, TAchievement, TActionFactory, TAc
             if (fighter.assignedTeam == this.winnerTeam)
             {
                 fighter.fightStatus = FightStatus.Won;
-                this.message.addInfo($"Awarded ${tokensToGiveToWinners} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
+                this.message.addInfo($"Awarded {tokensToGiveToWinners} {GameSettings.currencyName} to {fighter.getStylizedName()}");
                 fighter.User.giveTokens(tokensToGiveToWinners, TransactionType.FightReward, GameSettings.botName);
                 fighter.User.Stats.wins++;
                 fighter.User.Stats.winsSeason++;
@@ -857,7 +857,7 @@ public abstract class BaseFight<TFightingGame, TAchievement, TActionFactory, TAc
                     fighter.User.Stats.lossesSeason++;
                     fighter.User.Stats.eloRating += eloPointsChangeToLosers;
                 }
-                this.message.addInfo($"Awarded ${tokensToGiveToLosers} ${GameSettings.currencyName} to ${fighter.getStylizedName()}");
+                this.message.addInfo($"Awarded {tokensToGiveToLosers} {GameSettings.currencyName} to {fighter.getStylizedName()}");
                 fighter.User.giveTokens(tokensToGiveToLosers, TransactionType.FightReward, GameSettings.botName);
             }
             this.message.addInfo(fighter.checkAchievements((TFight)this));

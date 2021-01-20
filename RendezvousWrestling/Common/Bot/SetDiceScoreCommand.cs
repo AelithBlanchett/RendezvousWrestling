@@ -26,7 +26,7 @@ namespace RendezvousWrestling.Common.Bot
             if (this.Plugin.FChatClient.IsUserMaster(characterCalling) && this.Plugin.Fight.hasStarted)
             {
                 this.Plugin.Fight.forcedDiceRoll = int.Parse(args.ToList().FirstOrDefault());
-                this.Plugin.FChatClient.SendPrivateMessage($"Dice score is now automatically set to ${this.Plugin.Fight.debug}", characterCalling);
+                this.Plugin.FChatClient.SendPrivateMessage($"Dice score is now automatically set to {this.Plugin.Fight.debug}", characterCalling);
             }
         }
     }

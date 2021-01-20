@@ -48,16 +48,16 @@ public class RWUser : BaseUser<RendezVousWrestling, RWAchievement, RWActionFacto
 
     public override string outputStats()
     {
-        return "[b]" + this.Id + "[/b]'s stats" + "\n" +
-            "[b][color=red]Power[/color][/b]:  " + this.power + "      " + "\n" +
-            "[b][color=purple]Sensuality[/color][/b]:  " + this.sensuality + "\n" +
-            "[b][color=orange]Toughness[/color][/b]: " + this.toughness + "\n" +
-            "[b][color=cyan]Endurance[/color][/b]: " + this.endurance + "      " + "[b][color=green]Win[/color]/[color=red]Loss[/color] record[/b]: " + this.Stats.wins + " - " + this.Stats.losses + "\n" +
-            "[b][color=green]Dexterity[/color][/b]: " + this.dexterity + "\n" +
-            "[b][color=brown]Willpower[/color][/b]: " + this.willpower + "      " + "[b][color=orange]Tokens[/color][/b]: " + this.Tokens + "         [b][color=orange]Total spent[/color][/b]: " + this.TokensSpent + "\n" +
-            "[b][color=red]Features[/color][/b]: [b]" + this.getFeaturesList() + "[/b]\n" +
-            "[b][color=yellow]Common.Achievements[/color][/b]: [sub]" + this.getAchievementsList() + "[/sub]\n";
-        //TODO $"[sub]Avg. roll: {this.stats.averageDiceRoll}, {( "None!"  Fav. tag partner)} this.stats.favoriteTagPartner != null && this.stats.favoriteTagPartner != "" ? this.stats.favoriteTagPartner , Moves done: ${this.stats.actionsCount}, Nemesis: ${this.stats.nemesis} [/sub]"            "[b][color=white]Fun stats[/color][/b] {get; set;}
+        return $"[b]{this.Id}[/b]'s stats\n" +
+            $"[b][color=red]Power[/color][/b]:  {this.power}\n" +
+            $"[b][color=purple]Sensuality[/color][/b]:  {this.sensuality}\n" +
+            $"[b][color=orange]Toughness[/color][/b]: {this.toughness}\n" +
+            $"[b][color=cyan]Endurance[/color][/b]: {this.endurance}      [b][color=green]Win[/color]/[color=red]Loss[/color] record[/b]: { this.Stats.wins } - { this.Stats.losses }\n" +
+            $"[b][color=green]Dexterity[/color][/b]: {this.dexterity}\n" +
+            $"[b][color=brown]Willpower[/color][/b]: {this.willpower}      [b][color=orange]Tokens[/color][/b]: {this.Tokens}         [b][color=orange]Total spent[/color][/b]: { this.TokensSpent }\n" +
+            $"[b][color=red]Features[/color][/b]: [b]{this.getFeaturesList() }[/b]\n" +
+            $"[b][color=yellow]Achievements[/color][/b]: [sub]{this.getAchievementsList() }[/sub]\n" +
+            $"[b][color= white]Fun stats[/ color][/ b]: [sub]Avg.roll: {this.Stats.averageDiceRoll}, Fav.tag partner: {(this.Stats.favoriteTagPartner != null && this.Stats.favoriteTagPartner != "" ? this.Stats.favoriteTagPartner : "None!")}, Moves done: {this.Stats.actionsCount}, Nemesis: {this.Stats.nemesis}[/sub]";
     }
 
 }

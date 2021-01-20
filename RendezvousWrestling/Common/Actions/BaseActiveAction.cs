@@ -36,8 +36,6 @@ public abstract class BaseActiveAction<TFightingGame, TAchievement, TActionFacto
 
     public List<TModifier> AppliedModifiers { get; set; } = new List<TModifier>();
 
-    public Trigger Trigger { get; set; }
-
     public string TemporaryIdAttacker { get; set; }
     public string[] TemporaryIdDefenders { get; set; }
     public string TemporaryIdFight { get; set; }
@@ -206,7 +204,7 @@ public abstract class BaseActiveAction<TFightingGame, TAchievement, TActionFacto
     {
         this.Fight.message.addHint($"Rolled: { this.DiceScore} [sub] (RLL: {this.DiceRollRawValue} + STAT:{this.DiceRollBonusFromStat})[/sub]");
         this.Fight.message.addHint($"Required roll: {this.DiceRequiredRoll}[sub] ({this.DifficultyExplanation})[/sub]");
-        this.Fight.message.addHint("Damage calculation detail: [sub](BSE:${this.diceScoreBaseDamage} + STA:${this.diceScoreStatDifference} + OVR:${this.diceScoreBonusPoints})[/sub]");
+        this.Fight.message.addHint($"Damage calculation detail: [sub](BSE:{this.DiceScoreBaseDamage} + STA:{this.DiceScoreStatDifference} + OVR:{this.DiceScoreBonusPoints})[/sub]");
 
     }
 

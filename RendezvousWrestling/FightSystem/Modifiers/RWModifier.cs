@@ -1,8 +1,9 @@
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
+using RendezvousWrestling.FightSystem.Modifiers;
 using System.Collections.Generic;
 
-public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>, IModifierParameters
 {
     public RWModifier() : base()
     {
@@ -25,7 +26,7 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
 
     public override bool isAHold()
     {
-        return (this.type == (int)ModifierType.SubHold || this.type == (int)ModifierType.SexHold || this.type == (int)ModifierType.HumHold);
+        return (this.type == (int)RWModifierType.SubHold || this.type == (int)ModifierType.SexHold || this.type == (int)ModifierType.HumHold);
     }
 
     public override string applyModifierOnReceiver(TriggerMoment moment, Trigger triggeringEvent)
@@ -34,37 +35,37 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
         if (this.hpDamage > 0)
         {
             var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, triggeringEvent));
-            messageAboutModifier += " losing ${this.hpDamage} HP,";
+            messageAboutModifier += $" losing {this.hpDamage} HP,";
             this.Receiver.hitHP(this.hpDamage, flagTriggerMods);
         }
         if (this.lustDamage > 0)
         {
             var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarDamage, triggeringEvent));
-            messageAboutModifier += " losing ${this.lustDamage} LP,";
+            messageAboutModifier += $" losing {this.lustDamage} LP,";
             this.Receiver.hitLP(this.lustDamage, flagTriggerMods);
         }
         if (this.focusDamage > 0)
         {
             var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarDamage, triggeringEvent));
-            messageAboutModifier += " losing ${this.focusDamage} FP,";
+            messageAboutModifier += $" losing {this.focusDamage} FP,";
             this.Receiver.hitFP(this.focusDamage, flagTriggerMods);
         }
         if (this.hpHeal > 0)
         {
             var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarHealing, triggeringEvent));
-            messageAboutModifier += " gaining ${this.hpHeal} HP,";
+            messageAboutModifier += $" gaining {this.hpHeal} HP,";
             this.Receiver.healHP(this.hpHeal, flagTriggerMods);
         }
         if (this.lustHeal > 0)
         {
             var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarHealing, triggeringEvent));
-            messageAboutModifier += " gaining ${this.lustHeal} LP,";
+            messageAboutModifier += $" gaining {this.lustHeal} LP,";
             this.Receiver.healLP(this.lustHeal, flagTriggerMods);
         }
         if (this.focusHeal > 0)
         {
             var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarHealing, triggeringEvent));
-            messageAboutModifier += " gaining ${this.focusHeal} FP,";
+            messageAboutModifier += $" gaining {this.focusHeal} FP,";
             this.Receiver.healFP(this.focusHeal, flagTriggerMods);
         }
         if (this.diceRoll != 0)
@@ -72,11 +73,11 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             this.Receiver.dice.addTmpMod(this.diceRoll, 1);
             if (this.diceRoll > 0)
             {
-                messageAboutModifier += " getting a +${this.diceRoll} bonus for their dice roll,";
+                messageAboutModifier += $" getting a +{this.diceRoll} bonus for their dice roll,";
             }
             else
             {
-                messageAboutModifier += " getting a ${this.diceRoll} penalty for their dice roll,";
+                messageAboutModifier += $" getting a {this.diceRoll} penalty for their dice roll,";
             }
         }
 
@@ -91,12 +92,12 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             if (this.areDamageMultipliers)
             {
                 objFightAction.hpDamage *= this.hpDamage;
-                messageAboutModifier += " multiplying their attack's HP damage by ${this.hpDamage},";
+                messageAboutModifier += $" multiplying their attack's HP damage by {this.hpDamage},";
             }
             else
             {
                 var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarDamage, triggeringEvent));
-                messageAboutModifier += " losing ${this.hpDamage} HP,";
+                messageAboutModifier += $" losing {this.hpDamage} HP,";
                 this.Receiver.hitHP(this.hpDamage, flagTriggerMods);
             }
         }
@@ -105,12 +106,12 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             if (this.areDamageMultipliers)
             {
                 objFightAction.lustDamage *= this.lustDamage;
-                messageAboutModifier += " multiplying their attack's LP damage by ${this.lustDamage},";
+                messageAboutModifier += $" multiplying their attack's LP damage by {this.lustDamage},";
             }
             else
             {
                 var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarDamage, triggeringEvent));
-                messageAboutModifier += " losing ${this.lustDamage} LP,";
+                messageAboutModifier += $" losing {this.lustDamage} LP,";
                 this.Receiver.hitLP(this.lustDamage, flagTriggerMods);
             }
         }
@@ -119,12 +120,12 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             if (this.areDamageMultipliers)
             {
                 objFightAction.focusDamage *= this.focusDamage;
-                messageAboutModifier += " multiplying their attack's FP damage by ${this.focusDamage},";
+                messageAboutModifier += $" multiplying their attack's FP damage by {this.focusDamage},";
             }
             else
             {
                 var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarDamage, triggeringEvent));
-                messageAboutModifier += " losing ${this.focusDamage} LP,";
+                messageAboutModifier += $" losing {this.focusDamage} LP,";
                 this.Receiver.hitFP(this.focusDamage, flagTriggerMods);
             }
         }
@@ -133,12 +134,12 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             if (this.areDamageMultipliers)
             {
                 objFightAction.hpHeal *= this.hpHeal;
-                messageAboutModifier += " multiplying their action's HP healing by ${this.hpHeal},";
+                messageAboutModifier += $" multiplying their action's HP healing by {this.hpHeal},";
             }
             else
             {
                 var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.MainBarHealing, triggeringEvent));
-                messageAboutModifier += " gaining ${this.hpHeal} HP,";
+                messageAboutModifier += $" gaining {this.hpHeal} HP,";
                 this.Receiver.healHP(this.hpHeal, flagTriggerMods);
             }
         }
@@ -147,12 +148,12 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             if (this.areDamageMultipliers)
             {
                 objFightAction.lustHeal *= this.lustHeal;
-                messageAboutModifier += " multiplying their action's LP healing by ${this.lustHeal},";
+                messageAboutModifier += $" multiplying their action's LP healing by {this.lustHeal},";
             }
             else
             {
                 var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.SecondaryBarHealing, triggeringEvent));
-                messageAboutModifier += " gaining ${this.lustHeal} LP,";
+                messageAboutModifier += $" gaining {this.lustHeal} LP,";
                 this.Receiver.healLP(this.lustHeal, flagTriggerMods);
             }
         }
@@ -161,12 +162,12 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             if (this.areDamageMultipliers)
             {
                 objFightAction.focusHeal *= this.focusHeal;
-                messageAboutModifier += " multiplying their action's FP healing by ${this.focusHeal},";
+                messageAboutModifier += $" multiplying their action's FP healing by {this.focusHeal},";
             }
             else
             {
                 var flagTriggerMods = !(Utils.willTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, Trigger.UtilitaryBarHealing, triggeringEvent));
-                messageAboutModifier += " gaining ${this.focusHeal} LP,";
+                messageAboutModifier += $" gaining {this.focusHeal} LP,";
                 this.Receiver.healFP(this.focusHeal, flagTriggerMods);
             }
         }
@@ -175,11 +176,11 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
             objFightAction.diceScore += this.diceRoll;
             if (this.diceRoll > 0)
             {
-                messageAboutModifier += " getting a +${this.diceRoll} bonus for their dice roll,";
+                messageAboutModifier += $" getting a +{this.diceRoll} bonus for their dice roll,";
             }
             else
             {
-                messageAboutModifier += " getting a ${this.diceRoll} penalty for their dice roll,";
+                messageAboutModifier += $" getting a {this.diceRoll} penalty for their dice roll,";
             }
         }
 

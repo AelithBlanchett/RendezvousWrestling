@@ -39,9 +39,6 @@ public abstract class BaseAction : BaseEntity
 
     public Trigger Trigger { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-
     public BaseAction()
     {
 

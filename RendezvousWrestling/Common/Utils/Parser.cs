@@ -11,15 +11,6 @@ public class Parser
     {
         List<int> arrParam = new List<int>();
 
-        foreach (var nbr in strParameters)
-        {
-            if(int.TryParse(nbr, out var unusedNumber))
-            {
-                return "All the parameters aren't integers. Example: !register ${exampleStats}";
-            }
-            arrParam.Add(int.Parse(nbr));
-        }
-
         var exampleStats = "";
         int intStatsToAssign = (int)Math.Floor(intOfRequiredStatPoints / intOfDifferentStats * 1f);
         int statOverflow = intOfRequiredStatPoints - (intStatsToAssign * intOfDifferentStats);
@@ -30,9 +21,18 @@ public class Parser
         }
         exampleStats += (intStatsToAssign + statOverflow).ToString();
 
+        foreach (var nbr in strParameters)
+        {
+            if(int.TryParse(nbr, out var unusedNumber))
+            {
+                return $"All the parameters aren't integers. Example: !register {exampleStats}";
+            }
+            arrParam.Add(int.Parse(nbr));
+        }
+
         if (arrParam.Count != intOfDifferentStats)
         {
-            return "The number of parameters was incorrect. Example: !register ${ exampleStats}";
+            return $"The number of parameters was incorrect. Example: !register {exampleStats}";
         }
         else
         {
@@ -42,7 +42,7 @@ public class Parser
 
             if (total != intOfRequiredStatPoints)
             {
-                return $"The total of stat points you've spent isn't equal to {intOfRequiredStatPoints}. (${ total}). Example: !register {exampleStats} (or !restat {exampleStats} if you're already registered)";
+                return $"The total of stat points you've spent isn't equal to {intOfRequiredStatPoints}. ({total}). Example: !register {exampleStats} (or !restat {exampleStats} if you're already registered)";
             }
 
             for (var i = 0; i < intOfDifferentStats; i++)

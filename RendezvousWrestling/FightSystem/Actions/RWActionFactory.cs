@@ -15,7 +15,7 @@ public class RWActionFactory : IActionFactory<RendezVousWrestling, RWAchievement
     {
         if(!Enum.TryParse(typeof(ActionType), actionType, out var parsedActionType)) //TODO THIS PROBABLY ISNT WORKING!!!
         {
-            throw new Exception($"The action ${actionType} doesn't exist!");
+            throw new Exception($"The action {actionType} doesn't exist!");
         }
 
         switch (parsedActionType)
@@ -90,7 +90,7 @@ public class RWActionFactory : IActionFactory<RendezVousWrestling, RWAchievement
                 action = new ActionPass(fight, attacker, defenders);
                 break;
             default:
-                throw new Exception($"The action ${actionType} doesn't exist!");
+                throw new Exception($"The action {actionType} doesn't exist!");
         }
 
         return action;

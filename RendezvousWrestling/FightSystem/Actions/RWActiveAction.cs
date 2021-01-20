@@ -484,11 +484,11 @@ public class RWActiveAction : BaseActiveAction<RendezVousWrestling, RWAchievemen
                                 mod.uses += this.appliedModifiers[indexOfNewHold].uses;
                             }
                         }
-                        //this.Fight.message.addSpecial($"[b][color=red]Hold Stacking![/color][/b] ${Defender.getStylizedName()} will have to suffer this hold for ${this.appliedModifiers[indexOfNewHold].uses} more turns, and will also suffer a bit more, as it has added
-                        //                 ${ (this.appliedModifiers[indexOfNewHold].hpDamage > 0 ? " -" + this.appliedModifiers[indexOfNewHold].hpDamage + " HP per turn " : "")}
-                        //                 ${ (this.appliedModifiers[indexOfNewHold].lustDamage > 0 ? " +" + this.appliedModifiers[indexOfNewHold].lustDamage + " Lust per turn " : "")}
-                        //                 ${ (this.appliedModifiers[indexOfNewHold].focusDamage > 0 ? " -" + this.appliedModifiers[indexOfNewHold].focusDamage + " Focus per turn" : "")}
-                        //");
+
+                        this.Fight.message.addSpecial($"[b][color=red]Hold Stacking![/color][/b] {Defender.getStylizedName()} will have to suffer this hold for {this.appliedModifiers[indexOfNewHold].uses} more turns, and will also suffer a bit more, as it has added"+
+                                         $"{ (this.appliedModifiers[indexOfNewHold].hpDamage > 0 ? " -" + this.appliedModifiers[indexOfNewHold].hpDamage + " HP per turn " : "")}" +
+                                         $"{ (this.appliedModifiers[indexOfNewHold].lustDamage > 0 ? " +" + this.appliedModifiers[indexOfNewHold].lustDamage + " Lust per turn " : "")}" +
+                                         $"{ (this.appliedModifiers[indexOfNewHold].focusDamage > 0 ? " -" + this.appliedModifiers[indexOfNewHold].focusDamage + " Focus per turn" : "")}");
                     }
                     else
                     {

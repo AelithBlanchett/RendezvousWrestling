@@ -146,7 +146,7 @@ public enum SelfDebaseFpDamage
     Heavy = 24
 }
 
-public enum ModifierType
+public enum ModifierTypeo
 {
     SubHoldBrawlBonus = 0,
     SubHold = 1,

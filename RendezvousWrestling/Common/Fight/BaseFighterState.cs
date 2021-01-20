@@ -108,7 +108,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
 
     public string checkAchievements(TFight fight = null)
     {
-        var strBase = "[color=yellow][b]Achievements unlocked for ${this.name}![/b][/color]\n";
+        var strBase = $"[color=yellow][b]Achievements unlocked for {this.Name}![/b][/color]\n";
         var added = AchievementManager<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>.checkAll(this.User, (TFighterState)this, fight);
 
         if (added.Count > 0)
@@ -124,7 +124,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
     }
 
     //fight is "mistakenly" set as optional to be compatible with the super.init
-    public void initialize()
+    public virtual void initialize()
     {
         this.fightStatus = FightStatus.Initialized;
     }
@@ -401,7 +401,7 @@ public abstract class BaseFighterState<TFightingGame, TAchievement, TActionFacto
             modifierBeginning = "[i]";
             modifierEnding = "[/i]";
         }
-        return "${modifierBeginning}[b][color=${Team[this.assignedTeam].ToLower()}]${this.name}[/color][/b]${modifierEnding}";
+        return $"{modifierBeginning}[b][color={Enum.GetName(this.assignedTeam).ToLower()}]{this.Name}[/color][/b]{modifierEnding}";
     }
 
     public bool isInRange(List<TFighterState> targets)

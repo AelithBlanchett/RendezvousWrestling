@@ -25,7 +25,7 @@ namespace RendezvousWrestling.Common.Bot
             if (this.Plugin.FChatClient.IsUserMaster(characterCalling) && this.Plugin.Fight.hasStarted)
             {
                 this.Plugin.Fight.debug = !this.Plugin.Fight.debug;
-                this.Plugin.FChatClient.SendPrivateMessage($"Debug mode is now set to ${this.Plugin.Fight.debug}", characterCalling);
+                this.Plugin.FChatClient.SendPrivateMessage($"Debug mode is now set to {this.Plugin.Fight.debug}", characterCalling);
             }
         }
     }

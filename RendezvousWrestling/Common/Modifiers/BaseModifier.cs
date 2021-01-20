@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> : BaseEntity
+public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType> : BaseEntity, IModifierParameters, IModifier
     where TActionFactory : IActionFactory<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
     where TFeature : BaseFeature<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
     where TFeatureFactory : IFeatureFactory<TFightingGame, TAchievement, TActionFactory, TActiveAction, TFeature, TFeatureFactory, TFight, TFighterState, TFighterStats, TModifier, TUser, OptionalParameterType>, new()
@@ -23,11 +23,10 @@ public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Id { get; set; }
 
+    //Parameters
     public int tier { get; set; }
-
     public int type { get; set; }
     public string name { get; set; }
-
     public bool areDamageMultipliers { get; set; } = false;
     public int diceRoll { get; set; }
     public int escapeRoll { get; set; }
@@ -35,6 +34,7 @@ public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, 
     public Trigger triggeringEvent { get; set; }
     public TriggerMoment timeToTrigger { get; set; }
     public List<string> idParentActions { get; set; }
+
 
     [ForeignKey("Fight")]
     public string FightId { get; set; }
@@ -53,23 +53,24 @@ public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, 
 
     }
 
-    public BaseModifier(string name, TFight fight, TFighterState receive, TFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null)
+    public BaseModifier(TFight fight, TFighterState receive, TFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null)
+    {
+        this.initialize(fight, receive, applier, tier, uses, timeToTrigger, triggeringEvent, parentActionIds);
+    }
+
+    public void initialize(TFight fight, TFighterState receive, TFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null)
     {
         this.Id = Guid.NewGuid().ToString();
         this.Receiver = Receiver;
         this.Applier = applier;
         this.Fight = fight;
         this.tier = tier;
-        this.name = name;
+        //TODO NAME WAS REMOVED!!!!!!!!!!!!!!!!!!!!!!!!
         this.uses = uses;
         this.triggeringEvent = triggeringEvent;
         this.timeToTrigger = timeToTrigger;
         this.idParentActions = parentActionIds;
-        this.initialize();
-    }
 
-    public void initialize()
-    {
         this.areDamageMultipliers = false;
         this.diceRoll = 0;
     }
@@ -139,7 +140,7 @@ public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, 
         if (Utils.willTriggerForEvent(this.timeToTrigger, moment, this.triggeringEvent, triggeringEvent))
         {
             this.uses--;
-            messageAboutModifier = "${this.receiver.getStylizedName()} is affected by the ${this.name}, ";
+            messageAboutModifier = $"{this.Receiver.getStylizedName()} is affected by the {this.name}, ";
             if (!objFightAction)
             {
                 messageAboutModifier += this.applyModifierOnReceiver(moment, triggeringEvent);
@@ -159,7 +160,7 @@ public abstract class BaseModifier<TFightingGame, TAchievement, TActionFactory, 
             }
             else
             {
-                messageAboutModifier += " still effective for ${this.uses} more turns.";
+                messageAboutModifier += $" still effective for {this.uses} more turns.";
             }
 
             this.Fight.message.addSpecial(messageAboutModifier);

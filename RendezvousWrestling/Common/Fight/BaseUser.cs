@@ -51,13 +51,13 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
             var usesLeft = "";
             if (feature.Uses > 0)
             {
-                usesLeft = " - ${feature.uses} uses left";
+                usesLeft = $" - {feature.Uses} uses left";
             }
             else
             {
                 usesLeft = " - permanent";
             }
-            strResult.Add($"${feature.Type}${usesLeft}");
+            strResult.Add($"{feature.Type}{usesLeft}");
         }
         return string.Join(", ", strResult);
     }
@@ -67,7 +67,7 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
         var strResult = new List<string>();
         foreach (var achievement in this.Achievements)
         {
-            strResult.Add($"${achievement.getDetailedDescription()}");
+            strResult.Add($"{achievement.getDetailedDescription()}");
         }
         return string.Join(", ", strResult);
     }
@@ -91,7 +91,7 @@ public abstract class BaseUser<TFightingGame, TAchievement, TActionFactory, TAct
 
         if (feature == null)
         {
-            throw new Exception("Feature not found.These are the existing features: ${ this.featureFactory.getExistingFeatures().join(',') }");
+            throw new Exception($"Feature not found.These are the existing features: {string.Join(",", this.FeatureFactory.getExistingFeatures())}");
         }
 
         if (feature.getCost() > 0 && matches == 0)

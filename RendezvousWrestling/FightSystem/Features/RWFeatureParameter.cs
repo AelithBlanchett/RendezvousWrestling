@@ -7,9 +7,4 @@ public class RWFeatureParameter : BaseFeatureParameter<RendezVousWrestling, RWAc
     {
 
     }
-
-    public RWFight fight { get; set; }
-    public RWFighterState fighter { get; set; }
-    public RWFighterState target { get; set; }
-    public RWActiveAction action { get; set; }
 }

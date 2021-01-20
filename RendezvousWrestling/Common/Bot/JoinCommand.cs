@@ -44,11 +44,11 @@ namespace RendezvousWrestling.Common.Bot
             try
             {
                 var assignedTeam = this.Plugin.Fight.join(characterCalling, chosenTeam);
-                this.Plugin.FChatClient.SendMessageInChannel($"[color=green]${characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
+                this.Plugin.FChatClient.SendMessageInChannel($"[color=green]{characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
             }
             catch (Exception ex)
             {
-                this.Plugin.FChatClient.SendPrivateMessage("[color=red]" + ex.Message + "[/color]", channel);
+                this.Plugin.FChatClient.SendPrivateMessage($"[color=red]{ex.Message}[/color]", channel);
             }
         }
     }

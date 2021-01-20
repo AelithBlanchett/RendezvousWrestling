@@ -25,7 +25,7 @@ namespace RendezvousWrestling.Common.Bot
             var parserPassed = Parser.checkIfValidStats(args, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
             if (parserPassed != "")
             {
-                this.Plugin.FChatClient.SendPrivateMessage($"[color=red]${parserPassed}[/color]", characterCalling);
+                this.Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
                 return;
             }
 
