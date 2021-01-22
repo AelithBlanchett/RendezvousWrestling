@@ -3,8 +3,9 @@ using RendezvousWrestling.FightSystem.Features;
 using RendezvousWrestling.FightSystem.Modifiers;
 using RendezvousWrestling.FightSystem.Utils;
 using System.Threading.Tasks;
+using RendezvousWrestling.Common.DataContext;
 
-public class RWFight : BaseFight<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+public class RWFight : BaseFight<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 { 
 
     public RWFight() : base()

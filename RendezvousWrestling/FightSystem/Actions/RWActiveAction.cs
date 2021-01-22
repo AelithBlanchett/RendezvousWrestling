@@ -5,8 +5,9 @@ using RendezvousWrestling.FightSystem.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RendezvousWrestling.Common.DataContext;
 
-public class RWActiveAction : BaseActiveAction<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+public class RWActiveAction : BaseActiveAction<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
     public List<int> hpDamageToDefs { get; set; } = new List<int>();

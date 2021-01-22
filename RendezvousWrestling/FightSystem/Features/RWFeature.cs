@@ -4,10 +4,11 @@ using RendezvousWrestling.FightSystem.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using RendezvousWrestling.Common.DataContext;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
-    public class RWFeature : BaseFeature<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+    public class RWFeature : BaseFeature<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
     {
         public RWFeature() : base()
         {

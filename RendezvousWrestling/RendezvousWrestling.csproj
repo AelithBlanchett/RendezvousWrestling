@@ -44,7 +44,6 @@
     <Compile Include="FightSystem\RendezVousWrestlingGame.cs" />
     <Compile Include="FightSystem\RWConstants.cs" />
     <Compile Include="FightSystem\Utils\RWEntityMapper.cs" />
-    <Compile Include="FightSystem\Utils\TestInit2.cs" />
   </ItemGroup>
 
   <ItemGroup>
