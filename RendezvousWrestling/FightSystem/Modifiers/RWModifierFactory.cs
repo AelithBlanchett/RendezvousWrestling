@@ -9,7 +9,7 @@ using System;
 
 namespace RendezvousWrestling.FightSystem.Modifiers
 {
-    public class RWModifierFactory : BaseModifierFactory<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWModifierParameters, RWUser, RWFeatureParameter, RWModifierType>
+    public class RWModifierFactory : BaseModifierFactory<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
     {
 
     }

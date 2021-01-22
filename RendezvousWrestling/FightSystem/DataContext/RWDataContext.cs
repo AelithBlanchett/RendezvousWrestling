@@ -6,10 +6,12 @@ using RendezvousWrestling.FightSystem.Features;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using RendezvousWrestling.FightSystem.Utils;
+using RendezvousWrestling.FightSystem.Modifiers;
 
 namespace RendezvousWrestling.Common.DataContext
 {
-    public class RWDataContext : BaseDataContext<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+    public class RWDataContext : BaseDataContext<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
     {
         public IConfigurationRoot Configuration { get; } = new ConfigurationBuilder()
           .AddJsonFile("appsettings.json", true, true)

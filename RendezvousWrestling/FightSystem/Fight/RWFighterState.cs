@@ -1,10 +1,12 @@
 
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
+using RendezvousWrestling.FightSystem.Modifiers;
+using RendezvousWrestling.FightSystem.Utils;
 using System;
 using System.Collections.Generic;
 
-public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+public class RWFighterState : BaseFighterState<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
     public int hp { get; set; } = 0;
@@ -616,7 +618,7 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
         var bondageModCount = 0;
         foreach (var mod in this.modifiers)
         {
-            if (mod.type == (int)ModifierType.Bondage)
+            if (mod.type == RWModifierType.Bondage)
             {
                 bondageModCount++;
             }
@@ -626,12 +628,14 @@ public class RWFighterState : BaseFighterState<RendezVousWrestling, RWAchievemen
 
     public override string outputStatus()
     {
+        //TODO : Once DomSubLover is implemented, replace .Bondage with .DomSubLover
+        //this.User.hasFeature(RWFeatureType.Bondage) >>>>> this.User.hasFeature(RWFeatureType.DomSubLover)
         var nameLine = $"{this.getStylizedName()}:";
         var hpLine = $"  [color=yellow]hit points: {this.hp}{((this.hpDamageLastRound > 0 || this.hpHealLastRound > 0) ? $"{(((-this.hpDamageLastRound + this.hpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} ({Utils.getSignedNumber(-this.hpDamageLastRound + this.hpHealLastRound)})[/color]" : "")}|{this.hpPerHeart()}[/color] ";
         var lpLine = $"  [color=pink]lust points: {this.lust}{((this.lpDamageLastRound > 0 || this.lpHealLastRound > 0) ? $"{ (((-this.lpDamageLastRound + this.lpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} ({Utils.getSignedNumber(this.lpDamageLastRound - this.lpHealLastRound)})[/color]" : "")}|{ this.lustPerOrgasm()}[/color] ";
         var livesLine = $"  [color=red]lives: {this.displayRemainingLives}{((this.orgasmsDamageLastRound > 0 || this.orgasmsHealLastRound > 0) ? $"{ (((-this.orgasmsDamageLastRound + this.orgasmsHealLastRound) < 0) ? "[color=red]" : "[color=green]")} ({Utils.getSignedNumber(-this.orgasmsDamageLastRound + this.orgasmsHealLastRound)} orgasm(s))[/ color]" : "")}{ ((this.heartsDamageLastRound > 0 || this.heartsHealLastRound > 0) ? $"{ (((-this.heartsDamageLastRound + this.heartsHealLastRound) < 0) ? "[color=red]" : "[color=green]")} ({ Utils.getSignedNumber(-this.heartsDamageLastRound + this.heartsHealLastRound)} heart(s))[/ color]" : "")} ({this.livesRemaining}|{this.maxLives()})[/ color] ";
-        var focusLine = $"  [color=orange]{(this.User.hasFeature(FeatureType.DomSubLover) ? "submissiveness" : "focus")}:[/color] [b][color={ (this.focus <= 0 ? "red" : "orange")}]{this.focus}[/color][/b]{(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? $"{ (((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} ({ Utils.getSignedNumber(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]" : "")}|[color=green]{this.maxFocus()}[/color]";
-        var turnsFocusLine = $"  [color=orange]turns {(this.User.hasFeature(FeatureType.DomSubLover) ? "being too submissive" : "without focus")}: {this.consecutiveTurnsWithoutFocus}|{ RWGameSettings.maxTurnsWithoutFocus}[/color]";
+        var focusLine = $"  [color=orange]{(this.User.hasFeature(RWFeatureType.Bondage) ? "submissiveness" : "focus")}:[/color] [b][color={ (this.focus <= 0 ? "red" : "orange")}]{this.focus}[/color][/b]{(((this.fpDamageLastRound > 0 || this.fpHealLastRound > 0) && (this.fpDamageLastRound - this.fpHealLastRound != 0)) ? $"{ (((-this.fpDamageLastRound + this.fpHealLastRound) < 0) ? "[color=red]" : "[color=green]")} ({ Utils.getSignedNumber(-this.fpDamageLastRound + this.fpHealLastRound)})[/color]" : "")}|[color=green]{this.maxFocus()}[/color]";
+        var turnsFocusLine = $"  [color=orange]turns {(this.User.hasFeature(RWFeatureType.Bondage) ? "being too submissive" : "without focus")}: {this.consecutiveTurnsWithoutFocus}|{ RWGameSettings.maxTurnsWithoutFocus}[/color]";
         var bondageLine = $"  [color=purple]bondage items {this.bondageItemsOnSelf()}|{ RWGameSettings.maxBondageItemsOnSelf}[/color] ";
         var modifiersLine = $"  [color=cyan]affected by: {this.getListOfActiveModifiers()}[/color] ";
         var targetLine = $"  [color=red]target(s): " +((this.targets != null && this.targets.Count > 0) ? $"{ string.Join(", ", this.targets)}" : "None set yet! (!targets charactername)") + "[/ color]";

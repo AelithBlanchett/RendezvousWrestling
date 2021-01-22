@@ -1,9 +1,11 @@
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
+using RendezvousWrestling.FightSystem.Modifiers;
+using RendezvousWrestling.FightSystem.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class RWUser : BaseUser<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+public class RWUser : BaseUser<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
 
@@ -25,7 +27,7 @@ public class RWUser : BaseUser<RendezVousWrestling, RWAchievement, RWActionFacto
 
     }
 
-    public RWUser(string name, RWFeatureFactory featureFactory) : base(name, featureFactory)
+    public RWUser(string name) : base(name)
     {
 
         this.toughness = 1;

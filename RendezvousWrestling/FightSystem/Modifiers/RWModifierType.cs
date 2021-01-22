@@ -11,6 +11,11 @@ namespace RendezvousWrestling.FightSystem.Modifiers
     {
         public static RWModifierType Bondage { get; } = new RWModifierType(1000, typeof(RWBondageModifier));
 
+        public RWModifierType()
+        {
+
+        }
+
         public RWModifierType(int value, Type type) : base(value, type)
         {
             

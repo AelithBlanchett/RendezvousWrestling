@@ -3,7 +3,6 @@
 internal interface IModifierParameters
 {
     public int tier { get; set; }
-    public int type { get; set; }
     public string name { get; set; }
     public bool areDamageMultipliers { get; set; }
     public int diceRoll { get; set; }

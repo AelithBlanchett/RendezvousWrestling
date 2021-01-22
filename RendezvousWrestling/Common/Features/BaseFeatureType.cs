@@ -13,26 +13,32 @@ namespace RendezvousWrestling.Common.Features
         public int Value { get; private set; }
         public Type MatchingType { get; private set; }
 
+        public BaseFeatureType()
+        {
+
+        }
+
         public BaseFeatureType(int val, Type type)
         {
             Value = val;
             MatchingType = type;
         }
 
-        public static IEnumerable<BaseFeatureType> List()
+        public abstract ICollection<BaseFeatureType> FeaturesList {get;}
+
+        public BaseFeatureType FromString(string modifierTypeString)
         {
-            //return new[] { Author };
-            return Array.Empty<BaseFeatureType>();
+            return FeaturesList.Single(r => string.Equals(r.MatchingType.Name, modifierTypeString, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static BaseFeatureType FromString(string modifierTypeString)
+        public BaseFeatureType FromValue(int value)
         {
-            return List().Single(r => string.Equals(r.MatchingType.Name, modifierTypeString, StringComparison.OrdinalIgnoreCase));
+            return FeaturesList.Single(r => r.Value == value);
         }
 
-        public static BaseFeatureType FromValue(int value)
+        public ICollection<string> FeaturesListAsString()
         {
-            return List().Single(r => r.Value == value);
+            return FeaturesList.Select(x => x.MatchingType.Name).ToList();
         }
     }
 }

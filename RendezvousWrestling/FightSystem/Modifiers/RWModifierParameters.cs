@@ -1,9 +1,11 @@
 using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
+using RendezvousWrestling.FightSystem.Modifiers;
+using RendezvousWrestling.FightSystem.Utils;
 using System.Collections.Generic;
 
-public class RWModifierParameters : BaseModifierParameter<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWModifierParameters, RWUser, RWFeatureParameter>
+public class RWModifierParameters : BaseModifierParameter<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
     public RWModifierParameters()

@@ -13,6 +13,11 @@ namespace RendezvousWrestling.Common.Modifiers
         public int Value { get; private set; }
         public Type MatchingType { get; private set; }
 
+        public BaseModifierType()
+        {
+
+        }
+
         public BaseModifierType(int val, Type type)
         {
             Value = val;

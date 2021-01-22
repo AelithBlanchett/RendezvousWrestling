@@ -1,10 +1,12 @@
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
+using RendezvousWrestling.FightSystem.Modifiers;
+using RendezvousWrestling.FightSystem.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class RWActiveAction : BaseActiveAction<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+public class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
     public List<int> hpDamageToDefs { get; set; } = new List<int>();

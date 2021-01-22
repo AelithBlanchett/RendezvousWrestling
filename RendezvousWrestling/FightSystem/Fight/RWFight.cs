@@ -1,8 +1,10 @@
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
+using RendezvousWrestling.FightSystem.Modifiers;
+using RendezvousWrestling.FightSystem.Utils;
 using System.Threading.Tasks;
 
-public class RWFight : BaseFight<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>
+public class RWFight : BaseFight<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 { 
 
     public RWFight() : base()

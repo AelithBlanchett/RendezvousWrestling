@@ -1,17 +1,18 @@
 using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
 using RendezvousWrestling.FightSystem.Modifiers;
+using RendezvousWrestling.FightSystem.Utils;
 using System.Collections.Generic;
 
-public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWActionFactory, RWActiveAction, RWFeature, RWFeatureFactory, RWFight, RWFighterState, RWFighterStats, RWModifier, RWUser, RWFeatureParameter>, IModifierParameters
+public class RWModifier : BaseModifier<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>, IModifierParameters
 {
     public RWModifier() : base()
     {
 
     }
 
-    public RWModifier(string name, RWFight fight, RWFighterState receive, RWFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null) :
-        base(name, fight, receive, applier, tier, uses, timeToTrigger, triggeringEvent, parentActionIds)
+    public RWModifier(RWFight fight, RWFighterState receive, RWFighterState applier, int tier, int uses, TriggerMoment timeToTrigger, Trigger triggeringEvent, List<string> parentActionIds = null) :
+        base(fight, receive, applier, tier, uses, timeToTrigger, triggeringEvent, parentActionIds)
     {
 
     }
@@ -26,7 +27,8 @@ public class RWModifier : BaseModifier<RendezVousWrestling, RWAchievement, RWAct
 
     public override bool isAHold()
     {
-        return (this.type == (int)RWModifierType.SubHold || this.type == (int)ModifierType.SexHold || this.type == (int)ModifierType.HumHold);
+        //TODO Once modifiers are implemented: return (this.type == RWModifierType.SubHold || this.type == RWModifierType.SexHold || this.type == RWModifierType.HumHold);
+        return (this.type == RWModifierType.Bondage || this.type == RWModifierType.Bondage || this.type == RWModifierType.Bondage);
     }
 
     public override string applyModifierOnReceiver(TriggerMoment moment, Trigger triggeringEvent)
