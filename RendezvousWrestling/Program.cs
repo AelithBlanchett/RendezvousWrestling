@@ -7,7 +7,7 @@ namespace RendezvousWrestling
     {
         static void Main(string[] args)
         {
-            var plugin = new RendezVousWrestling(true);
+            var plugin = new RendezVousWrestlingGame(true);
             plugin.Initialize();
             plugin.Run();
         }

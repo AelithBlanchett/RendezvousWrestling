@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
-    public class RWFeatureType : BaseFeatureType
+    public class RWActionType : BaseActionType
     {
-        public static RWFeatureType Bondage { get; } = new RWFeatureType(1000, typeof(BondageBunnyFeature));
+        public static RWActionType Pass { get; } = new RWActionType(1000, typeof(ActionPass));
 
-        private static ICollection<RWFeatureType> _rwFeatures = new List<RWFeatureType>()
+        private static ICollection<RWActionType> _rwFeatures = new List<RWActionType>()
         {
-            Bondage
+            Pass
         };
 
         public override ICollection<BaseEntityType> List { get => (ICollection<BaseEntityType>)_rwFeatures; }
 
-        public RWFeatureType() : base()
+        public RWActionType() : base()
         {
 
         }
 
-        public RWFeatureType(int value, Type type) : base(value, type)
+        public RWActionType(int value, Type type) : base(value, type)
         {
             
         }

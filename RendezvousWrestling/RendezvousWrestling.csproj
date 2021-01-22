@@ -17,10 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="FightSystem\Achievements\RWAchievementManager.cs" />
     <Compile Include="FightSystem\Achievements\RWAchievement.cs" />
-    <Compile Include="FightSystem\Actions\ActionPass.cs" />
+    <Compile Include="FightSystem\Actions\Enabled\ActionPass.cs" />
     <Compile Include="FightSystem\Actions\RWActiveAction.cs" />
     <Compile Include="FightSystem\Actions\RWActionFactory.cs" />
+    <Compile Include="FightSystem\Actions\RWActionType.cs" />
     <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
     <Compile Include="FightSystem\Constants\Stats.cs" />
     <Compile Include="FightSystem\Constants\Tiers.cs" />
@@ -39,7 +41,7 @@
     <Compile Include="FightSystem\Modifiers\RWModifierParameters.cs" />
     <Compile Include="FightSystem\Modifiers\RWModifier.cs" />
     <Compile Include="FightSystem\Modifiers\RWModifierFactory.cs" />
-    <Compile Include="FightSystem\RendezVousWrestling.cs" />
+    <Compile Include="FightSystem\RendezVousWrestlingGame.cs" />
     <Compile Include="FightSystem\RWConstants.cs" />
     <Compile Include="FightSystem\Utils\RWEntityMapper.cs" />
     <Compile Include="FightSystem\Utils\TestInit2.cs" />

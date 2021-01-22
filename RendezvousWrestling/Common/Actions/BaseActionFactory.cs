@@ -1,15 +1,13 @@
-﻿using FChatSharpLib.Entities.Plugin.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RendezvousWrestling.Common.Features;
+using AutoMapper;
+using Newtonsoft.Json;
+using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using System;
+using RendezvousWrestling.Common.Features;
+using System.Collections.Generic;
 
-namespace RendezvousWrestling.Common.Bot
-{
-    public class HowToStartCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+public class BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>
     where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
     where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
     where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
@@ -29,10 +27,12 @@ namespace RendezvousWrestling.Common.Bot
     where TModifierType : BaseModifierType, new()
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 
+{
+
+    public TActiveAction GetAction(BaseActionType actionType, TFight fight, TFighterState attacker, List<TFighterState> defenders, int tier)
     {
-        public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
-        {
-            this.Plugin.FChatClient.SendPrivateMessage(Messages.startupGuide, characterCalling);
-        }
+        var action = (TActiveAction)Activator.CreateInstance(actionType.MatchingType);
+        action.activate(fight, attacker, defenders, tier);
+        return null;
     }
 }

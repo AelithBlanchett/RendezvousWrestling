@@ -5,7 +5,7 @@ using RendezvousWrestling.FightSystem.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class RWUser : BaseUser<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+public class RWUser : BaseUser<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
 
@@ -59,7 +59,7 @@ public class RWUser : BaseUser<RWAchievement, RWActionFactory, RWActiveAction, R
             $"[b][color=brown]Willpower[/color][/b]: {this.willpower}      [b][color=orange]Tokens[/color][/b]: {this.Tokens}         [b][color=orange]Total spent[/color][/b]: { this.TokensSpent }\n" +
             $"[b][color=red]Features[/color][/b]: [b]{this.getFeaturesList() }[/b]\n" +
             $"[b][color=yellow]Achievements[/color][/b]: [sub]{this.getAchievementsList() }[/sub]\n" +
-            $"[b][color= white]Fun stats[/ color][/ b]: [sub]Avg.roll: {this.Stats.averageDiceRoll}, Fav.tag partner: {(this.Stats.favoriteTagPartner != null && this.Stats.favoriteTagPartner != "" ? this.Stats.favoriteTagPartner : "None!")}, Moves done: {this.Stats.actionsCount}, Nemesis: {this.Stats.nemesis}[/sub]";
+            $"[b][color=white]Fun stats[/color][/b]: [sub]Avg.roll: {this.Stats.averageDiceRoll}, Fav.tag partner: {(this.Stats.favoriteTagPartner != null && this.Stats.favoriteTagPartner != "" ? this.Stats.favoriteTagPartner : "None!")}, Moves done: {this.Stats.actionsCount}, Nemesis: {this.Stats.nemesis}[/sub]";
     }
 
 }

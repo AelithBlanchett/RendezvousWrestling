@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+public class RWActiveAction : BaseActiveAction<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
     public List<int> hpDamageToDefs { get; set; } = new List<int>();
@@ -29,67 +29,6 @@ public class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, R
     public List<RWModifier> appliedModifiers { get; set; } = new List<RWModifier>();
 
     public RWActiveAction() : base()
-    {
-
-    }
-
-    public RWActiveAction(RWFight fight,
-                            RWFighterState attacker,
-                            List<RWFighterState> defenders,
-                            string name,
-                             int tier,
-                             bool isHold,
-                            bool requiresRoll,
-                            bool keepActorsTurn,
-                            bool singleTarget,
-                            bool requiresBeingAlive,
-                            bool requiresBeingDead,
-                            bool requiresBeingInRing,
-                            bool requiresBeingOffRing,
-                            bool targetMustBeAlive,
-                            bool targetMustBeDead,
-                            bool targetMustBeInRing,
-                            bool targetMustBeOffRing,
-                            bool targetMustBeInRange,
-                            bool targetMustBeOffRange,
-                            bool requiresBeingInHold,
-                            bool requiresNotBeingInHold,
-                            bool targetMustBeInHold,
-                            bool targetMustNotBeInHold,
-                            bool usableOnSelf,
-                            bool usableOnAllies,
-                            bool usableOnEnemies,
-                            Trigger trigger,
-                            string explanation = null,
-                                            int? maxTargets = null) : base(fight,
-                            attacker,
-                            defenders,
-                            name,
-                            tier,
-                            isHold,
-                            requiresRoll,
-                            keepActorsTurn,
-                            singleTarget,
-                            requiresBeingAlive,
-                            requiresBeingDead,
-                            requiresBeingInRing,
-                            requiresBeingOffRing,
-                            targetMustBeAlive,
-                            targetMustBeDead,
-                            targetMustBeInRing,
-                            targetMustBeOffRing,
-                            targetMustBeInRange,
-                            targetMustBeOffRange,
-                            requiresBeingInHold,
-                            requiresNotBeingInHold,
-                            targetMustBeInHold,
-                            targetMustNotBeInHold,
-                            usableOnSelf,
-                            usableOnAllies,
-                            usableOnEnemies,
-                            trigger,
-                            explanation,
-                            maxTargets)
     {
 
     }
@@ -536,9 +475,9 @@ public class RWActiveAction : BaseActiveAction<RWAchievement, RWActionFactory, R
 public class EmptyAction : RWActiveAction
 {
 
-    public EmptyAction(RWFight fight, RWFighterState defender, RWFighterState attacker) : base(fight, attacker, new List<RWFighterState>() { defender }, "actionName", -1, false, false, false, true, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, false, true, Trigger.None, "no explanation", 1)
+    public EmptyAction()
     {
-
+        this.initialize("actionName", -1, false, false, false, true, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, false, true, Trigger.None, "no explanation", 1);
 
     }
 

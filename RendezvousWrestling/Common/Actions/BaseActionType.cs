@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace RendezvousWrestling.Common.Features
 {
-    public abstract class BaseFeatureType : BaseEntityType
+    public abstract class BaseActionType : BaseEntityType
     {
-        public BaseFeatureType()
+        public BaseActionType()
         {
         }
 
-        public BaseFeatureType(int val, Type type) : base(val, type)
+        public BaseActionType(int val, Type type) : base(val, type)
         {
         }
     }

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 public class ActionPass : RWActiveAction {
 
-    public ActionPass(RWFight fight, RWFighterState attacker, List<RWFighterState> defenders)
-        : base(fight,
-            attacker,
-            defenders,
+    public ActionPass()
+    {
+        base.initialize(
             nameof(ActionType.Pass),
             (int)Tiers.None,
             false, //isHold
@@ -31,9 +30,7 @@ public class ActionPass : RWActiveAction {
             false,  //usableOnAllies
             false, //usableOnEnemies
             Trigger.Pass,
-            ActionExplanation.Pass)
-    {
-        
+            ActionExplanation.Pass);
     }
 
     public override void onHit() {

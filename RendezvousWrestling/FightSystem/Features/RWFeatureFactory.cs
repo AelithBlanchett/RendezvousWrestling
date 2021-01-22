@@ -5,7 +5,7 @@ using System;
 using RendezvousWrestling.FightSystem.Utils;
 using RendezvousWrestling.FightSystem.Modifiers;
 
-public class RWFeatureFactory : BaseFeatureFactory<RWAchievement, RWActionFactory, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestling, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+public class RWFeatureFactory : BaseFeatureFactory<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
 {
 
 }

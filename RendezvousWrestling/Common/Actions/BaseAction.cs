@@ -4,7 +4,6 @@ using System;
 public abstract class BaseAction : BaseEntity
 {
 
-    public string IdAction { get; set; }
     public string Name { get; set; }
     public int Tier { get; set; }
     public bool IsHold { get; set; }
@@ -44,7 +43,9 @@ public abstract class BaseAction : BaseEntity
 
     }
 
-    public BaseAction(string name,
+    public abstract int requiredDiceScore { get; }
+
+    public void initialize(string name,
                 int tier,
                 bool isHold,
                 bool requiresRoll,
@@ -71,7 +72,6 @@ public abstract class BaseAction : BaseEntity
                 string explanation = null,
                 int? maxTargets = null)
     {
-        IdAction = Guid.NewGuid().ToString();
         Name = name;
         Tier = tier;
         IsHold = isHold;
@@ -98,9 +98,6 @@ public abstract class BaseAction : BaseEntity
         Trigger = trigger;
         Explanation = explanation;
         MaxTargets = maxTargets;
-        CreatedAt = DateTime.Now;
     }
-
-    public abstract int requiredDiceScore { get; }
 
 }
