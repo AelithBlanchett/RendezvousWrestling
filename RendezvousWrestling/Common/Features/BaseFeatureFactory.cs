@@ -29,10 +29,10 @@ public class BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactor
 
 {
 
-    public TFeature getFeature(TFeatureType featureType, TUser receiver, int uses, string id = null)
+    public TFeature getFeature(TFeatureType featureType, TUser receiver, int uses)
     {
         var feature = (TFeature)Activator.CreateInstance(featureType.MatchingType);
-        feature.initialize(receiver, uses, id);
+        feature.initialize(receiver, uses);
         return feature;
     }
 }

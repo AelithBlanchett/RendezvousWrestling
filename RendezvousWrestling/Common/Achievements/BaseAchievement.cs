@@ -34,9 +34,6 @@ public abstract class BaseAchievement<TAchievement, TAchievementManager, TAction
 
     }
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
 
     [ForeignKey("User")]
     public string UserName { get; set; }

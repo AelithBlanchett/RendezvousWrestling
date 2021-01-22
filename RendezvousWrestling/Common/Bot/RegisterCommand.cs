@@ -57,6 +57,7 @@ namespace RendezvousWrestling.Common.Bot
                     var newFighter = new TUser();
                     newFighter.Id = characterCalling;
                     newFighter.restat(arrParam);
+                    Plugin.DataContext.Users.Add(newFighter);
                     Plugin.DataContext.SaveChanges();
                     this.Plugin.FChatClient.SendPrivateMessage(Messages.registerWelcomeMessage, characterCalling);
                 }

@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
 
 public abstract class BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity, IModifier, IModifierParameters
     where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
@@ -30,12 +29,9 @@ public abstract class BaseModifier<TAchievement, TAchievementManager, TActionFac
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 {
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
-
     //Parameters
     public int tier { get; set; }
+    [NotMapped]
     public TModifierType type { get; set; }
     public string name { get; set; }
     public bool areDamageMultipliers { get; set; } = false;

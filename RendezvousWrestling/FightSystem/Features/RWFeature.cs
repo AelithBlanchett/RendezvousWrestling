@@ -15,7 +15,7 @@ namespace RendezvousWrestling.FightSystem.Features
 
         }
 
-        public RWFeature(RWUser receiver, int uses, string id = null) : base(receiver, uses, id)
+        public RWFeature(RWUser receiver, int uses) : base(receiver, uses)
         {
 
         }

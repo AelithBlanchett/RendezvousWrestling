@@ -6,9 +6,8 @@ using System.Linq;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
 
-public abstract class BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>
+public abstract class BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
     where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
     where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
     where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
@@ -30,10 +29,7 @@ public abstract class BaseFeature<TAchievement, TAchievementManager, TActionFact
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 {
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
-
+    [NotMapped]
     public TFeatureType Type { get; set; }
     public int Uses { get; set; }
     public bool Permanent { get; set; }
@@ -46,25 +42,15 @@ public abstract class BaseFeature<TAchievement, TAchievementManager, TActionFact
     {
     }
 
-    public BaseFeature(TUser receiver, int uses, string id = null)
+    public BaseFeature(TUser receiver, int uses)
     {
-        this.initialize(receiver, uses, id);
+        this.initialize(receiver, uses);
     }
 
-    public void initialize(TUser receiver, int uses, string id = null)
+    public void initialize(TUser receiver, int uses)
     {
-        if (id != null)
-        {
-            Id = id.ToString();
-        }
-        else
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         Receiver = receiver;
-
-        //Type = featureType; //TODO WE REMOVED FEATURE NAMES TOO!
+        Uses = uses;
     }
 
     public bool isExpired()

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
 
 public abstract class BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
     where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()

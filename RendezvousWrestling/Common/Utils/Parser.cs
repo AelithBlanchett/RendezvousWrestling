@@ -23,7 +23,7 @@ public class Parser
 
         foreach (var nbr in strParameters)
         {
-            if(int.TryParse(nbr, out var unusedNumber))
+            if(!int.TryParse(nbr, out var unusedNumber))
             {
                 return $"All the parameters aren't integers. Example: !register {exampleStats}";
             }

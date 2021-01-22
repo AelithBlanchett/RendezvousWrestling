@@ -7,7 +7,7 @@ namespace RendezvousWrestling.FightSystem.Features.Enabled
     public class BondageBunnyFeature : RWFeature
     {
 
-        public BondageBunnyFeature(RWUser receiver, int uses, string id = null) : base(receiver, uses, id)
+        public BondageBunnyFeature(RWUser receiver, int uses) : base(receiver, uses)
         {
 
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Features;
@@ -27,6 +28,8 @@ public abstract class BaseActiveAction<TAchievement, TAchievementManager, TActio
     where TModifierType : BaseModifierType, new()
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 {
+    [NotMapped]
+    public TActionType Type { get; set; }
 
     public TFight Fight { get; set; }
 

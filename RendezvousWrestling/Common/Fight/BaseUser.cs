@@ -30,8 +30,6 @@ public abstract class BaseUser<TAchievement, TAchievementManager, TActionFactory
     where TModifierType : BaseModifierType, new()
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 {
-    [Key]
-    public string Id { get; set; } = "";
     public bool AreStatsPrivate { get; set; } = true;
     public int Tokens { get; set; } = 50;
     public int TokensSpent { get; set; } = 0;
