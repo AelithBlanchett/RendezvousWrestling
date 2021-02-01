@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RendezvousWrestling.Common.Utils
 {
@@ -24,7 +22,7 @@ namespace RendezvousWrestling.Common.Utils
             MatchingType = type;
         }
 
-        public abstract ICollection<BaseEntityType> List {get;}
+        public abstract ICollection<BaseEntityType> List { get; }
 
         public BaseEntityType FromString(string modifierTypeString)
         {

@@ -1,12 +1,13 @@
-using RendezvousWrestling.FightSystem.Achievements;
-using RendezvousWrestling.FightSystem.Features;
-using System.Collections.Generic;
+using RendezvousWrestling.FightSystem.Modifiers;
 
-public class RWBondageModifier : RWModifier
+namespace RendezvousWrestling.FightSystem.Modifiers.Enabled
 {
-    public RWBondageModifier() : base()
+    public class RWBondageModifier : RWModifier
     {
+        public RWBondageModifier() : base()
+        {
+
+        }
 
     }
-
 }

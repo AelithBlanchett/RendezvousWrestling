@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,27 +36,27 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (!Plugin.isInFight(characterCalling, true))
+            if (!Plugin.IsInFight(characterCalling, true))
             {
                 return;
             }
-            if (args.Any() && !this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
+            if (args.Any() && !Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
-                this.Plugin.FChatClient.SendPrivateMessage("[color=red]You're not an operator for this channel. You can't force someone to forfeit.[/color]", characterCalling);
+                Plugin.FChatClient.SendPrivateMessage("[color=red]You're not an operator for this channel. You can't force someone to forfeit.[/color]", characterCalling);
                 return;
             }
             if (!args.Any())
             {
-                args = new string[]{characterCalling};
+                args = new string[] { characterCalling };
             }
 
             try
             {
-                this.Plugin.Fight.forfeit(string.Join(" ", args));
+                Plugin.Fight.Forfeit(string.Join(" ", args));
             }
             catch (Exception ex)
             {
-                this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
             }
         }
     }

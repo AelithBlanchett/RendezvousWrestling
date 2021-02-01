@@ -2,7 +2,8 @@
 using System;
 using System.Linq;
 
-public class FightFinishers {
+public class FightFinishers
+{
 
     public static string[] AvailableFinishers = {
         "Tombstone Piledriver into the mats",
@@ -10,13 +11,15 @@ public class FightFinishers {
         "Smother"
     };
 
-    public static string[] getAll() {
+    public static string[] getAll()
+    {
         return FightFinishers.AvailableFinishers;
     }
 
-    public static string pick(){
+    public static string pick()
+    {
         var finishers = FightFinishers.getAll();
-        return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Count())];
+        return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Length)];
     }
 }
 

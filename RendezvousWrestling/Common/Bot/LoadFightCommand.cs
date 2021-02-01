@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,7 +36,7 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.Fight == null || this.Plugin.Fight.hasEnded || !this.Plugin.Fight.hasStarted)
+            if (Plugin.Fight == null || Plugin.Fight.HasEnded || !Plugin.Fight.HasStarted)
             {
                 try
                 {
@@ -42,30 +44,30 @@ namespace RendezvousWrestling.Common.Bot
                     {
                         TFight theFight = Plugin.DataContext.Fights.Find(args.First());
 
-                        if (theFight != null && (this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel) || theFight.Fighters.FindIndex(x => x.Name == characterCalling) != -1))
+                        if (theFight != null && (Plugin.FChatClient.IsUserAdmin(characterCalling, channel) || theFight.Fighters.FindIndex(x => x.Name == characterCalling) != -1))
                         {
-                            this.Plugin.Fight = theFight;
-                            this.Plugin.Fight.build(this.Plugin.FChatClient, channel);
-                            this.Plugin.Fight.outputStatus();
+                            Plugin.Fight = theFight;
+                            Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
+                            Plugin.Fight.OutputStatus();
                         }
                         else
                         {
-                            this.Plugin.FChatClient.SendMessageInChannel("[color=red]No fight is associated with this idAction/user, or you don't have the rights to access it.[/color]", channel);
+                            Plugin.FChatClient.SendMessageInChannel("[color=red]No fight is associated with this idAction/user, or you don't have the rights to access it.[/color]", channel);
                         }
                     }
                     else
                     {
-                        this.Plugin.FChatClient.SendMessageInChannel("[color=red]Wrong idFight. It must be specified.[/color]", channel);
+                        Plugin.FChatClient.SendMessageInChannel("[color=red]Wrong idFight. It must be specified.[/color]", channel);
                     }
                 }
                 catch (Exception ex)
                 {
-                    this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
                 }
             }
             else
             {
-                this.Plugin.FChatClient.SendMessageInChannel(Messages.errorFightAlreadyInProgress, channel);
+                Plugin.FChatClient.SendMessageInChannel(Messages.errorFightAlreadyInProgress, channel);
             }
         }
     }

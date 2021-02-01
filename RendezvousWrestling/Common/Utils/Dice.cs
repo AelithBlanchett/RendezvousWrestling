@@ -18,16 +18,16 @@ public class Dice
     public Dice(int sides)
     {
         this.sides = sides;
-        this.mods = new List<int>();
-        this.tmpMods = new List<TempMod>();
-        this.lastRolls = new List<int>();
+        mods = new List<int>();
+        tmpMods = new List<TempMod>();
+        lastRolls = new List<int>();
     }
 
     // Private
     // ========================================================================
     private int random()
     {
-        return (int)(new Random().NextDouble() * this.sides) + 1;
+        return (int)(new Random().NextDouble() * sides) + 1;
     }
 
     private void refreshTmpMods()
@@ -48,15 +48,15 @@ public class Dice
     // ========================================================================
     public int roll(int times)
     {
-        var result = this.getResult(times);
-        while (this.lastRolls.IndexOf(result) != -1)
+        var result = getResult(times);
+        while (lastRolls.IndexOf(result) != -1)
         {
-            result = this.getResult(times);
+            result = getResult(times);
         }
-        this.lastRolls.Add(result);
-        if (this.lastRolls.Count > 3)
+        lastRolls.Add(result);
+        if (lastRolls.Count > 3)
         {
-            this.lastRolls.RemoveAt(0);
+            lastRolls.RemoveAt(0);
         }
         return result;
     }
@@ -68,12 +68,12 @@ public class Dice
         for (var i = 0; i < times; i++)
         {
             res.Add(
-                this.random() +
-                this.getModsSum() +
-                this.getTmpModsSum()
+                random() +
+                getModsSum() +
+                getTmpModsSum()
             );
 
-            this.refreshTmpMods();
+            refreshTmpMods();
         }
 
         return res.Count == 1 ? res[0] : res.Sum();
@@ -83,25 +83,25 @@ public class Dice
     // ------------------------------------------------------------------------
     public Dice addMod(int mod)
     {
-        this.mods.Add(mod);
+        mods.Add(mod);
         return this;
     }
 
     public Dice removeMod(int mod)
     {
-        this.mods.RemoveAt(this.mods.IndexOf(mod));
+        mods.RemoveAt(mods.IndexOf(mod));
         return this;
     }
 
     public Dice resetMods()
     {
-        this.mods = new List<int>();
+        mods = new List<int>();
         return this;
     }
 
     public int getModsSum()
     {
-        return this.mods.Sum(); ;
+        return mods.Sum(); ;
     }
 
     // Tmp Mods
@@ -110,19 +110,19 @@ public class Dice
     {
         var mod = new TempMod() { Value = val, Times = times };
 
-        this.tmpMods.Add(mod);
+        tmpMods.Add(mod);
         return this;
     }
 
     public Dice resetTmpMods()
     {
-        this.tmpMods.Clear();
+        tmpMods.Clear();
         return this;
     }
 
     public int getTmpModsSum()
     {
-        return this.tmpMods.Sum(x => x.Value);
+        return tmpMods.Sum(x => x.Value);
     }
 
 }

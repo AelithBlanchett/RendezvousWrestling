@@ -1,4 +1,5 @@
-public enum TransactionType{
+public enum TransactionType
+{
     FightReward = 0,
     Feature = 1,
     AchievementReward = 2,

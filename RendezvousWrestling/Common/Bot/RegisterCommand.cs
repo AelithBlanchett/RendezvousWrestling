@@ -1,13 +1,13 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Features;
+using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -39,10 +39,10 @@ namespace RendezvousWrestling.Common.Bot
 
             if (fighter == null)
             {
-                var parserPassed = Parser.checkIfValidStats(args, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
+                var parserPassed = Parser.checkIfValidStats(args, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
                 if (parserPassed != "")
                 {
-                    this.Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
                     return;
                 }
                 var arrParam = new List<int>() { };
@@ -54,21 +54,23 @@ namespace RendezvousWrestling.Common.Bot
 
                 try
                 {
-                    var newFighter = new TUser();
-                    newFighter.Id = characterCalling;
-                    newFighter.restat(arrParam);
+                    var newFighter = new TUser
+                    {
+                        Id = characterCalling
+                    };
+                    newFighter.Restat(arrParam);
                     Plugin.DataContext.Users.Add(newFighter);
                     Plugin.DataContext.SaveChanges();
-                    this.Plugin.FChatClient.SendPrivateMessage(Messages.registerWelcomeMessage, characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage(Messages.registerWelcomeMessage, characterCalling);
                 }
                 catch (Exception ex)
                 {
-                    this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
                 }
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorAlreadyRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.errorAlreadyRegistered, characterCalling);
             }
         }
     }

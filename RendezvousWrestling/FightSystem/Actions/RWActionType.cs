@@ -1,11 +1,8 @@
 ﻿using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.FightSystem.Features.Enabled;
+using RendezvousWrestling.FightSystem.Actions.Enabled;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
@@ -27,7 +24,7 @@ namespace RendezvousWrestling.FightSystem.Features
 
         public RWActionType(int value, Type type) : base(value, type)
         {
-            
+
         }
     }
 }

@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -36,7 +38,7 @@ namespace RendezvousWrestling.Common.Bot
         {
             if (!Enum.TryParse(typeof(FightLength), args.First(), out var parsedFD))
             {
-                this.Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight length not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightLength)))}. Example: !fightlength Long[/color]", channel);
+                Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight length not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightLength)))}. Example: !fightlength Long[/color]", channel);
                 return;
             }
 
@@ -44,11 +46,11 @@ namespace RendezvousWrestling.Common.Bot
 
             if (fighter != null)
             {
-                this.Plugin.Fight.setFightLength((FightLength)parsedFD);
+                Plugin.Fight.SetFightLength((FightLength)parsedFD);
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorNotRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.ErrorNotRegistered, characterCalling);
             }
         }
     }

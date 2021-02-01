@@ -1,12 +1,13 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -41,18 +42,17 @@ namespace RendezvousWrestling.Common.Bot
                 try
                 {
                     Plugin.DataContext.SaveChanges();
-                    this.Plugin.FChatClient.SendPrivateMessage("[color=green]You stats are now private.[/color]", characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage("[color=green]You stats are now private.[/color]", characterCalling);
                 }
                 catch (Exception ex)
                 {
-                    this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
                 }
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorNotRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.ErrorNotRegistered, characterCalling);
             }
         }
     }
 }
- 

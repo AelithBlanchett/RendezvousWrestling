@@ -1,9 +1,11 @@
+using RendezvousWrestling.Common;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Features;
+using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,7 +36,11 @@ public abstract class BaseAchievement<TAchievement, TAchievementManager, TAction
 
     }
 
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; }
 
+    [Required]
     [ForeignKey("User")]
     public string UserName { get; set; }
 

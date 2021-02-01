@@ -5,8 +5,9 @@ using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,17 +35,17 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (!Plugin.isInFight(characterCalling, true))
+            if (!Plugin.IsInFight(characterCalling, true))
             {
                 return;
             }
             try
             {
-                this.Plugin.Fight.unrequestDraw(characterCalling);
+                Plugin.Fight.UnrequestDraw(characterCalling);
             }
             catch (Exception ex)
             {
-                this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
             }
         }
     }

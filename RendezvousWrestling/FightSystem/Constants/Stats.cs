@@ -1,4 +1,5 @@
-public enum Stats {
+public enum Stats
+{
     Power = 0,
     Sensuality = 1,
     Toughness = 2,

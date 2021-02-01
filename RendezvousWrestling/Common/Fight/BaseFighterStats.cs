@@ -4,6 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common;
+using RendezvousWrestling.Common.Fight;
 
 public abstract class BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
     where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
@@ -27,7 +31,7 @@ public abstract class BaseFighterStats<TAchievement, TAchievementManager, TActio
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 {
 
-    [Required]
+    [Key]
     [ForeignKey("User")]
     public string UserId { get; set; }
 
@@ -68,13 +72,13 @@ public abstract class BaseFighterStats<TAchievement, TAchievementManager, TActio
         get
         {
             var winRate = 0.00;
-            if (this.fightsCount > 0 && this.wins > 0)
+            if (fightsCount > 0 && wins > 0)
             {
-                winRate = this.fightsCount / this.wins;
+                winRate = fightsCount / wins;
             }
-            else if (this.fightsCount > 0 && this.losses > 0)
+            else if (fightsCount > 0 && losses > 0)
             {
-                winRate = 1 - this.fightsCount / this.losses;
+                winRate = 1 - fightsCount / losses;
             }
             return winRate;
         }

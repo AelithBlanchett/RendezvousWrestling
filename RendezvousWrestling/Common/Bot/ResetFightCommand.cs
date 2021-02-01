@@ -1,12 +1,12 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,20 +34,20 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
+            if (Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
-                if (this.Plugin.Fight != null && !string.IsNullOrEmpty(this.Plugin.Fight.Id))
+                if (Plugin.Fight != null && !string.IsNullOrEmpty(Plugin.Fight.Id))
                 {
-                    this.Plugin.Fight.IsDeleted = true;
-                    this.Plugin.Fight.save();
+                    Plugin.Fight.IsDeleted = true;
+                    Plugin.DataContext.SaveChanges();
                 }
-                this.Plugin.Fight = new TFight();
-                this.Plugin.Fight.build(this.Plugin.FChatClient, channel);
-                this.Plugin.FChatClient.SendMessageInChannel("The fight has been ended.", channel);
+                Plugin.Fight = new TFight();
+                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
+                Plugin.FChatClient.SendMessageInChannel("The fight has been ended.", channel);
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage("[color=red]You're not an operator for this channel.[/color]", characterCalling);
+                Plugin.FChatClient.SendPrivateMessage("[color=red]You're not an operator for this channel.[/color]", characterCalling);
             }
         }
     }

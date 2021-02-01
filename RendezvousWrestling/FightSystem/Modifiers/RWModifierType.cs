@@ -1,10 +1,8 @@
 ﻿using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.FightSystem.Modifiers.Enabled;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RendezvousWrestling.FightSystem.Modifiers
 {
@@ -26,7 +24,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
 
         public RWModifierType(int value, Type type) : base(value, type)
         {
-            
+
         }
     }
 }

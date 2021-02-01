@@ -65,7 +65,7 @@ public class Messages
     public static string changeMinTeamsInvolvedInFightFail = "The int of teams should be superior or equal than 2.";
     public static string setDiceLess = "The fight is now %susing the dice.";
     public static string setDiceLessFail = "Couldn't drop the dice for this fight, it is already started, or it's already over.";
-    public static string setFightLength = "The fight's pace has been set to {0}";
+    public static string SetFightLength = "The fight's pace has been set to {0}";
     public static string setFightLengthFail = "Couldn't change the pace for this fight, it is already started, or it's already over.";
     public static string setFightTypeClassic = "RWFight name successfully set to Classic.";
     public static string setFightTypeTag = "RWFight name successfully set to Tag-Team.";
@@ -73,8 +73,9 @@ public class Messages
     public static string setFightTypeHMatch = "RWFight name successfully set to Humiliation Match.";
     public static string setFightTypeSexFight = "RWFight name successfully set to SexFight.";
     public static string setFightTypeBondageMatch = "RWFight name successfully set to Bondage Match.";
-    public static string setFightTypeNotFound = "Type not found. RWFight name reset to Classic.";
-    public static string setFightTypeFail = "Can't change the fight name if the fight has already started or is already finished.";
+    public static string setFightTypeSubmission = "RWFight name successfully set to Submission.";
+    public static string SetFightTypeNotFound = "Type not found. RWFight name reset to Classic.";
+    public static string SetFightTypeFail = "Can't change the fight name if the fight has already started or is already finished.";
 
     public static string startMatchAnnounce = "[color=green]Everyone's ready, {0} Keep it somewhere if you want to resume it later!  let's start the match![/color] (Match ID)";
     public static string startMatchStageAnnounce = "The fighters will meet in the... [color=red][b]{0}![/b][/color]";
@@ -130,8 +131,8 @@ public class Messages
     public static string finishFailMessage = "{0} failed their finisher!";
     public static string finishMessage = "{0} couldn't fight against that! They're out!";
 
-    public static string checkForDrawOK = "Everybody agrees, it's a draw!";
-    public static string checkForDrawWaiting = "Waiting for the other players still in the fight to call the draw.";
+    public static string CheckForDrawOK = "Everybody agrees, it's a draw!";
+    public static string CheckForDrawWaiting = "Waiting for the other players still in the fight to call the draw.";
     public static string endFightAnnounce = "{0} team wins the fight!";
 
     public static string wrongMatchTypeForAction = "You can't {0} in a {1} match.";
@@ -146,9 +147,9 @@ public class Messages
 
     public static string errorAlreadyReady = "[color=red]You are already ready.[/color]";
     public static string errorFightAlreadyInProgress = "[color=red]There is already a fight in progress.[/color]";
-    public static string errorNotRegistered = "[color=red]You are not registered.[/color]";
+    public static string ErrorNotRegistered = "[color=red]You are not registered.[/color]";
     public static string errorRecipientOrSenderNotFound = "[color=red]Either you or the receiver wasn't found in the fighter database.[/color]";
     public static string errorNotEnoughMoney = "[color=red]You don't have enough money. Required: {0}[/color]";
     public static string errorAlreadyRegistered = "[color=red]You are already registered.[/color]";
-    public static string errorTooManyDefendersForThisCall = "Wrong function call. There are too many targets, this function can only return one.";
+    public static string ErrorTooManyDefendersForThisCall = "Wrong function call. There are too many targets, this function can only return one.";
 }

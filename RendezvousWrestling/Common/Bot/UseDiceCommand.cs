@@ -1,12 +1,13 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,10 +35,10 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
+            if (Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
                 var flag = !(args.Any(x => x.ToLower() == "no" || x.ToLower() == "false"));
-                this.Plugin.Fight.setDiceLess(flag);
+                Plugin.Fight.SetDiceLess(flag);
                 return;
             }
 
@@ -46,11 +47,11 @@ namespace RendezvousWrestling.Common.Bot
             if (fighter != null)
             {
                 var flag = !(args.Any(x => x.ToLower() == "no" || x.ToLower() == "false"));
-                this.Plugin.Fight.setDiceLess(flag);
+                Plugin.Fight.SetDiceLess(flag);
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorNotRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.ErrorNotRegistered, characterCalling);
             }
         }
     }

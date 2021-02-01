@@ -1,66 +1,74 @@
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.FightSystem.Achievements;
+using RendezvousWrestling.FightSystem.Actions;
 using RendezvousWrestling.FightSystem.Features;
 using RendezvousWrestling.FightSystem.Modifiers;
 using RendezvousWrestling.FightSystem.Utils;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-public class RWUser : BaseUser<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+namespace RendezvousWrestling.FightSystem.Fight
 {
-
-
-    public int dexterity { get; set; } = 1;
-    public int power { get; set; } = 1;
-    public int sensuality { get; set; } = 1;
-    public int toughness { get; set; } = 1;
-    public int endurance { get; set; } = 1;
-    public int willpower { get; set; } = 1;
-
-
-    public override void saveTokenTransaction(string idFighter, int amount, TransactionType type, string fromFighter = null)
-    {
-        return;
-    }
-
-    public RWUser() : base()
+    public class RWUser : BaseUser<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
     {
 
-    }
 
-    public RWUser(string name) : base(name)
-    {
+        public int Dexterity { get; set; } = 1;
+        public int Power { get; set; } = 1;
+        public int Sensuality { get; set; } = 1;
+        public int Toughness { get; set; } = 1;
+        public int Endurance { get; set; } = 1;
+        public int Willpower { get; set; } = 1;
 
-        this.toughness = 1;
-        this.toughness = 1;
-        this.endurance = 1;
-        this.willpower = 1;
-        this.sensuality = 1;
-        this.power = 1;
-        this.dexterity = 1;
-    }
 
-    public override void restat(List<int> statArray)
-    {
-        for (var i = 0; i < statArray.Count; i++)
+        public override void SaveTokenTransaction(string idFighter, int amount, TransactionType type, string fromFighter = null)
         {
-            //this[Stats[i]] = statArray[i];
-            //TODO 
+            return;
         }
-    }
 
-    public override string outputStats()
-    {
-        return $"[b]{this.Id}[/b]'s stats\n" +
-            $"[b][color=red]Power[/color][/b]:  {this.power}\n" +
-            $"[b][color=purple]Sensuality[/color][/b]:  {this.sensuality}\n" +
-            $"[b][color=orange]Toughness[/color][/b]: {this.toughness}\n" +
-            $"[b][color=cyan]Endurance[/color][/b]: {this.endurance}      [b][color=green]Win[/color]/[color=red]Loss[/color] record[/b]: { this.Stats.wins } - { this.Stats.losses }\n" +
-            $"[b][color=green]Dexterity[/color][/b]: {this.dexterity}\n" +
-            $"[b][color=brown]Willpower[/color][/b]: {this.willpower}      [b][color=orange]Tokens[/color][/b]: {this.Tokens}         [b][color=orange]Total spent[/color][/b]: { this.TokensSpent }\n" +
-            $"[b][color=red]Features[/color][/b]: [b]{this.getFeaturesList() }[/b]\n" +
-            $"[b][color=yellow]Achievements[/color][/b]: [sub]{this.getAchievementsList() }[/sub]\n" +
-            $"[b][color=white]Fun stats[/color][/b]: [sub]Avg.roll: {this.Stats.averageDiceRoll}, Fav.tag partner: {(this.Stats.favoriteTagPartner != null && this.Stats.favoriteTagPartner != "" ? this.Stats.favoriteTagPartner : "None!")}, Moves done: {this.Stats.actionsCount}, Nemesis: {this.Stats.nemesis}[/sub]";
-    }
+        public RWUser() : base()
+        {
 
+        }
+
+        public RWUser(string name) : base(name)
+        {
+
+            Toughness = 1;
+            Toughness = 1;
+            Endurance = 1;
+            Willpower = 1;
+            Sensuality = 1;
+            Power = 1;
+            Dexterity = 1;
+        }
+
+        public override void Restat(List<int> statArray)
+        {
+            for (var i = 0; i < statArray.Count; i++)
+            {
+                Power = statArray[0];
+                Sensuality = statArray[1];
+                Toughness = statArray[2];
+                Endurance = statArray[3];
+                Dexterity = statArray[4];
+                Willpower = statArray[5];
+            }
+        }
+
+        public override string OutputStats()
+        {
+            return $"[b]{Id}[/b]'s stats\n" +
+                $"[b][color=red]Power[/color][/b]:  {Power}\n" +
+                $"[b][color=purple]Sensuality[/color][/b]:  {Sensuality}\n" +
+                $"[b][color=orange]Toughness[/color][/b]: {Toughness}\n" +
+                $"[b][color=cyan]Endurance[/color][/b]: {Endurance}      [b][color=green]Win[/color]/[color=red]Loss[/color] record[/b]: { Stats.wins } - { Stats.losses }\n" +
+                $"[b][color=green]Dexterity[/color][/b]: {Dexterity}\n" +
+                $"[b][color=brown]Willpower[/color][/b]: {Willpower}      [b][color=orange]Tokens[/color][/b]: {Tokens}         [b][color=orange]Total spent[/color][/b]: { TokensSpent }\n" +
+                $"[b][color=red]Features[/color][/b]: [b]{FeaturesAsString }[/b]\n" +
+                $"[b][color=yellow]Achievements[/color][/b]: [sub]{AchievementsList }[/sub]\n" +
+                $"[b][color=white]Fun stats[/color][/b]: [sub]Avg.roll: {Stats.averageDiceRoll}, Fav.tag partner: {(Stats.favoriteTagPartner != null && Stats.favoriteTagPartner != "" ? Stats.favoriteTagPartner : "None!")}, Moves done: {Stats.actionsCount}, Nemesis: {Stats.nemesis}[/sub]";
+        }
+
+    }
 }

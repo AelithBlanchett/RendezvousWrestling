@@ -19,6 +19,9 @@
   <ItemGroup>
     <Compile Include="FightSystem\Achievements\RWAchievementManager.cs" />
     <Compile Include="FightSystem\Achievements\RWAchievement.cs" />
+    <Compile Include="FightSystem\Actions\ActionExplanation.cs" />
+    <Compile Include="FightSystem\Actions\ActionType.cs" />
+    <Compile Include="FightSystem\Actions\EmptyAction.cs" />
     <Compile Include="FightSystem\Actions\Enabled\ActionPass.cs" />
     <Compile Include="FightSystem\Actions\RWActiveAction.cs" />
     <Compile Include="FightSystem\Actions\RWActionFactory.cs" />

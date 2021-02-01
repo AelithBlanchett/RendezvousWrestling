@@ -1,12 +1,12 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -35,7 +35,7 @@ namespace RendezvousWrestling.Common.Bot
 
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.FChatClient.IsUserMaster(characterCalling))
+            if (Plugin.FChatClient.IsUserMaster(characterCalling))
             {
                 Plugin.DebugImpersonatedCharacter = string.Join(" ", args);
             }

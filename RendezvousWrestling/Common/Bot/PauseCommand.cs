@@ -3,10 +3,10 @@ using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,15 +34,15 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.FChatClient.IsUserMaster(characterCalling) && Plugin.isInFight(characterCalling, true))
+            if (Plugin.FChatClient.IsUserMaster(characterCalling) && Plugin.IsInFight(characterCalling, true))
             {
-                this.Plugin.Fight = new TFight();
-                this.Plugin.Fight.build(this.Plugin.FChatClient, channel);
-                this.Plugin.FChatClient.SendMessageInChannel($"Successfully saved and stored the match for later. The ring is available now!", channel);
+                Plugin.Fight = new TFight();
+                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
+                Plugin.FChatClient.SendMessageInChannel($"Successfully saved and stored the match for later. The ring is available now!", channel);
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage($"[color=red]You're not an admin![/color]", characterCalling);
+                Plugin.FChatClient.SendPrivateMessage($"[color=red]You're not an admin![/color]", characterCalling);
             }
         }
     }

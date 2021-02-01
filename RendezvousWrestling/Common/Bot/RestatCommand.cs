@@ -5,8 +5,9 @@ using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,10 +35,10 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            var parserPassed = Parser.checkIfValidStats(args, GameSettings.intOfRequiredStatPoints, GameSettings.intOfDifferentStats, GameSettings.minStatLimit, GameSettings.maxStatLimit);
+            var parserPassed = Parser.checkIfValidStats(args, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
             if (parserPassed != "")
             {
-                this.Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
+                Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
                 return;
             }
 
@@ -45,7 +46,7 @@ namespace RendezvousWrestling.Common.Bot
 
             if (fighter != null)
             {
-                if (fighter.canPayAmount(GameSettings.restatCostInTokens))
+                if (fighter.CanPayAmount(GameSettings.RestatCostInTokens))
                 {
                     try
                     {
@@ -56,21 +57,21 @@ namespace RendezvousWrestling.Common.Bot
                             arrParam.Add(int.Parse(nbr));
                         }
 
-                        var cost = GameSettings.restatCostInTokens;
-                        fighter.removeTokens(cost, TransactionType.Restat);
-                        fighter.restat(arrParam);
+                        var cost = GameSettings.RestatCostInTokens;
+                        fighter.RemoveTokens(cost, TransactionType.Restat);
+                        fighter.Restat(arrParam);
                         Plugin.DataContext.SaveChanges();
-                        this.Plugin.FChatClient.SendPrivateMessage(Messages.statChangeSuccessful, fighter.Id);
+                        Plugin.FChatClient.SendPrivateMessage(Messages.statChangeSuccessful, fighter.Id);
                     }
                     catch (Exception ex)
                     {
-                        this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), fighter.Id);
+                        Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), fighter.Id);
                     }
 
                 }
                 else
                 {
-                    this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.errorNotEnoughMoney, GameSettings.restatCostInTokens.ToString()), characterCalling);
+                    Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.errorNotEnoughMoney, GameSettings.RestatCostInTokens.ToString()), characterCalling);
                 }
 
 
@@ -78,7 +79,7 @@ namespace RendezvousWrestling.Common.Bot
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorNotRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.ErrorNotRegistered, characterCalling);
             }
         }
     }

@@ -1,0 +1,26 @@
+﻿public enum ActionType
+{
+    Brawl = 0,
+    Tease = 1,
+    Tag = 2,
+    Rest = 3,
+    SubHold = 4,
+    SexHold = 5,
+    Bondage = 6,
+    HumHold = 7,
+    ItemPickup = 8,
+    SextoyPickup = 9,
+    Degradation = 10,
+    ForcedWorship = 11,
+    HighRisk = 12,
+    RiskyLewd = 13,
+    Stun = 14,
+    Escape = 15,
+    Submit = 16,
+    StrapToy = 17,
+    Finisher = 18,
+    Masturbate = 19,
+    Pass = 20,
+    ReleaseHold = 21,
+    SelfDebase = 22
+}

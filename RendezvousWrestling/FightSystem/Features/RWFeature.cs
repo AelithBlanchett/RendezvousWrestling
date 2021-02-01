@@ -2,9 +2,11 @@
 using RendezvousWrestling.FightSystem.Modifiers;
 using RendezvousWrestling.FightSystem.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Features;
+using RendezvousWrestling.FightSystem.Fight;
+using RendezvousWrestling.FightSystem.Actions;
+using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
@@ -15,19 +17,16 @@ namespace RendezvousWrestling.FightSystem.Features
 
         }
 
-        public RWFeature(RWUser receiver, int uses) : base(receiver, uses)
+        public RWFeature(RWFeatureType featureType, int uses) : base(featureType, uses)
         {
 
         }
 
-        public override string applyFeature(TriggerMoment moment, Trigger triggeringEvent, RWFeatureParameter parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int getCost()
+        public override string ApplyFeature(TriggerMoment moment, TriggerEvent triggeringEvent, RWFeatureParameter parameters)
         {
             throw new NotImplementedException();
         }
+
+        public override int Cost => throw new NotImplementedException();
     }
 }

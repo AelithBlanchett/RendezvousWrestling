@@ -1,14 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using System.Linq;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.DataContext
 {
@@ -74,16 +76,46 @@ namespace RendezvousWrestling.Common.DataContext
             .WithMany(b => b.AppliedModifiers);
 
             modelBuilder.Entity<TFighterState>()
-                        .Property(b => b.targets)
+                        .Property(b => b.TargetsAsString)
                         .HasConversion(
                             v => JsonConvert.SerializeObject(v),
                             v => JsonConvert.DeserializeObject<List<string>>(v));
 
             modelBuilder.Entity<TModifier>()
-                        .Property(b => b.idParentActions)
+                        .Property(b => b.IdParentActions)
                         .HasConversion(
                             v => JsonConvert.SerializeObject(v),
                             v => JsonConvert.DeserializeObject<List<string>>(v));
+        }
+
+
+        public override int SaveChanges()
+        {
+            AddTimestamps();
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(System.Threading.CancellationToken cancellationToken = default)
+        {
+            AddTimestamps();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void AddTimestamps()
+        {
+            var entities = ChangeTracker.Entries()
+                .Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+
+            foreach (var entity in entities)
+            {
+                var now = DateTime.UtcNow; // current datetime
+
+                if (entity.State == EntityState.Added)
+                {
+                    ((BaseEntity)entity.Entity).CreatedAt = now;
+                }
+                ((BaseEntity)entity.Entity).UpdatedAt = now;
+            }
         }
     }
 }

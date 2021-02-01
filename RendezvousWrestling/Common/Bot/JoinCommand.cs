@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,17 +36,18 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.Fight == null || this.Plugin.Fight.hasEnded)
+            if (Plugin.Fight == null || Plugin.Fight.HasEnded)
             {
-                this.Plugin.Fight = new TFight();
-                this.Plugin.Fight.build(this.Plugin.FChatClient, channel);
+                Plugin.Fight = new TFight();
+                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
             }
 
             var chosenTeam = Team.White;
             object parsedTeamObject = Team.White;
 
-            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), out parsedTeamObject)){
-                this.Plugin.FChatClient.SendPrivateMessage("[color=red]" + "This team doesn't exist." + "[/color]", channel);
+            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), out parsedTeamObject))
+            {
+                Plugin.FChatClient.SendPrivateMessage("[color=red]" + "This team doesn't exist." + "[/color]", channel);
                 return;
             }
             else
@@ -54,12 +57,12 @@ namespace RendezvousWrestling.Common.Bot
 
             try
             {
-                var assignedTeam = this.Plugin.Fight.join(characterCalling, chosenTeam);
-                this.Plugin.FChatClient.SendMessageInChannel($"[color=green]{characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
+                var assignedTeam = Plugin.Fight.Join(characterCalling, chosenTeam);
+                Plugin.FChatClient.SendMessageInChannel($"[color=green]{characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
             }
             catch (Exception ex)
             {
-                this.Plugin.FChatClient.SendPrivateMessage($"[color=red]{ex.Message}[/color]", channel);
+                Plugin.FChatClient.SendPrivateMessage($"[color=red]{ex.Message}[/color]", channel);
             }
         }
     }

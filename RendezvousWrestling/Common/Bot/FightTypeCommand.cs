@@ -6,7 +6,10 @@ using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
+using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -36,7 +39,7 @@ namespace RendezvousWrestling.Common.Bot
         {
             if (!Enum.TryParse(typeof(FightType), args.First(), out var parsedFD))
             {
-                this.Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight type not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightType)))}. Example: !fighttype Sexfight[/color]", channel);
+                Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight type not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightType)))}. Example: !fighttype Sexfight[/color]", channel);
                 return;
             }
 
@@ -44,11 +47,11 @@ namespace RendezvousWrestling.Common.Bot
 
             if (fighter != null)
             {
-                this.Plugin.Fight.setFightType(Enum.GetName(typeof(FightType), parsedFD));
+                Plugin.Fight.SetFightType(Enum.GetName(typeof(FightType), parsedFD));
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorNotRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.ErrorNotRegistered, characterCalling);
             }
         }
     }

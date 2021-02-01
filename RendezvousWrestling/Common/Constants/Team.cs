@@ -1,4 +1,5 @@
-public enum Team {
+public enum Team
+{
     White = -1,
     Blue = 0,
     Red = 1,

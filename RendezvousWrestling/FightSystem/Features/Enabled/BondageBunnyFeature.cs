@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.FightSystem.Features.Enabled
 {
     public class BondageBunnyFeature : RWFeature
     {
 
-        public BondageBunnyFeature(RWUser receiver, int uses) : base(receiver, uses)
+        public BondageBunnyFeature(int uses) : base(RWFeatureType.BondageBunny, uses)
         {
 
         }
 
-        public override int getCost()
-        {
-            return 0;
-        }
+        public override int Cost => 0;
 
-        public override string applyFeature(TriggerMoment moment, Trigger triggeringEvent, RWFeatureParameter parameters = null)
+        public override string ApplyFeature(TriggerMoment moment, TriggerEvent triggeringEvent, RWFeatureParameter parameters = null)
         {
             return "";
         }

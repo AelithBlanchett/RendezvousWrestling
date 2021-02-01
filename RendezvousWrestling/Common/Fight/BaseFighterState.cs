@@ -7,437 +7,461 @@ using System.Linq;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common;
+using RendezvousWrestling.Common.Constants;
 
-public abstract class BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
-    where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TActionType : BaseActionType, new()
-    where TActiveAction : BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TDataContext : BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TEntityMapper : BaseEntityMapper<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeature : BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeatureFactory : BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeatureParameters : BaseFeatureParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeatureType : BaseFeatureType, new()
-    where TFight : BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFighterState : BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFighterStats : BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFightingGame : BaseFightingGame<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TModifier : BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TModifierParameters : BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TModifierType : BaseModifierType, new()
-    where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+namespace RendezvousWrestling.Common.Fight
 {
-
-    public Team assignedTeam { get; set; } = Team.White;
-    public List<string> targets { get; set; } = new List<string>();
-    public bool isReady { get; set; } = false;
-    public int lastDiceRoll { get; set; } = 0;
-    public bool isInTheRing { get; set; } = true;
-    public bool canMoveFromOrOffRing { get; set; } = true;
-    public int lastTagTurn { get; set; } = 9999999;
-    public bool wantsDraw { get; set; } = false;
-    public int distanceFromRingCenter { get; set; }
-    public FightStatus fightStatus { get; set; }
-
-    [ForeignKey("Fight")]
-    public string FightId { get; set; }
-    public TFight Fight { get; set; }
-
-    [ForeignKey("User")]
-    public string UserId { get; set; }
-    public TUser User { get; set; }
-
-    [NotMapped]
-    public List<TModifier> modifiers
+    public abstract class BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
+        where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TActionType : BaseActionType, new()
+        where TActiveAction : BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TDataContext : BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TEntityMapper : BaseEntityMapper<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeature : BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureFactory : BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureParameters : BaseFeatureParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureType : BaseFeatureType, new()
+        where TFight : BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFighterState : BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFighterStats : BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFightingGame : BaseFightingGame<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TModifier : BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TModifierParameters : BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TModifierType : BaseModifierType, new()
+        where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
     {
-        get
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
+
+        public Team AssignedTeam { get; set; } = Team.White;
+        public List<string> TargetsAsString { get; set; } = new List<string>();
+        public bool IsReady { get; set; } = false;
+        public int LastDiceRoll { get; set; }
+        public bool IsInTheRing { get; set; } = true;
+        public bool CanMoveFromOrOffRing { get; set; } = true;
+        public int LastTagTurn { get; set; } = int.MaxValue;
+        public bool WantsDraw { get; set; } = false;
+        public int DistanceFromRingCenter { get; set; }
+        public FightStatus FightStatus { get; set; }
+
+        [Required]
+        [ForeignKey("Fight")]
+        public string FightId { get; set; }
+        public TFight Fight { get; set; }
+
+        [Required]
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public TUser User { get; set; }
+
+        [NotMapped]
+        public List<TModifier> Modifiers
         {
-            return (List<TModifier>)ReceivedModifiers.Union(AppliedModifiers);
-        }
-    }
-
-    public virtual List<TModifier> ReceivedModifiers { get; set; } = new List<TModifier>();
-
-    public virtual List<TModifier> AppliedModifiers { get; set; } = new List<TModifier>();
-
-    [NotMapped]
-    public Dice dice { get; set; }
-
-    [NotMapped]
-    public string Name { get { return this.User.Id; } }
-
-    public BaseFighterState()
-    {
-    }
-
-    public BaseFighterState(TFight fight, TUser fighter)
-    {
-        this.Fight = fight;
-        this.User = fighter;
-        this.assignedTeam = Team.White;
-        this.targets = null;
-        this.isReady = false;
-
-        this.lastDiceRoll = 0;
-        this.isInTheRing = true;
-        this.canMoveFromOrOffRing = true;
-        this.lastTagTurn = 9999999;
-        this.distanceFromRingCenter = 0;
-        this.wantsDraw = false;;
-        this.targets = new List<string>();
-
-        this.dice = new Dice(GameSettings.diceSides);
-        this.fightStatus = FightStatus.Idle;
-        this.lastDiceRoll = 0;
-    }
-
-    public void assignFight(TFight fight)
-    {
-        this.Fight = fight;
-    }
-
-    public List<TFighterState> getTargets()
-    {
-        var fighters = new List<TFighterState>();
-        foreach (var name in this.targets)
-        {
-            var fighter = this.Fight.getFighterByName(name);
-            if (fighter != null)
+            get
             {
-                fighters.Add(fighter);
+                return (List<TModifier>)ReceivedModifiers.Union(AppliedModifiers);
             }
         }
-        return fighters;
-    }
 
-    public string checkAchievements(TFight fight = null)
-    {
-        var strBase = $"[color=yellow][b]Achievements unlocked for {this.Name}![/b][/color]\n";
-        var added = new TAchievementManager().checkAll(this.User, (TFighterState)this, fight);
+        public virtual List<TModifier> ReceivedModifiers { get; set; } = new List<TModifier>();
 
-        if (added.Count > 0)
-        {
-            strBase += string.Join("\n", added);
+        public virtual List<TModifier> AppliedModifiers { get; set; } = new List<TModifier>();
+
+        [NotMapped]
+        public Dice Dice { get; set; }
+
+        [NotMapped]
+        public string Name 
+        { 
+            get 
+            { 
+                return User.Id; 
+            } 
         }
-        else
+
+        public BaseFighterState()
         {
-            strBase = "";
+
         }
 
-        return strBase;
-    }
-
-    //fight is "mistakenly" set as optional to be compatible with the super.init
-    public virtual void initialize()
-    {
-        this.fightStatus = FightStatus.Initialized;
-    }
-
-    public abstract string validateStats();
-
-    public bool isInDebug
-    {
-        get
+        public BaseFighterState(TFight fight, TUser fighter)
         {
-            if (this.Fight != null)
+            Fight = fight;
+            User = fighter;
+            AssignedTeam = Team.White;
+            TargetsAsString = null;
+            IsReady = false;
+
+            LastDiceRoll = 0;
+            IsInTheRing = true;
+            CanMoveFromOrOffRing = true;
+            LastTagTurn = int.MaxValue;
+            DistanceFromRingCenter = 0;
+            WantsDraw = false; ;
+            TargetsAsString = new List<string>();
+
+            Dice = new Dice(GameSettings.DiceSides);
+            FightStatus = FightStatus.Idle;
+            LastDiceRoll = 0;
+        }
+
+        public void AssignFight(TFight fight)
+        {
+            Fight = fight;
+        }
+
+        public List<TFighterState> Targets
+        {
+            get
             {
-                return this.Fight.debug;
+                var fighters = new List<TFighterState>();
+                foreach (var name in TargetsAsString)
+                {
+                    var fighter = Fight.GetFighterByName(name);
+                    if (fighter != null)
+                    {
+                        fighters.Add(fighter);
+                    }
+                }
+                return fighters;
+            }
+        }
+
+        public string CheckAchievements(TFight fight = null)
+        {
+            var strBase = $"[color=yellow][b]Achievements unlocked for {Name}![/b][/color]\n";
+            var added = new TAchievementManager().CheckAll(User, (TFighterState)this, fight);
+
+            if (added.Count > 0)
+            {
+                strBase += string.Join("\n", added);
             }
             else
             {
-                return false;
+                strBase = "";
             }
-        }
-    }
 
-    //returns dice score
-    public int roll(int times = 1, Trigger @triggeringEvent = Trigger.Roll)
-    {
-        this.triggerMods(TriggerMoment.Before, @triggeringEvent);
-        var result = 0;
-        if (times == 1)
-        {
-            result = this.dice.roll(GameSettings.diceCount);
-        }
-        else
-        {
-            result = this.dice.roll(GameSettings.diceCount * times);
+            return strBase;
         }
 
-        if (this.isInDebug && this.Fight.forcedDiceRoll > 0)
+        //fight is "mistakenly" set as optional to be compatible with the super.init
+        public virtual void Initialize()
         {
-            result = this.Fight.forcedDiceRoll;
+            FightStatus = FightStatus.Initialized;
         }
 
-        this.triggerMods(TriggerMoment.After, @triggeringEvent);
-        return result;
-    }
+        public abstract string ValidateStats();
 
-    public virtual void nextRound() { }
-
-    public bool triggerMods(TriggerMoment moment, Trigger @triggeringEvent, TFeatureParameters objFightAction = null)
-    {
-        bool atLeastOneModWasActivated = false;
-        foreach (var mod in this.modifiers)
+        public bool IsInDebug
         {
-            var message = mod.trigger(moment, @triggeringEvent, objFightAction);
-            if (message.Length > 0)
+            get
             {
-                this.Fight.message.addSpecial(message);
-                atLeastOneModWasActivated = true;
+                return Fight != null && Fight.Debug;
             }
         }
-        return atLeastOneModWasActivated;
-    }
 
-
-    public void removeMod(string idMod)
-    { 
-        //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
-        var index = this.modifiers.RemoveAll(x => x.Id == idMod);
-    }
-
-    public FightLength fightDuration()
-    {
-        if (this.Fight != null)
+        //returns dice score
+        public int Roll(int times = 1, TriggerEvent @triggeringEvent = TriggerEvent.Roll)
         {
-            return this.Fight.fightLength;
-        }
-        else
-        {
-            return FightLength.Long;
-        }
-    }
-
-    public void triggerInsideRing()
-    {
-        this.isInTheRing = true;
-    }
-
-    public void triggerOutsideRing()
-    {
-        this.isInTheRing = false;
-    }
-
-    public void triggerPermanentInsideRing()
-    {
-        this.isInTheRing = false;
-        this.canMoveFromOrOffRing = false;
-    }
-
-    public void triggerPermanentOutsideRing()
-    {
-        this.triggerOutsideRing();
-        this.canMoveFromOrOffRing = false;
-    }
-
-    public abstract bool isTechnicallyOut(bool displayMessage = false);
-
-    public void requestDraw()
-    {
-        this.wantsDraw = true;
-        this.fightStatus = FightStatus.Draw;
-    }
-
-    public void unrequestDraw()
-    {
-        this.wantsDraw = false;
-        this.fightStatus = FightStatus.Playing;
-    }
-
-    public bool isRequestingDraw()
-    {
-        return this.wantsDraw;
-    }
-
-    public int getStunnedTier()
-    {
-        var stunTier = -1;
-        foreach (var mod in this.modifiers)
-        {
-            if (mod.Receiver.Name == this.Name && mod.name == "Stun")
+            TriggerMods(TriggerMoment.Before, @triggeringEvent);
+            int result = times == 1 ? Dice.roll(GameSettings.DiceCount) : Dice.roll(GameSettings.DiceCount * times);
+            if (IsInDebug && Fight.ForcedDiceRoll > 0)
             {
-                stunTier = mod.tier;
+                result = Fight.ForcedDiceRoll;
             }
+
+            TriggerMods(TriggerMoment.After, @triggeringEvent);
+            return result;
         }
-        return stunTier;
-    }
 
-    public bool isStunned()
-    {
-        return this.getStunnedTier() >= 0;
-    }
+        public virtual void NextRound() { }
 
-    public bool isApplyingHold()
-    {
-        var isApplyingHold = false;
-        foreach (var mod in this.modifiers)
+        public bool TriggerMods(TriggerMoment moment, TriggerEvent @triggeringEvent, TFeatureParameters objFightAction = null)
         {
-            if (mod.Receiver.Name == this.Name && mod.isAHold())
+            bool atLeastOneModWasActivated = false;
+            foreach (var mod in Modifiers)
             {
-                isApplyingHold = true;
+                var message = mod.Trigger(moment, @triggeringEvent, objFightAction);
+                if (message.Length > 0)
+                {
+                    Fight.Message.addSpecial(message);
+                    atLeastOneModWasActivated = true;
+                }
             }
+            return atLeastOneModWasActivated;
         }
-        return isApplyingHold;
-    }
 
-    public int isApplyingHoldOfTier()
-    {
-        var tier = -1;
-        foreach (var mod in this.modifiers)
+
+        public void RemoveMod(string idMod)
         {
-            if (mod.Receiver.Name == this.Name && mod.isAHold())
+            //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
+            var index = Modifiers.RemoveAll(x => x.Id == idMod);
+        }
+
+        public FightLength FightDuration
+        {
+            get
             {
-                tier = mod.tier;
+                return Fight != null ? Fight.FightLength : FightLength.Long;
             }
         }
-        return tier;
-    }
 
-    public bool isInHold()
-    {
-        var isInHold = false;
-        foreach (var mod in this.modifiers)
+        public void TriggerInsideRing()
         {
-            if (mod.Receiver.Name == this.Name && mod.isAHold())
+            IsInTheRing = true;
+        }
+
+        public void TriggerOutsideRing()
+        {
+            IsInTheRing = false;
+        }
+
+        public void TriggerPermanentInsideRing()
+        {
+            IsInTheRing = false;
+            CanMoveFromOrOffRing = false;
+        }
+
+        public void TriggerPermanentOutsideRing()
+        {
+            TriggerOutsideRing();
+            CanMoveFromOrOffRing = false;
+        }
+
+        public abstract bool IsTKO { get; }
+
+        public abstract void DisplayTKOMessage();
+
+        public void RequestDraw()
+        {
+            WantsDraw = true;
+            FightStatus = FightStatus.Draw;
+        }
+
+        public void UnrequestDraw()
+        {
+            WantsDraw = false;
+            FightStatus = FightStatus.Playing;
+        }
+
+        public bool IsRequestingDraw()
+        {
+            return WantsDraw;
+        }
+
+        public int StunnedTier
+        {
+            get
             {
-                isInHold = true;
+                var stunTier = -1;
+                foreach (var mod in ReceivedModifiers)
+                {
+                    if (mod.IsStun)
+                    {
+                        if (stunTier < mod.Tier)
+                        {
+                            stunTier = mod.Tier;
+                        }
+                    }
+                }
+                return stunTier;
             }
         }
-        return isInHold;
-    }
 
-    //May have to move
-    public bool isInSpecificHold(string holdType)
-    {
-        var isInHold = false;
-        foreach (var mod in this.modifiers)
+        public bool IsStunned
         {
-            if (mod.Receiver.Name == this.Name && mod.isAHold() && mod.name == holdType)
+            get
             {
-                isInHold = true;
+                return StunnedTier >= 0;
             }
         }
-        return isInHold;
-    }
 
-    public bool isInHoldAppliedBy(string fighterName)
-    {
-        var isTrue = false;
-        foreach (var mod in this.modifiers)
+        public bool IsApplyingHold()
         {
-            if (mod.Receiver.Name == fighterName && mod.isAHold())
+            var isApplyingHold = false;
+            foreach (var mod in ReceivedModifiers)
             {
-                isTrue = true;
+                if (mod.IsHold)
+                {
+                    isApplyingHold = true;
+                }
             }
+            return isApplyingHold;
         }
-        return isTrue;
-    }
 
-    public int isInHoldOfTier()
-    {
-        var tier = -1;
-        foreach (var mod in this.modifiers)
+        public int TierOfReceivedHold
         {
-            if (mod.Receiver.Name == this.Name && mod.isAHold())
+            get
             {
-                tier = mod.tier;
+                var tier = -1;
+                foreach (var mod in ReceivedModifiers)
+                {
+                    if (mod.IsHold)
+                    {
+                        if (tier < mod.Tier)
+                        {
+                            tier = mod.Tier;
+                        }
+                    }
+                }
+                return tier;
             }
         }
-        return tier;
-    }
 
-    public void releaseHoldsApplied()
-    {
-        foreach (var mod in this.modifiers)
+        public bool IsInHold()
         {
-            if (mod.Applier != null && mod.Applier.Name == this.Name && mod.isAHold())
+            var isInHold = false;
+            foreach (var mod in ReceivedModifiers)
             {
-                mod.Receiver.releaseHoldsAppliedBy(mod.Applier.Name);
+                if (mod.IsHold)
+                {
+                    isInHold = true;
+                }
             }
+            return isInHold;
         }
-    }
 
-    public void releaseHoldsAppliedBy(string fighterName)
-    {
-        foreach (var mod in this.modifiers)
+        //May have to move
+        public bool IsInSpecificHold(TModifierType holdType)
         {
-            if (mod.Applier != null && mod.Applier.Name == fighterName && mod.isAHold())
+            var isInHold = false;
+            foreach (var mod in ReceivedModifiers)
             {
-                this.removeMod(mod.Id);
+                if (mod.IsHold && mod.Type == holdType)
+                {
+                    isInHold = true;
+                }
             }
+            return isInHold;
         }
-    }
 
-    public void escapeHolds()
-    {
-        foreach (var mod in this.modifiers)
+        public bool IsInHoldAppliedBy(string fighterName)
         {
-            if (mod.Receiver.Name == this.Name && mod.isAHold())
+            var isTrue = false;
+            foreach (var mod in ReceivedModifiers)
             {
-                this.removeMod(mod.Id);
+                if (mod.Applier.Name == fighterName && mod.IsHold)
+                {
+                    isTrue = true;
+                }
             }
+            return isTrue;
         }
-    }
 
-    public string getListOfActiveModifiers()
-    {
-        var strMods = "";
-        foreach (var mod in this.modifiers)
+        public int IsInHoldOfTier
         {
-            strMods += mod.name + ", ";
-        }
-        strMods = strMods.Substring(0, strMods.Length - 2);
-        return strMods;
-    }
-
-    public string getStylizedName()
-    {
-        var modifierBeginning = "";
-        var modifierEnding = "";
-        if (this.isTechnicallyOut())
-        {
-            modifierBeginning = "[s]";
-            modifierEnding = "[/s]";
-        }
-        else if (!this.isInTheRing)
-        {
-            modifierBeginning = "[i]";
-            modifierEnding = "[/i]";
-        }
-        return $"{modifierBeginning}[b][color={Enum.GetName(this.assignedTeam).ToLower()}]{this.Name}[/color][/b]{modifierEnding}";
-    }
-
-    public bool isInRange(List<TFighterState> targets)
-    {
-        var result = true;
-        foreach (var target in targets)
-        {
-            if ((target.distanceFromRingCenter - this.distanceFromRingCenter) > GameSettings.maximumDistanceToBeConsideredInRange)
+            get
             {
-                result = false;
+                var tier = -1;
+                foreach (var mod in Modifiers)
+                {
+                    if (mod.Receiver.Name == Name && mod.IsHold)
+                    {
+                        tier = mod.Tier;
+                    }
+                }
+                return tier;
             }
         }
-        return result;
-    }
 
-    public abstract string outputStatus();
-
-    public abstract void save();
-    public bool triggerFeatures(TriggerMoment before, Trigger trigger, TFeatureParameters baseFeatureParameter)
-    {
-        bool atLeastOneFeatureWasActivated = false;
-        foreach (var feat in this.User.Features)
+        public void ReleaseHoldsApplied()
         {
-            var message = feat.Trigger(before, trigger, baseFeatureParameter);
-            if (!string.IsNullOrEmpty(message))
+            foreach (var mod in Modifiers)
             {
-                this.Fight.message.addSpecial(message);
-                atLeastOneFeatureWasActivated = true;
+                if (mod.Applier != null && mod.Applier.Name == Name && mod.IsHold)
+                {
+                    mod.Receiver.ReleaseHoldsAppliedBy(mod.Applier.Name);
+                }
             }
         }
-        return atLeastOneFeatureWasActivated;
+
+        public void ReleaseHoldsAppliedBy(string fighterName)
+        {
+            foreach (var mod in ReceivedModifiers)
+            {
+                if (mod.IsHold && mod.Applier?.Name == fighterName)
+                {
+                    RemoveMod(mod.Id);
+                }
+            }
+        }
+
+        public void ReleaseAllHolds()
+        {
+            foreach (var mod in ReceivedModifiers)
+            {
+                if (mod.IsHold)
+                {
+                    RemoveMod(mod.Id);
+                }
+            }
+        }
+
+        public string ActiveModifiersAsString
+        {
+            get
+            {
+                var strMods = "";
+                foreach (var mod in Modifiers)
+                {
+                    strMods += mod.Name + ", ";
+                }
+                strMods = strMods[0..^2];
+                return strMods;
+            }
+        }
+
+        public string GetStylizedName()
+        {
+            var modifierBeginning = "";
+            var modifierEnding = "";
+            if (IsTKO)
+            {
+                modifierBeginning = "[s]";
+                modifierEnding = "[/s]";
+            }
+            else if (!IsInTheRing)
+            {
+                modifierBeginning = "[i]";
+                modifierEnding = "[/i]";
+            }
+            return $"{modifierBeginning}[b][color={Enum.GetName(AssignedTeam).ToLower()}]{Name}[/color][/b]{modifierEnding}";
+        }
+
+        public bool IsInRange(List<TFighterState> targets)
+        {
+            var result = true;
+            foreach (var target in targets)
+            {
+                if (target.DistanceFromRingCenter - DistanceFromRingCenter > GameSettings.MaximumDistanceToBeConsideredInRange)
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
+
+        public abstract string OutputStatus();
+
+        public bool TriggerFeatures(TriggerMoment before, TriggerEvent trigger, TFeatureParameters baseFeatureParameter)
+        {
+            bool atLeastOneFeatureWasActivated = false;
+            foreach (var feat in User.Features)
+            {
+                var message = feat.Trigger(before, trigger, baseFeatureParameter);
+                if (!string.IsNullOrEmpty(message))
+                {
+                    Fight.Message.addSpecial(message);
+                    atLeastOneFeatureWasActivated = true;
+                }
+            }
+            return atLeastOneFeatureWasActivated;
+        }
     }
 }

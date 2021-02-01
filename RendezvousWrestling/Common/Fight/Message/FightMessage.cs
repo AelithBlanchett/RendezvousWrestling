@@ -14,8 +14,8 @@ public class FightMessage : IMessage
 
     public FightMessage()
     {
-        this.clear();
-        this.LastMessage = null;
+        clear();
+        LastMessage = null;
     }
 
     void clear()
@@ -66,37 +66,37 @@ public class FightMessage : IMessage
 
     public void addAction(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Action.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Action.Add(line);
     }
 
     public void addHit(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Hit.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Hit.Add(line);
     }
 
     public void addHint(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Hint.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Hint.Add(line);
     }
 
     public void addStatus(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Status.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Status.Add(line);
     }
 
-    public void addInfo(string line)
+    public void AddInfo(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Info.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Info.Add(line);
     }
 
     public void addError(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Error.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Error.Add(line);
     }
 
     public void addSpecial(string line)
     {
-        if (!string.IsNullOrWhiteSpace(line)) this.Special.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) Special.Add(line);
     }
 
 
@@ -104,27 +104,27 @@ public class FightMessage : IMessage
     {
         var lines = new List<string>();
 
-        if (Info.Count > 0) lines.Add(this.getInfo());
-        if (Action.Count > 0) lines.Add(this.getAction());
-        if (Hit.Count > 0) lines.Add(this.getHit());
-        if (Status.Count > 0) lines.Add(this.getStatus());
-        if (Hint.Count > 0) lines.Add(this.getHint());
-        if (Special.Count > 0) lines.Add(this.getSpecial());
-        if (Error.Count > 0) lines.Add(this.getError());
+        if (Info.Count > 0) lines.Add(getInfo());
+        if (Action.Count > 0) lines.Add(getAction());
+        if (Hit.Count > 0) lines.Add(getHit());
+        if (Status.Count > 0) lines.Add(getStatus());
+        if (Hint.Count > 0) lines.Add(getHint());
+        if (Special.Count > 0) lines.Add(getSpecial());
+        if (Error.Count > 0) lines.Add(getError());
 
         return string.Join("\n", lines);
     }
 
     public string getMessage()
     {
-        string message = this.buildMessage();
-        this.LastMessage = message;
-        this.clear();
+        string message = buildMessage();
+        LastMessage = message;
+        clear();
         return message;
     }
 
     public string getLastMessage()
     {
-        return this.LastMessage;
+        return LastMessage;
     }
 }

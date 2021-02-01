@@ -2,7 +2,8 @@
 using System;
 using System.Linq;
 
-public class FightingStages {
+public class FightingStages
+{
 
     public static string[] AvailableStages = {
         "The Pit",
@@ -37,13 +38,15 @@ public class FightingStages {
         "Junkyard"
     };
 
-    public static string[] getAll(){
+    public static string[] getAll()
+    {
         return FightingStages.AvailableStages;
     }
 
-    public static string pick(){
+    public static string pick()
+    {
         var stages = FightingStages.getAll();
-        return stages[(int)Math.Floor(new Random().NextDouble() * stages.Count())];
+        return stages[(int)Math.Floor(new Random().NextDouble() * stages.Length)];
     }
 }
 

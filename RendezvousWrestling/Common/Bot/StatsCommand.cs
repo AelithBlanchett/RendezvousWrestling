@@ -3,10 +3,10 @@ using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -38,11 +38,11 @@ namespace RendezvousWrestling.Common.Bot
 
             if (fighter != null)
             {
-                this.Plugin.FChatClient.SendPrivateMessage(fighter.outputStats(), fighter.Id);
+                Plugin.FChatClient.SendPrivateMessage(fighter.OutputStats(), fighter.Id);
             }
             else
             {
-                this.Plugin.FChatClient.SendPrivateMessage(Messages.errorNotRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(Messages.ErrorNotRegistered, characterCalling);
             }
         }
     }

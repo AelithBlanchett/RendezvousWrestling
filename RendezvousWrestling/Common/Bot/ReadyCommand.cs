@@ -5,8 +5,9 @@ using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,28 +35,28 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (this.Plugin.Fight.hasStarted)
+            if (Plugin.Fight.HasStarted)
             {
-                this.Plugin.FChatClient.SendMessageInChannel(Messages.errorFightAlreadyInProgress, channel);
+                Plugin.FChatClient.SendMessageInChannel(Messages.errorFightAlreadyInProgress, channel);
                 return;
             }
-            if (this.Plugin.Fight == null || this.Plugin.Fight.hasEnded)
+            if (Plugin.Fight == null || Plugin.Fight.HasEnded)
             {
-                this.Plugin.Fight = new TFight();
-                this.Plugin.Fight.build(this.Plugin.FChatClient, channel);
+                Plugin.Fight = new TFight();
+                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
             }
 
             try
             {
-                bool result = this.Plugin.Fight.setFighterReady(characterCalling);
+                bool result = Plugin.Fight.SetFighterReady(characterCalling);
                 if (!result)
                 { //else, the match starts!
-                    this.Plugin.FChatClient.SendMessageInChannel(Messages.errorAlreadyReady, channel);
+                    Plugin.FChatClient.SendMessageInChannel(Messages.errorAlreadyReady, channel);
                 }
             }
             catch (Exception ex)
             {
-                this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
             }
         }
     }

@@ -1,12 +1,13 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
@@ -34,20 +35,20 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (!Plugin.isInFight(characterCalling, true))
+            if (!Plugin.IsInFight(characterCalling, true))
             {
                 return;
             }
             try
             {
-                if (this.Plugin.Fight.getFighterByName(characterCalling) != null)
+                if (Plugin.Fight.GetFighterByName(characterCalling) != null)
                 {
-                    this.Plugin.Fight.assignTarget(characterCalling, string.Join(" ", args));
+                    Plugin.Fight.AssignTarget(characterCalling, string.Join(" ", args));
                 }
             }
             catch (Exception ex)
             {
-                this.Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(string.Format(Messages.commandError, ex.Message), characterCalling);
             }
         }
     }

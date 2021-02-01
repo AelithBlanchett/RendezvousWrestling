@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-
-namespace RendezvousWrestling
+﻿namespace RendezvousWrestling
 {
     class Program
     {

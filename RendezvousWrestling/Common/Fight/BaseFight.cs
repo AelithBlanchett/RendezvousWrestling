@@ -4,1148 +4,1215 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Threading.Tasks;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common;
+using RendezvousWrestling.Common.Constants;
 
-public abstract class BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
-    where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TActionType : BaseActionType, new()
-    where TActiveAction : BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TDataContext : BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TEntityMapper : BaseEntityMapper<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeature : BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeatureFactory : BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeatureParameters : BaseFeatureParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFeatureType : BaseFeatureType, new()
-    where TFight : BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFighterState : BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFighterStats : BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TFightingGame : BaseFightingGame<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TModifier : BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TModifierParameters : BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-    where TModifierType : BaseModifierType, new()
-    where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+namespace RendezvousWrestling.Common.Fight
 {
-
-    public int requiredTeams { get; set; }
-    public bool hasStarted { get; set; } = false;
-    public bool hasEnded { get; set; } = false;
-    public string stage { get; set; }
-    public int currentTurn { get; set; }
-    public FightType fightType { get; set; }
-    public Team winnerTeam { get; set; }
-    public int season { get; set; }
-    public bool waitingForAction { get; set; } = true;
-    public FightLength fightLength { get; set; } = FightLength.Long;
-
-    [NotMapped]
-    public virtual List<TActiveAction> pastActions { get; set; }
-    public virtual List<TFighterState> Fighters { get; set; }
-
-    public string channel { get; set; }
-
-    [NotMapped]
-    public FightMessage message { get; set; }
-    [NotMapped]
-    public FChatSharpLib.BaseBot fChatLibInstance { get; set; }
-    [NotMapped]
-    public TActionFactory actionFactory { get; set; }
-
-    public bool debug { get; set; } = false;
-    public int forcedDiceRoll { get; set; } = 0;
-    public bool diceLess { get; set; } = false;
-
-    public BaseFight()
+    public abstract class BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseEntity
+        where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TActionType : BaseActionType, new()
+        where TActiveAction : BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TDataContext : BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TEntityMapper : BaseEntityMapper<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeature : BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureFactory : BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureParameters : BaseFeatureParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureType : BaseFeatureType, new()
+        where TFight : BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFighterState : BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFighterStats : BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFightingGame : BaseFightingGame<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TModifier : BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TModifierParameters : BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TModifierType : BaseModifierType, new()
+        where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
     {
-        this.actionFactory = new TActionFactory();
-        this.Id = Guid.NewGuid().ToString();
-        this.Fighters = new List<TFighterState>();
-        this.stage = FightingStages.pick();
-        this.fightType = FightType.Classic;
-        this.pastActions = new List<TActiveAction>();
-        this.winnerTeam = Team.White;
-        this.currentTurn = 0;
-        this.season = GameSettings.currentSeason;
-        this.requiredTeams = 2;
-        this.diceLess = false;
-        this.fightLength = FightLength.Long;
-        this.actionFactory = actionFactory;
-        this.message = new FightMessage();
-    }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
 
-    public void build(FChatSharpLib.BaseBot fChatLibInstance, string channel)
-    {
-        this.fChatLibInstance = fChatLibInstance;
-        this.channel = channel;
-    }
+        public int RequiredTeams { get; set; }
+        public bool HasStarted { get; set; }
+        public bool HasEnded { get; set; }
+        public string Stage { get; set; }
+        public int CurrentTurn { get; set; }
+        public FightType FightType { get; set; }
+        public Team WinnerTeam { get; set; }
+        public int Season { get; set; }
+        public bool WaitingForAction { get; set; } = true;
+        public FightLength FightLength { get; set; } = FightLength.Long;
 
-    public void sendFightMessage()
-    {
-        this.fChatLibInstance.SendMessageInChannel(this.message.getMessage(), this.channel);
-    }
+        [NotMapped]
+        public virtual List<TActiveAction> PastActions { get; set; }
+        public virtual List<TFighterState> Fighters { get; set; }
 
-    public void resendFightMessage()
-    {
-        this.fChatLibInstance.SendMessageInChannel(this.message.getLastMessage(), this.channel);
-    }
+        public string Channel { get; set; }
 
-    public void setTeamsCount(int intNewTeamsCount)
-    {
-        if (intNewTeamsCount >= 2)
+        [NotMapped]
+        public FightMessage Message { get; set; }
+        [NotMapped]
+        public TFightingGame FightingGame { get; set; }
+        [NotMapped]
+        public FChatSharpLib.BaseBot FChatLibInstance { get; set; }
+        [NotMapped]
+        public TActionFactory ActionFactory { get; set; }
+        [NotMapped]
+        public TActionFactory ModifierFactory { get; set; }
+        [NotMapped]
+        public TFeatureFactory FeatureFactory { get; set; }
+
+        public bool Debug { get; set; }
+        public int ForcedDiceRoll { get; set; }
+        public bool DiceLess { get; set; } = false;
+
+        public BaseFight()
         {
-            this.requiredTeams = intNewTeamsCount;
-            this.message.addInfo(Messages.changeMinTeamsInvolvedInFightOK);
+            ActionFactory = new TActionFactory();
+            Id = Guid.NewGuid().ToString();
+            Fighters = new List<TFighterState>();
+            Stage = FightingStages.pick();
+            FightType = FightType.Classic;
+            PastActions = new List<TActiveAction>();
+            WinnerTeam = Team.White;
+            CurrentTurn = 0;
+            Season = GameSettings.CurrentSeason;
+            RequiredTeams = 2;
+            DiceLess = false;
+            FightLength = FightLength.Long;
+            Message = new FightMessage();
         }
-        else
-        {
-            this.message.addInfo(Messages.changeMinTeamsInvolvedInFightFail);
-        }
-        this.sendFightMessage();
-    }
 
-    public void setDiceLess(bool bln)
-    {
-        if (!this.hasStarted && !this.hasEnded)
+        public void Activate(TFightingGame fightingGame, FChatSharpLib.BaseBot fChatLibInstance, string channel)
         {
-            this.diceLess = bln;
-            this.message.addInfo(string.Format(Messages.setDiceLess, (bln ? "NOT " : "")));
+            FightingGame = fightingGame;
+            FChatLibInstance = fChatLibInstance;
+            Channel = channel;
         }
-        else
-        {
-            this.message.addInfo(Messages.setDiceLessFail);
-        }
-        this.sendFightMessage();
-    }
 
-    public void setFightLength(FightLength fightDuration)
-    {
-        if (!this.hasStarted && !this.hasEnded)
+        public void SendFightMessage()
         {
-            this.fightLength = fightDuration;
-            this.message.addInfo(string.Format(Messages.setFightLength, Enum.GetName(typeof(FightLength), fightDuration)));
+            FChatLibInstance.SendMessageInChannel(Message.getMessage(), Channel);
         }
-        else
-        {
-            this.message.addInfo(Messages.setFightLengthFail);
-        }
-        this.sendFightMessage();
-    }
 
-    public void setFightType(string type)
-    {
-        if (!this.hasStarted && !this.hasEnded)
+        public void ResendFightMessage()
         {
-            var fightTypesList = Enum.GetNames(typeof(FightType));
-            var foundAskedType = false;
-            foreach (var fightTypeId in fightTypesList)
+            FChatLibInstance.SendMessageInChannel(Message.getLastMessage(), Channel);
+        }
+
+        public void SetTeamsCount(int newTeamsCount)
+        {
+            if (newTeamsCount >= 2)
             {
-                if (type.ToLower() == fightTypeId.ToLower())
-                {
-                    this.fightType = (FightType)Enum.Parse(typeof(FightType), fightTypeId);
-                    //TODO this.message.addInfo(Messages["setFightType"+ fightTypeId]);
-                    foundAskedType = true;
-                    break;
-                }
-            }
-            if (!foundAskedType)
-            {
-                this.fightType = FightType.Classic;
-                this.message.addInfo(Messages.setFightTypeNotFound);
-            }
-        }
-        else
-        {
-            this.message.addInfo(Messages.setFightTypeFail);
-        }
-        this.sendFightMessage();
-    }
-
-    //Pre-fight utils
-
-    public bool leave(string fighterName)
-    {
-        if (!this.hasStarted)
-        {
-            var index = this.getFighterIndex(fighterName);
-            if (index != -1)
-            {
-                var fighter = this.Fighters[index];
-                this.Fighters.RemoveAt(index);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public Team join(string fighterName, Team team)
-    {
-        if (!this.hasStarted)
-        {
-            if (this.getFighterByName(fighterName) == null)
-            { //find user by its name property instead of comparing objects, which doesn't work.
-                TFighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName); //TODO DATABASE
-                if (activeFighter == null)
-                {
-                    throw new Exception(Messages.errorNotRegistered);
-                }
-                if (!activeFighter.User.canPayAmount(GameSettings.tokensCostToFight))
-                {
-                    throw new Exception(string.Format(Messages.errorNotEnoughMoney, GameSettings.tokensCostToFight.ToString()));
-                }
-                var areStatsValid = activeFighter.validateStats();
-                if (areStatsValid != "")
-                {
-                    throw new Exception(areStatsValid);
-                }
-                activeFighter.assignFight((TFight)this);
-                activeFighter.initialize();
-                activeFighter.fightStatus = FightStatus.Joined;
-                if (team != Team.White)
-                {
-                    activeFighter.assignedTeam = team;
-                }
-                else
-                {
-                    team = this.getAvailableTeam();
-                    activeFighter.assignedTeam = team;
-                }
-                this.Fighters.Add(activeFighter);
-                return team;
+                RequiredTeams = newTeamsCount;
+                Message.AddInfo(Messages.changeMinTeamsInvolvedInFightOK);
             }
             else
             {
-                throw new Exception("You have already joined the fight.");
+                Message.AddInfo(Messages.changeMinTeamsInvolvedInFightFail);
             }
+            SendFightMessage();
         }
-        else
-        {
-            throw new Exception("The fight has already started");
-        }
-    }
 
-    public bool setFighterReady(string fighterName)
-    {
-        if (!this.hasStarted)
+        public void SetDiceLess(bool diceless)
         {
-            if (this.getFighterByName(fighterName) == null)
+            if (!HasStarted && !HasEnded)
             {
-                this.join(fighterName, Team.White);
+                DiceLess = diceless;
+                Message.AddInfo(string.Format(Messages.setDiceLess, diceless ? "NOT " : ""));
             }
-            var fighterInFight = this.getFighterByName(fighterName);
-            if (fighterInFight != null && !fighterInFight.isReady)
-            { //find user by its name property instead of comparing objects, which doesn't work.
-                fighterInFight.isReady = true;
-                fighterInFight.fightStatus = FightStatus.Ready;
-                var fightTypes = Enum.GetNames(typeof(FightType));
-                var listOfFightTypes = string.Join(", ", fightTypes);
-                listOfFightTypes = listOfFightTypes.Replace(fightType.ToString(), $"[color=green][b]{fightType.ToString()}[/b][/color]");
-                var fightDurations = Enum.GetNames(typeof(FightLength));
-                var listOfFightDurations = string.Join(", ", fightDurations);
-                listOfFightDurations = listOfFightDurations.Replace(this.fightLength.ToString(), $"[color=green][b]{this.fightLength.ToString()}[/b][/color]");
-                this.message.addInfo(string.Format(Messages.Ready, fighterInFight.getStylizedName(), listOfFightTypes, this.requiredTeams.ToString(), listOfFightDurations));
-                this.sendFightMessage();
-                if (this.canStart())
+            else
+            {
+                Message.AddInfo(Messages.setDiceLessFail);
+            }
+            SendFightMessage();
+        }
+
+        public void SetFightLength(FightLength fightDuration)
+        {
+            if (!HasStarted && !HasEnded)
+            {
+                FightLength = fightDuration;
+                Message.AddInfo(string.Format(Messages.SetFightLength, Enum.GetName(typeof(FightLength), fightDuration)));
+            }
+            else
+            {
+                Message.AddInfo(Messages.setFightLengthFail);
+            }
+            SendFightMessage();
+        }
+
+        public void SetFightType(string type)
+        {
+            if (!HasStarted && !HasEnded)
+            {
+                var fightTypesList = Enum.GetNames(typeof(FightType));
+                var foundAskedType = false;
+                foreach (var fightTypeId in fightTypesList)
                 {
-                    this.start();
+                    if (type.ToLower() == fightTypeId.ToLower())
+                    {
+                        FightType = (FightType)Enum.Parse(typeof(FightType), fightTypeId);
+                        switch (FightType)
+                        {
+                            case FightType.Classic:
+                                Message.AddInfo(Messages.setFightTypeClassic);
+                                break;
+                            case FightType.Tag:
+                                Message.AddInfo(Messages.setFightTypeTag);
+                                break;
+                            case FightType.LastManStanding:
+                                Message.AddInfo(Messages.setFightTypeLMS);
+                                break;
+                            case FightType.SexFight:
+                                Message.AddInfo(Messages.setFightTypeSexFight);
+                                break;
+                            case FightType.Humiliation:
+                                Message.AddInfo(Messages.setFightTypeHMatch);
+                                break;
+                            case FightType.Bondage:
+                                Message.AddInfo(Messages.setFightTypeBondageMatch);
+                                break;
+                            case FightType.Submission:
+                                Message.AddInfo(Messages.setFightTypeSubmission);
+                                break;
+                            default:
+                                break;
+                        }
+                        foundAskedType = true;
+                        break;
+                    }
                 }
-                return true;
+                if (!foundAskedType)
+                {
+                    FightType = FightType.Classic;
+                    Message.AddInfo(Messages.SetFightTypeNotFound);
+                }
+            }
+            else
+            {
+                Message.AddInfo(Messages.SetFightTypeFail);
+            }
+            SendFightMessage();
+        }
+
+        //Pre-fight utils
+
+        public bool Leave(string fighterName)
+        {
+            if (!HasStarted)
+            {
+                return Fighters.RemoveAll(x => x.UserId == fighterName) > 0;
+            }
+
+            return false;
+        }
+
+        public Team Join(string fighterName, Team team)
+        {
+            if (!HasStarted)
+            {
+                if (GetFighterByName(fighterName) == null)
+                { //find user by its name property instead of comparing objects, which doesn't work.
+                    TFighterState activeFighter = null; //await BaseFighterState.loadFighter(fighterName); //TODO DATABASE
+                    if (activeFighter == null)
+                    {
+                        throw new Exception(Messages.ErrorNotRegistered);
+                    }
+                    if (!activeFighter.User.CanPayAmount(GameSettings.TokensCostToFight))
+                    {
+                        throw new Exception(string.Format(Messages.errorNotEnoughMoney, GameSettings.TokensCostToFight.ToString()));
+                    }
+                    var areStatsValid = activeFighter.ValidateStats();
+                    if (areStatsValid != "")
+                    {
+                        throw new Exception(areStatsValid);
+                    }
+                    activeFighter.AssignFight((TFight)this);
+                    activeFighter.Initialize();
+                    activeFighter.FightStatus = FightStatus.Joined;
+                    if (team != Team.White)
+                    {
+                        activeFighter.AssignedTeam = team;
+                    }
+                    else
+                    {
+                        team = FirstAvailableTeam;
+                        activeFighter.AssignedTeam = team;
+                    }
+                    Fighters.Add(activeFighter);
+                    return team;
+                }
+                else
+                {
+                    throw new Exception("You have already joined the fight.");
+                }
+            }
+            else
+            {
+                throw new Exception("The fight has already started");
             }
         }
-        return false;
-    }
 
-    public bool canStart()
-    {
-        return (this.isEveryoneReady() && !this.hasStarted && this.getAllOccupiedTeams().Count >= this.requiredTeams); //only start if everyone's ready and if the teams are balanced
-    }
-
-
-    //RWFight logic
-
-    public void start()
-    {
-        this.message.addInfo(string.Format(Messages.startMatchAnnounce, this.Id));
-        this.currentTurn = 1;
-        this.hasStarted = true;
-        //TODO this.shufflePlayers(); //random order for teams
-
-        this.message.addInfo(string.Format(Messages.startMatchStageAnnounce, this.stage));
-
-        for (var i = 0; i < this.maxPlayersPerTeam; i++)
-        { //Prints as much names as there are Team
-            var fullStringVS = "[b]";
-            foreach (var j in this.getTeamsStillInGame())
+        public bool SetFighterReady(string fighterName)
+        {
+            if (!HasStarted)
             {
-                var theFighter = this.getTeam(j)[i];
+                if (GetFighterByName(fighterName) == null)
+                {
+                    Join(fighterName, Team.White);
+                }
+                var fighterInFight = GetFighterByName(fighterName);
+                if (fighterInFight != null && !fighterInFight.IsReady)
+                { //find user by its name property instead of comparing objects, which doesn't work.
+                    fighterInFight.IsReady = true;
+                    fighterInFight.FightStatus = FightStatus.Ready;
+                    var fightTypes = Enum.GetNames(typeof(FightType));
+                    var listOfFightTypes = string.Join(", ", fightTypes);
+                    listOfFightTypes = listOfFightTypes.Replace(FightType.ToString(), $"[color=green][b]{FightType}[/b][/color]");
+                    var fightDurations = Enum.GetNames(typeof(FightLength));
+                    var listOfFightDurations = string.Join(", ", fightDurations);
+                    listOfFightDurations = listOfFightDurations.Replace(FightLength.ToString(), $"[color=green][b]{FightLength}[/b][/color]");
+                    Message.AddInfo(string.Format(Messages.Ready, fighterInFight.GetStylizedName(), listOfFightTypes, RequiredTeams.ToString(), listOfFightDurations));
+                    SendFightMessage();
+                    if (CanStart())
+                    {
+                        Start();
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CanStart()
+        {
+            return IsEveryoneReady&& !HasStarted && AllOccupiedTeamsList.Count >= RequiredTeams; //only start if everyone's ready and if the teams are balanced
+        }
+
+
+        //RWFight logic
+
+        public void Start()
+        {
+            Message.AddInfo(string.Format(Messages.startMatchAnnounce, Id));
+            CurrentTurn = 1;
+            HasStarted = true;
+            Fighters = Utils.Utils.ShuffleArray(Fighters); //random order for teams
+
+            Message.AddInfo(string.Format(Messages.startMatchStageAnnounce, Stage));
+
+            for (var i = 0; i < MaxPlayersPerTeam; i++)
+            { //Prints as much names as there are Team
+                var fullStringVS = "[b]";
+                foreach (var j in TeamsStillInGame)
+                {
+                    var theFighter = GetTeam(j)[i];
+                    if (theFighter != null)
+                    {
+                        fullStringVS = $"{fullStringVS} VS {theFighter.GetStylizedName()}";
+                    }
+                }
+                fullStringVS = $"{fullStringVS}[/b]";
+                fullStringVS = fullStringVS.Replace(" VS ", "");
+                Message.AddInfo(fullStringVS);
+            }
+
+
+            ReorderFightersByInitiative(RollAllDice(TriggerEvent.InitiationRoll));
+            Message.AddInfo(string.Format(Messages.startMatchFirstPlayer, CurrentPlayer.GetStylizedName(), CurrentTeamName.ToLower(), CurrentTeamName));
+            for (var i = 1; i < Fighters.Count; i++)
+            {
+                Message.AddInfo(string.Format(Messages.startMatchFollowedBy, Fighters[i].GetStylizedName(), Fighters[i].AssignedTeam.ToString().ToLower(), Fighters[i].AssignedTeam.ToString().ToLower()));
+                if (FightType == FightType.Tag)
+                {
+                    Fighters[i].IsInTheRing = false;
+                }
+            }
+            if (FightType == FightType.Tag)
+            { //if it's a tag match, only allow the first player of the next Team
+                for (var i = 1; i < Fighters.Count; i++)
+                {
+                    if (CurrentPlayer.AssignedTeam != Fighters[i].AssignedTeam)
+                    {
+                        Fighters[i].IsInTheRing = true;
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 0; i < Fighters.Count; i++)
+            {
+                Fighters[i].FightStatus = FightStatus.Playing;
+                int fightCost = GameSettings.TokensCostToFight;
+                Fighters[i].User.RemoveTokens(fightCost, TransactionType.FightStart);
+                Fighters[i].TriggerFeatures(TriggerMoment.After, TriggerEvent.InitiationRoll, GetFeatureParameter((TFight)this, Fighters[i]));
+            }
+
+
+
+            SendFightMessage();
+            OutputStatus();
+        }
+
+        private static TFeatureParameters GetFeatureParameter(TFight fight = null, TFighterState fighter = null, TFighterState target = null, TActiveAction action = null)
+        {
+            var parameters = new TFeatureParameters();
+            parameters.Initialize(fight, fighter, target, action);
+            return parameters;
+        }
+
+        public void RequestDraw(string fighterName)
+        {
+            var fighter = GetFighterByName(fighterName);
+            if (fighter != null)
+            {
+                if (!fighter.IsRequestingDraw())
+                {
+                    fighter.RequestDraw();
+                }
+                else
+                {
+                    throw new Exception("You already have requested a draw.");
+                }
+            }
+            else
+            {
+                throw new Exception("You aren't in this fight.");
+            }
+        }
+
+        public void UnrequestDraw(string fighterName)
+        {
+            var fighter = GetFighterByName(fighterName);
+            if (fighter != null)
+            {
+                if (fighter.IsRequestingDraw())
+                {
+                    fighter.UnrequestDraw();
+                }
+                else
+                {
+                    throw new Exception("You already have requested a draw.");
+                }
+            }
+            else
+            {
+                throw new Exception("You aren't in this fight.");
+            }
+        }
+
+        public virtual void NextTurn()
+        {
+            CurrentTurn++;
+
+            foreach (var fighter in Fighters)
+            {
+                var strAchievements = fighter.CheckAchievements((TFight)this);
+                if (strAchievements != "")
+                {
+                    Message.addSpecial(strAchievements);
+                }
+            }
+
+            if (IsOver)
+            { //Check for the ending
+                int tokensToGiveToWinners = (int)Enum.Parse(typeof(TokensPerWin), GetHighestQualifyingFightTier(WinnerTeam).ToString());
+                int tokensToGiveToLosers = (int)(tokensToGiveToWinners * GameSettings.TokensPerLossMultiplier);
+                if (IsDraw)
+                {
+                    Message.addHit($"DOUBLE KO! Everyone is out! It's over!");
+                    tokensToGiveToLosers = tokensToGiveToWinners;
+                }
+                OutputStatus();
+                EndFight(tokensToGiveToWinners, tokensToGiveToLosers);
+            }
+            else
+            {
+                WaitingForAction = true;
+                OutputStatus();
+            }
+
+            foreach (var fighter in Fighters)
+            {
+                fighter.NextRound();
+            }
+        }
+
+        public bool IsOver
+        {
+            get
+            {
+                return TeamsStillInGame.Count <= 1;
+            }
+        }
+
+        public bool IsDraw
+        {
+            get
+            {
+                return TeamsStillInGame.Count == 0;
+            }
+        }
+
+        //Fighting info displays
+
+        public void OutputStatus()
+        {
+            Message.AddInfo(string.Format(Messages.outputStatusInfo, CurrentTurn.ToString(), CurrentTeamName.ToLower(), CurrentTeamName, CurrentPlayer.GetStylizedName()));
+
+            for (var i = 0; i < Fighters.Count; i++)
+            { //Prints as much names as there are Team
+                var theFighter = Fighters[i];
                 if (theFighter != null)
                 {
-                    fullStringVS = $"{fullStringVS} VS {theFighter.getStylizedName()}";
+                    Message.addStatus(theFighter.OutputStatus());
                 }
             }
-            fullStringVS = $"{fullStringVS}[/b]";
-            fullStringVS = fullStringVS.Replace(" VS ", "");
-            this.message.addInfo(fullStringVS);
+
+            SendFightMessage();
         }
 
-
-        this.reorderFightersByInitiative(this.rollAllDice(Trigger.InitiationRoll));
-        this.message.addInfo(string.Format(Messages.startMatchFirstPlayer, this.currentPlayer.getStylizedName(), this.currentTeamName.ToLower(), this.currentTeamName));
-        for (var i = 1; i < this.Fighters.Count; i++)
+        [NotMapped]
+        public Team CurrentTeam
         {
-            this.message.addInfo(string.Format(Messages.startMatchFollowedBy, this.Fighters[i].getStylizedName(), this.Fighters[i].assignedTeam.ToString().ToLower(), this.Fighters[i].assignedTeam.ToString().ToLower()));
-            if (this.fightType == FightType.Tag)
+            get
             {
-                this.Fighters[i].isInTheRing = false;
+                return AlivePlayers[(CurrentTurn - 1) % AliveFighterCount].AssignedTeam;
             }
         }
-        if (this.fightType == FightType.Tag)
-        { //if it's a tag match, only allow the first player of the next Team
-            for (var i = 1; i < this.Fighters.Count; i++)
+
+        [NotMapped]
+        public Team NextTeamToPlay
+        {
+            get
             {
-                if (this.currentPlayer.assignedTeam != this.Fighters[i].assignedTeam)
+                return AlivePlayers[CurrentTurn % AliveFighterCount].AssignedTeam;
+            }
+        }
+
+        [NotMapped]
+        public int CurrentPlayerIndex
+        {
+            get
+            {
+                var curTurn = 1;
+                if (CurrentTurn > 0)
                 {
-                    this.Fighters[i].isInTheRing = true;
-                    break;
+                    curTurn = CurrentTurn - 1;
                 }
+                return curTurn % AliveFighterCount;
             }
         }
 
-        for (var i = 0; i < this.Fighters.Count; i++)
+        [NotMapped]
+        public TFighterState CurrentPlayer
         {
-            this.Fighters[i].fightStatus = FightStatus.Playing;
-            int fightCost = GameSettings.tokensCostToFight;
-            this.Fighters[i].User.removeTokens(fightCost, TransactionType.FightStart);
-            this.Fighters[i].triggerFeatures(TriggerMoment.After, Trigger.InitiationRoll, GetFeatureParameter((TFight)this, this.Fighters[i]));
-        }
-
-
-
-        this.sendFightMessage();
-        this.save();
-        this.outputStatus();
-    }
-
-    private TFeatureParameters GetFeatureParameter(TFight fight = null, TFighterState fighter = null, TFighterState target = null, TActiveAction action = null)
-    {
-        var parameters = new TFeatureParameters();
-        parameters.initialize(fight, fighter, target, action);
-        return parameters;
-    }
-
-    public void requestDraw(string fighterName)
-    {
-        var fighter = this.getFighterByName(fighterName);
-        if (fighter != null)
-        {
-            if (!fighter.isRequestingDraw())
+            get
             {
-                fighter.requestDraw();
-            }
-            else
-            {
-                throw new Exception("You already have requested a draw.");
-            }
-        }
-        else
-        {
-            throw new Exception("You aren't in this fight.");
-        }
-    }
-
-    public void unrequestDraw(string fighterName)
-    {
-        var fighter = this.getFighterByName(fighterName);
-        if (fighter != null)
-        {
-            if (fighter.isRequestingDraw())
-            {
-                fighter.unrequestDraw();
-            }
-            else
-            {
-                throw new Exception("You already have requested a draw.");
-            }
-        }
-        else
-        {
-            throw new Exception("You aren't in this fight.");
-        }
-    }
-
-    public virtual void nextTurn()
-    {
-        this.currentTurn++;
-
-        foreach (var fighter in this.Fighters)
-        {
-            var strAchievements = fighter.checkAchievements((TFight)this);
-            if (strAchievements != "")
-            {
-                this.message.addSpecial(strAchievements);
+                return AlivePlayers[CurrentPlayerIndex];
             }
         }
 
-        if (this.isOver())
-        { //Check for the ending
-            int tokensToGiveToWinners = (int)Enum.Parse(typeof(TokensPerWin), this.getFightTier(this.winnerTeam).ToString());
-            int tokensToGiveToLosers = (int)(tokensToGiveToWinners * GameSettings.tokensPerLossMultiplier);
-            if (this.isDraw())
-            {
-                this.message.addHit($"DOUBLE KO! Everyone is out! It's over!");
-                tokensToGiveToLosers = tokensToGiveToWinners;
-            }
-            this.outputStatus();
-            this.endFight(tokensToGiveToWinners, tokensToGiveToLosers);
-        }
-        else
+        [NotMapped]
+        public TFighterState NextPlayer
         {
-            this.save();
-            this.waitingForAction = true;
-            this.outputStatus();
-        }
-
-        foreach (var fighter in this.Fighters)
-        {
-            fighter.nextRound();
-        }
-    }
-
-    public bool isOver()
-    {
-        return this.getTeamsStillInGame().Count <= 1;
-    }
-
-    public bool isDraw()
-    {
-        return this.getTeamsStillInGame().Count == 0;
-    }
-
-    //Fighting info displays
-
-    public void outputStatus()
-    {
-        this.message.addInfo(string.Format(Messages.outputStatusInfo, this.currentTurn.ToString(), this.currentTeamName.ToLower(), this.currentTeamName, this.currentPlayer.getStylizedName()));
-
-        for (var i = 0; i < this.Fighters.Count; i++)
-        { //Prints as much names as there are Team
-            var theFighter = this.Fighters[i];
-            if (theFighter != null)
+            get
             {
-                this.message.addStatus(theFighter.outputStatus());
+                return AlivePlayers[CurrentTurn % AliveFighterCount];
             }
         }
 
-        this.sendFightMessage();
-    }
-
-    public Team currentTeam
-    {
-        get
+        public void SetCurrentPlayer(string fighterName)
         {
-            return this.getAlivePlayers()[(this.currentTurn - 1) % this.aliveFighterCount].assignedTeam;
-        }
-    }
-
-    public Team nextTeamToPlay
-    {
-        get
-        {
-            return this.getAlivePlayers()[this.currentTurn % this.aliveFighterCount].assignedTeam;
-        }
-    }
-
-    public int currentPlayerIndex
-    {
-        get
-        {
-            var curTurn = 1;
-            if (this.currentTurn > 0)
-            {
-                curTurn = this.currentTurn - 1;
-            }
-            return curTurn % this.aliveFighterCount;
-        }
-    }
-
-    public TFighterState currentPlayer
-    {
-        get
-        {
-            return this.getAlivePlayers()[this.currentPlayerIndex];
-        }
-    }
-
-    public TFighterState nextPlayer
-    {
-        get
-        {
-            return this.getAlivePlayers()[this.currentTurn % this.aliveFighterCount];
-        }
-    }
-
-    public void setCurrentPlayer(string fighterName)
-    {
-        var index = this.Fighters.FindIndex((x) => x.Name == fighterName && !x.isTechnicallyOut());
-        if (index != -1 && this.Fighters[this.currentPlayerIndex].Name != fighterName)
-        { //switch positions
-            var temp = this.Fighters[this.currentPlayerIndex];
-            this.Fighters[this.currentPlayerIndex] = this.Fighters[index];
-            this.Fighters[index] = temp;
-            this.Fighters[this.currentPlayerIndex].isInTheRing = true;
-            if (this.Fighters[index].assignedTeam == this.Fighters[this.currentPlayerIndex].assignedTeam && this.Fighters[index].isInTheRing == true && this.fightType == FightType.Tag)
-            {
-                this.Fighters[index].isInTheRing = false;
-            }
-            if (this.Fighters[index].assignedTeam != this.Fighters[this.currentPlayerIndex].assignedTeam && this.Fighters[this.currentPlayerIndex].isInTheRing == true && this.fightType == FightType.Tag)
-            {
-                this.Fighters.Where(x => x.isInTheRing && x.assignedTeam == this.Fighters[this.currentPlayerIndex].assignedTeam && x.Name != fighterName).ToList().ForEach(x => x.isInTheRing = false);
-            }
-            this.message.addInfo(string.Format(Messages.setCurrentPlayerOK, temp.Name, this.Fighters[this.currentPlayerIndex].Name));
-        }
-        else
-        {
-            this.message.addInfo(Messages.setCurrentPlayerFail);
-        }
-    }
-
-    //RWFight helpers
-    public string currentTeamName
-    {
-        get
-        {
-            return currentTeam.ToString();
-        }
-    }
-
-    public List<TFighterState> currentTarget
-    {
-        get
-        {
-            return currentPlayer.getTargets();
-        }
-    }
-
-    public void assignRandomTargetToAllFighters()
-    {
-        foreach (var fighter in this.getAlivePlayers())
-        {
-            this.assignRandomTargetToFighter(fighter);
-        }
-    }
-
-    public void assignRandomTargetToFighter(TFighterState fighter)
-    {
-        fighter.targets.Add(this.getRandomFighterNotInTeam(fighter.assignedTeam).Name);
-    }
-
-    //Dice rolling
-    public List<TFighterState> rollAllDice(Trigger triggeringEvent)
-    {
-        var arrSortedFightersByInitiative = new List<TFighterState>();
-        foreach (var player in this.getAlivePlayers())
-        {
-            player.lastDiceRoll = player.roll(10, triggeringEvent);
-            arrSortedFightersByInitiative.Add(player);
-            this.message.addHint(string.Format(Messages.rollAllDiceEchoRoll, player.getStylizedName(), player.lastDiceRoll.ToString()));
-        }
-
-        arrSortedFightersByInitiative.Sort((a, b) =>
-        {
-            return b.lastDiceRoll - a.lastDiceRoll;
-        });
-
-        return arrSortedFightersByInitiative;
-    }
-
-    public TFighterState rollAllGetWinner(Trigger triggeringEvent)
-    {
-        return this.rollAllDice(triggeringEvent)[0];
-    }
-
-    //Attacks
-
-    public void assignTarget(string fighterName, string name)
-    {
-        var theTarget = this.getFighterByName(name);
-        if (theTarget != null)
-        {
-            this.getFighterByName(fighterName).targets = new List<string>() { theTarget.Name };
-            this.message.addInfo("Target set to " + theTarget.getStylizedName());
-            this.sendFightMessage();
-        }
-        else
-        {
-            this.message.addError("Target not found.");
-            this.sendFightMessage();
-        }
-    }
-
-    public async void prepareAction(string attacker, TActionType actionType, bool tierRequired, bool isCustomTargetInsteadOfTier, string args)
-    {
-        var tier = -1;
-        if (!this.isMatchInProgress())
-        {
-            throw new Exception("There isn't any fight going on.");
-        }
-
-        if (!this.waitingForAction)
-        {
-            throw new Exception(Messages.lastActionStillProcessing);
-        }
-
-        if (this.currentPlayer == null || attacker != this.currentPlayer.Name)
-        {
-            throw new Exception(Messages.doActionNotActorsTurn);
-        }
-
-        int.TryParse(args, out tier);
-
-        if (tierRequired && tier == -1)
-        {
-            throw new Exception($"The tier is required and neither Light, Medium or Heavy was specified. Example: !action Medium");
-        }
-        if (isCustomTargetInsteadOfTier)
-        {
-            TFighterState customTarget = this.getFighterByName(args);
-            if (customTarget == null)
-            {
-                throw new Exception("The character to tag with is required and wasn't found.");
-            }
-            else
-            {
-                this.currentPlayer.targets = new List<string>() { customTarget.Name };
-            }
-        }
-
-        if (this.getFighterByName(attacker) == null)
-        {
-            throw new Exception("You aren't participating in this fight.");
-        }
-
-        //Might need to disable this for self-targetted actions?
-        if (this.currentTarget == null || this.currentTarget.Count() == 0)
-        {
-            if (this.Fighters.Where(x => x.assignedTeam != this.currentPlayer.assignedTeam && x.isInTheRing && !x.isTechnicallyOut()).Count() == 1)
-            {
-                this.assignRandomTargetToFighter(this.currentPlayer);
-            }
-            else
-            {
-                throw new Exception("There are too many possible targets. Please choose one with the '!target characternamehere' command.");
-            }
-        }
-
-        this.waitingForAction = false;
-        var action = this.doAction(actionType, this.currentPlayer, this.currentTarget, tier);
-        var allInvolvedActors = new List<TFighterState>();
-        allInvolvedActors.Add(action.Attacker);
-        allInvolvedActors.AddRange(action.Defenders);
-        this.displayDeathMessagesIfNeedBe(allInvolvedActors);
-        if (action.KeepActorsTurn && action.Missed == false)
-        {
-            this.message.addHint($"[b]This is still your turn {action.Attacker.getStylizedName()}![/b]");
-            this.sendFightMessage();
-            this.waitingForAction = true;
-        }
-        else if (!this.isOver())
-        {
-            this.nextTurn();
-        }
-        else
-        {
-            this.onMatchEnding();
-        }
-    }
-
-    public TActiveAction doAction(TActionType actionType, TFighterState attacker, List<TFighterState> defenders, int tier)
-    {
-        var action = this.actionFactory.GetAction(actionType, (TFight)this, attacker, defenders, tier);
-        action.execute();
-        action.save();
-        this.pastActions.Add(action);
-        return action;
-    }
-
-    public void displayDeathMessagesIfNeedBe(List<TFighterState> involvedActors)
-    {
-        foreach (var actor in involvedActors)
-        {
-            actor.isTechnicallyOut(true);
-        }
-    }
-
-    public void onMatchEnding()
-    {
-        int tokensToGiveToWinners = (int)Enum.Parse(typeof(TokensPerWin), this.getFightTier(this.winnerTeam).ToString());
-        int tokensToGiveToLosers = (int)(tokensToGiveToWinners * GameSettings.tokensPerLossMultiplier);
-        if (this.isDraw())
-        {
-            this.message.addHit($"DOUBLE KO! Everyone is out! It's over!");
-            tokensToGiveToLosers = tokensToGiveToWinners;
-        }
-        this.outputStatus();
-
-        this.endFight(tokensToGiveToWinners, tokensToGiveToLosers);
-    }
-
-
-
-    public bool isMatchInProgress()
-    {
-        return (this.hasStarted && !this.hasEnded);
-    }
-
-    public FightTier getFightTier(Team winnerTeam)
-    {
-        var highestWinnerTier = (int)FightTier.Bronze;
-        foreach (var fighter in this.getTeam(winnerTeam))
-        {
-            if ((int)fighter.User.getFightTier() > highestWinnerTier)
-            {
-                highestWinnerTier = (int)fighter.User.getFightTier();
-            }
-        }
-
-        var lowestLoserTier = -99;
-        foreach (var fighter in this.Fighters)
-        {
-            if (fighter.assignedTeam != winnerTeam)
-            {
-                if (lowestLoserTier == -99)
+            var index = Fighters.FindIndex((x) => x.Name == fighterName && !x.IsTKO);
+            if (index != -1 && Fighters[CurrentPlayerIndex].Name != fighterName)
+            { //switch positions
+                var temp = Fighters[CurrentPlayerIndex];
+                Fighters[CurrentPlayerIndex] = Fighters[index];
+                Fighters[index] = temp;
+                Fighters[CurrentPlayerIndex].IsInTheRing = true;
+                if (Fighters[index].AssignedTeam == Fighters[CurrentPlayerIndex].AssignedTeam && Fighters[index].IsInTheRing == true && FightType == FightType.Tag)
                 {
-                    lowestLoserTier = (int)fighter.User.getFightTier();
+                    Fighters[index].IsInTheRing = false;
                 }
-                else if (lowestLoserTier > (int)fighter.User.getFightTier())
+                if (Fighters[index].AssignedTeam != Fighters[CurrentPlayerIndex].AssignedTeam && Fighters[CurrentPlayerIndex].IsInTheRing == true && FightType == FightType.Tag)
                 {
-                    lowestLoserTier = (int)fighter.User.getFightTier();
+                    Fighters.Where(x => x.IsInTheRing && x.AssignedTeam == Fighters[CurrentPlayerIndex].AssignedTeam && x.Name != fighterName).ToList().ForEach(x => x.IsInTheRing = false);
                 }
-            }
-        }
-
-        //If the loser was weaker, the fight fightTier matches the winner's fightTier
-        //if the weakest wrestler was equal or more powerful, the fight fightTier matches the loser's fightTier
-        var fightTier = highestWinnerTier;
-        if (lowestLoserTier >= highestWinnerTier)
-        {
-            fightTier = lowestLoserTier;
-        }
-
-        return (FightTier)fightTier;
-    }
-
-    public void forfeit(string fighterName)
-    {
-        var fighter = this.getFighterByName(fighterName);
-        if (fighter != null)
-        {
-            if (!fighter.isTechnicallyOut())
-            {
-                fighter.fightStatus = FightStatus.Forfeited;
-                this.punishPlayerOnForfeit(fighter);
+                Message.AddInfo(string.Format(Messages.setCurrentPlayerOK, temp.Name, Fighters[CurrentPlayerIndex].Name));
             }
             else
             {
-                this.message.addError(Messages.forfeitAlreadyOut);
-                this.sendFightMessage();
-                return;
+                Message.AddInfo(Messages.setCurrentPlayerFail);
             }
         }
-        else
-        {
-            this.message.addInfo($"You are not participating in the match. OH, and that message should NEVER happen.");
-            this.sendFightMessage();
-            return;
-        }
-        this.sendFightMessage();
-        if (this.isOver())
-        {
-            int tokensToGiveToWinners = (int)((int)Enum.Parse(typeof(TokensPerWin), this.getFightTier(this.winnerTeam).ToString()) * GameSettings.tokensForWinnerByForfeitMultiplier);
-            this.endFight(tokensToGiveToWinners, 0);
-        }
-        else
-        {
-            this.outputStatus();
-        }
-    }
 
-    public void checkForDraw()
-    {
-        var neededDrawFlags = this.getAlivePlayers().Count;
-        var drawFlags = 0;
-        foreach (var fighter in this.getAlivePlayers())
+        //RWFight helpers
+        [NotMapped]
+        public string CurrentTeamName
         {
-            if (fighter.wantsDraw)
+            get
             {
-                drawFlags++;
+                return CurrentTeam.ToString();
             }
         }
-        if (neededDrawFlags == drawFlags)
+
+        [NotMapped]
+        public List<TFighterState> CurrentTarget
         {
-            this.message.addInfo(Messages.checkForDrawOK);
-            this.sendFightMessage();
-            int tokensToGive = this.currentTurn;
-            int tokensMax = (int)(Enum.Parse(typeof(TokensPerWin), nameof(FightTier.Bronze)));
-            if (tokensToGive > tokensMax)
+            get
             {
-                tokensToGive = tokensMax;
+                return CurrentPlayer.Targets;
             }
-            this.endFight(0, tokensToGive, Team.White); //0 because there isn't a winning Team
-        }
-        else
-        {
-            this.message.addInfo(Messages.checkForDrawWaiting);
-            this.sendFightMessage();
-        }
-    }
-
-    public void endFight(int tokensToGiveToWinners, int tokensToGiveToLosers, Team? forceWinner = null)
-    {
-        this.hasEnded = true;
-        this.hasStarted = false;
-
-        if (!forceWinner.HasValue)
-        {
-            this.winnerTeam = this.getTeamsStillInGame()[0];
-        }
-        else
-        {
-            this.winnerTeam = forceWinner.Value;
-        }
-        if (this.winnerTeam != Team.White)
-        {
-            this.message.addInfo(string.Format(Messages.endFightAnnounce, this.winnerTeam));
-            this.message.addHit("Finisher suggestion: " + FightFinishers.pick());
-            this.sendFightMessage();
         }
 
-        var eloAverageOfWinners = 0;
-        var intOfWinners = 0;
-        var intOfLosers = 0;
-        var eloAverageOfLosers = 0;
-        int eloPointsChangeToWinners;
-        int eloPointsChangeToLosers;
-        foreach (var fighter in this.Fighters)
+        public void AssignRandomTargetToAllFighters()
         {
-            if (fighter.assignedTeam == this.winnerTeam)
+            foreach (var fighter in AlivePlayers)
             {
-                intOfWinners++;
-                eloAverageOfWinners += fighter.User.Stats.eloRating;
+                AssignRandomTargetToFighter(fighter);
+            }
+        }
+
+        public void AssignRandomTargetToFighter(TFighterState fighter)
+        {
+            fighter.TargetsAsString.Add(GetRandomFighterNotInTeam(fighter.AssignedTeam).Name);
+        }
+
+        //Dice rolling
+        public List<TFighterState> RollAllDice(TriggerEvent triggeringEvent)
+        {
+            var arrSortedFightersByInitiative = new List<TFighterState>();
+            foreach (var player in AlivePlayers)
+            {
+                player.LastDiceRoll = player.Roll(10, triggeringEvent);
+                arrSortedFightersByInitiative.Add(player);
+                Message.addHint(string.Format(Messages.rollAllDiceEchoRoll, player.GetStylizedName(), player.LastDiceRoll.ToString()));
+            }
+
+            arrSortedFightersByInitiative.Sort((a, b) =>
+            {
+                return b.LastDiceRoll - a.LastDiceRoll;
+            });
+
+            return arrSortedFightersByInitiative;
+        }
+
+        public TFighterState RollAllAndReturnWinner(TriggerEvent triggeringEvent)
+        {
+            return RollAllDice(triggeringEvent)[0];
+        }
+
+        //Attacks
+
+        public void AssignTarget(string fighterName, string name)
+        {
+            var theTarget = GetFighterByName(name);
+            if (theTarget != null)
+            {
+                GetFighterByName(fighterName).TargetsAsString = new List<string>() { theTarget.Name };
+                Message.AddInfo("Target set to " + theTarget.GetStylizedName());
+                SendFightMessage();
             }
             else
             {
-                intOfLosers++;
-                eloAverageOfLosers += fighter.User.Stats.eloRating;
+                Message.addError("Target not found.");
+                SendFightMessage();
             }
         }
 
-        eloAverageOfWinners = (int)Math.Floor((double)eloAverageOfWinners / intOfWinners);
-        eloAverageOfLosers = (int)Math.Floor((double)eloAverageOfLosers / intOfLosers);
-
-        dynamic eloResults = new Exception();//TODO!!!  EloRating.calculate(eloAverageOfWinners, eloAverageOfLosers);
-        eloPointsChangeToWinners = eloResults.playerRating - eloAverageOfWinners;
-        eloPointsChangeToLosers = eloResults.opponentRating - eloAverageOfLosers;
-
-        foreach (var fighter in this.Fighters)
+        public void PrepareAction(string attacker, TActionType actionType, bool tierRequired, bool isCustomTargetInsteadOfTier, string args)
         {
-            if (fighter.assignedTeam == this.winnerTeam)
+            var tier = -1;
+            if (!IsMatchInProgress())
             {
-                fighter.fightStatus = FightStatus.Won;
-                this.message.addInfo($"Awarded {tokensToGiveToWinners} {GameSettings.currencyName} to {fighter.getStylizedName()}");
-                fighter.User.giveTokens(tokensToGiveToWinners, TransactionType.FightReward, GameSettings.botName);
-                fighter.User.Stats.wins++;
-                fighter.User.Stats.winsSeason++;
-                fighter.User.Stats.eloRating += eloPointsChangeToWinners;
+                throw new Exception("There isn't any fight going on.");
             }
-            else
+
+            if (!WaitingForAction)
             {
-                if (this.winnerTeam != Team.White)
+                throw new Exception(Messages.lastActionStillProcessing);
+            }
+
+            if (CurrentPlayer == null || attacker != CurrentPlayer.Name)
+            {
+                throw new Exception(Messages.doActionNotActorsTurn);
+            }
+
+            
+            if (tierRequired && (!int.TryParse(args, out tier) || tier == -1))
+            {
+                throw new Exception($"The tier is required and neither Light, Medium or Heavy was specified. Example: !action Medium");
+            }
+
+            if (isCustomTargetInsteadOfTier)
+            {
+                TFighterState customTarget = GetFighterByName(args);
+                if (customTarget != null)
                 {
-                    fighter.fightStatus = FightStatus.Lost;
-                    fighter.User.Stats.losses++;
-                    fighter.User.Stats.lossesSeason++;
-                    fighter.User.Stats.eloRating += eloPointsChangeToLosers;
-                }
-                this.message.addInfo($"Awarded {tokensToGiveToLosers} {GameSettings.currencyName} to {fighter.getStylizedName()}");
-                fighter.User.giveTokens(tokensToGiveToLosers, TransactionType.FightReward, GameSettings.botName);
-            }
-            this.message.addInfo(fighter.checkAchievements((TFight)this));
-            fighter.save();
-        }
-
-        this.sendFightMessage();
-
-        this.save();
-    }
-
-    public void reorderFightersByInitiative(List<TFighterState> arrFightersSortedByInitiative)
-    {
-        var index = 0;
-        foreach (var fighter in arrFightersSortedByInitiative)
-        {
-            var indexToMoveInFront = this.getFighterIndex(fighter.Name);
-            var temp = this.Fighters[index];
-            this.Fighters[index] = this.Fighters[indexToMoveInFront];
-            this.Fighters[indexToMoveInFront] = temp;
-            index++;
-        }
-    }
-
-    public List<TFighterState> getAlivePlayers()
-    {
-        var arrPlayers = new List<TFighterState>();
-        foreach (var player in this.Fighters)
-        {
-            if (!player.isTechnicallyOut() && player.isInTheRing)
-            {
-                arrPlayers.Add(player);
-            }
-        }
-        return arrPlayers;
-    }
-
-    public TFighterState getFighterByName(string name)
-    {
-        TFighterState fighter = null;
-        foreach (var player in this.Fighters)
-        {
-            if (player.Name == name)
-            {
-                fighter = player;
-            }
-        }
-        return fighter;
-    }
-
-    public int getFighterIndex(string fighterName)
-    {
-        var index = -1;
-        for (var i = 0; i < this.Fighters.Count; i++)
-        {
-            if (this.Fighters[i].Name == fighterName)
-            {
-                index = i;
-            }
-        }
-        return index;
-    }
-
-    public int getFirstPlayerIDAliveInTeam(Team Teams, int afterIndex = 0)
-    {
-        var fullTeam = this.getTeam(Teams);
-        var index = -1;
-        for (var i = afterIndex; i < fullTeam.Count; i++)
-        {
-            if (fullTeam[i] != null && !fullTeam[i].isTechnicallyOut() && fullTeam[i].isInTheRing)
-            {
-                index = i;
-            }
-        }
-        return index;
-    }
-
-    public List<TFighterState> getTeam(Team teamToSearch)
-    {
-        var teamList = new List<TFighterState>();
-        foreach (var player in this.Fighters)
-        {
-            if (player.assignedTeam == teamToSearch)
-            {
-                teamList.Add(player);
-            }
-        }
-        return teamList;
-    }
-
-    public int getNumberOfPlayersInTeam(Team teamToSearch)
-    {
-        var fullTeamCount = this.getTeam(teamToSearch);
-        return fullTeamCount.Count;
-    }
-
-    public List<Team> getAllOccupiedTeams()
-    {
-        List<Team> usedTeams = new List<Team>();
-        foreach (var player in this.Fighters)
-        {
-            if (usedTeams.IndexOf(player.assignedTeam) == -1)
-            {
-                usedTeams.Add(player.assignedTeam);
-            }
-        }
-        return usedTeams;
-    }
-
-    public List<Team> getAllUsedTeams()
-    {
-        List<Team> usedTeams = this.getAllOccupiedTeams();
-
-        var teamIndex = 0;
-        while (usedTeams.Count < this.requiredTeams)
-        {
-            var teamToAdd = (Team)teamIndex;
-            if (usedTeams.IndexOf(teamToAdd) == -1)
-            {
-                usedTeams.Add(teamToAdd);
-            }
-            teamIndex++;
-        }
-        return usedTeams;
-    }
-
-    public List<Team> getTeamsStillInGame()
-    {
-        List<Team> usedTeams = new List<Team>();
-        foreach (var player in this.getAlivePlayers())
-        {
-            if (usedTeams.IndexOf(player.assignedTeam) == -1)
-            {
-                usedTeams.Add(player.assignedTeam);
-            }
-        }
-        return usedTeams;
-    }
-
-    public Team getRandomTeam()
-    {
-        return this.getTeamsStillInGame()[Utils.getRandomInt(0, this.numberOfTeamsInvolved)];
-    }
-
-    public int numberOfTeamsInvolved
-    {
-        get
-        {
-            return this.getTeamsStillInGame().Count;
-        }
-    }
-
-    public Dictionary<Team, int> numberOfPlayersPerTeam
-    {
-        get
-        {
-            var count = new Dictionary<Team, int>();
-            foreach (var player in this.Fighters)
-            {
-                if (!count.ContainsKey(player.assignedTeam))
-                {
-                    count.Add(player.assignedTeam, 1);
+                    CurrentPlayer.TargetsAsString = new List<string>() { customTarget.Name };
                 }
                 else
                 {
-                    count[player.assignedTeam]++;
+                    throw new Exception("The character to tag with is required and wasn't found.");
                 }
             }
-            return count;
-        }
-    }
 
-    public int maxPlayersPerTeam
-    {
-        get
-        { //returns 0 if there aren't any teams
-            var maxCount = 0;
-            foreach (var nb in this.numberOfPlayersPerTeam)
+            if (GetFighterByName(attacker) == null)
             {
-                if (nb.Value > maxCount)
+                throw new Exception("You aren't participating in this fight.");
+            }
+
+            //Might need to disable this for self-targetted actions?
+            if (CurrentTarget == null || CurrentTarget.Count == 0)
+            {
+                if (Fighters.Where(x => x.AssignedTeam != CurrentPlayer.AssignedTeam && x.IsInTheRing && !x.IsTKO).Count() == 1)
                 {
-                    maxCount = nb.Value;
+                    AssignRandomTargetToFighter(CurrentPlayer);
+                }
+                else
+                {
+                    throw new Exception("There are too many possible targets. Please choose one with the '!target characternamehere' command.");
                 }
             }
-            return maxCount;
-        }
-    }
 
-    public bool isEveryoneReady()
-    {
-        var isEveryoneReady = true;
-        foreach (var fighter in this.Fighters)
-        {
-            if (!fighter.isReady)
+            WaitingForAction = false;
+            var action = DoAction(actionType, CurrentPlayer, CurrentTarget, tier);
+            var allInvolvedActors = new List<TFighterState>
             {
-                isEveryoneReady = false;
+                action.Attacker
+            };
+            allInvolvedActors.AddRange(action.Defenders);
+            DisplayDeathMessagesIfNeedBe(allInvolvedActors);
+            if (action.KeepActorsTurn && action.Missed == false)
+            {
+                Message.addHint($"[b]This is still your turn {action.Attacker.GetStylizedName()}![/b]");
+                SendFightMessage();
+                WaitingForAction = true;
+            }
+            else if (!IsOver)
+            {
+                NextTurn();
+            }
+            else
+            {
+                OnMatchEnding();
             }
         }
-        return isEveryoneReady;
-    }
 
-    public Team getAvailableTeam()
-    {
-        Team teamToUse = Team.Blue;
-        var arrPlayersCount = new Dictionary<Team, int>();
-        var usedTeams = this.getAllUsedTeams();
-        foreach (var teamId in usedTeams)
+        public TActiveAction DoAction(TActionType actionType, TFighterState attacker, List<TFighterState> defenders, int tier)
         {
-            arrPlayersCount.Add(teamId, this.getNumberOfPlayersInTeam(teamId));
+            var action = ActionFactory.Build(actionType, (TFight)this, attacker, defenders, tier);
+            action.Execute();
+            action.Save();
+            PastActions.Add(action);
+            return action;
         }
 
-        var mostPlayersInTeam = arrPlayersCount.Values.Max();
-        var leastPlayersInTeam = arrPlayersCount.Values.Min();
-        var firstEmptiestTeam = arrPlayersCount.FirstOrDefault(x => x.Value == leastPlayersInTeam);
-
-        if (mostPlayersInTeam == leastPlayersInTeam || mostPlayersInTeam == int.MinValue || leastPlayersInTeam == int.MaxValue)
+        public void DisplayDeathMessagesIfNeedBe(List<TFighterState> involvedActors)
         {
-            teamToUse = Team.Blue;
-        }
-        else
-        {
-            teamToUse = firstEmptiestTeam.Key;
+            foreach (var actor in involvedActors)
+            {
+                if (actor.IsTKO)
+                {
+                    actor.DisplayTKOMessage();
+                }
+            }
         }
 
-        return teamToUse;
-    }
-
-    public TFighterState getRandomFighter()
-    {
-        return this.getAlivePlayers()[Utils.getRandomInt(0, this.getAlivePlayers().Count)];
-    }
-
-    public TFighterState getRandomFighterNotInTeam(Team Teams)
-    {
-        var tries = 0;
-        TFighterState fighter = null;
-        while (tries < 99 && (fighter == null || fighter.assignedTeam == Team.White || fighter.assignedTeam == Teams))
+        public void OnMatchEnding()
         {
-            fighter = this.getRandomFighter();
-            tries++;
-        }
-        return fighter;
-    }
+            int tokensToGiveToWinners = (int)Enum.Parse(typeof(TokensPerWin), GetHighestQualifyingFightTier(WinnerTeam).ToString());
+            int tokensToGiveToLosers = (int)(tokensToGiveToWinners * GameSettings.TokensPerLossMultiplier);
+            if (IsDraw)
+            {
+                Message.addHit($"DOUBLE KO! Everyone is out! It's over!");
+                tokensToGiveToLosers = tokensToGiveToWinners;
+            }
+            OutputStatus();
 
-    //Misc. shortcuts
-    public int fighterCount
-    {
-        get
+            EndFight(tokensToGiveToWinners, tokensToGiveToLosers);
+        }
+
+
+
+        public bool IsMatchInProgress()
         {
-            return this.Fighters.Count;
+            return HasStarted && !HasEnded;
         }
-    }
 
-    public int aliveFighterCount
-    {
-        get
+        public FightTier GetHighestQualifyingFightTier(Team winnerTeam)
         {
-            return this.getAlivePlayers().Count;
+            var highestWinnerTier = (int)FightTier.Bronze;
+            foreach (var fighter in GetTeam(winnerTeam))
+            {
+                if ((int)fighter.User.FightTier > highestWinnerTier)
+                {
+                    highestWinnerTier = (int)fighter.User.FightTier;
+                }
+            }
+
+            var lowestLoserTier = -99;
+            foreach (var fighter in Fighters)
+            {
+                if (fighter.AssignedTeam != winnerTeam)
+                {
+                    if (lowestLoserTier == -99)
+                    {
+                        lowestLoserTier = (int)fighter.User.FightTier;
+                    }
+                    else if (lowestLoserTier > (int)fighter.User.FightTier)
+                    {
+                        lowestLoserTier = (int)fighter.User.FightTier;
+                    }
+                }
+            }
+
+            //If the loser was weaker, the fight fightTier matches the winner's fightTier
+            //if the weakest wrestler was equal or more powerful, the fight fightTier matches the loser's fightTier
+            var fightTier = highestWinnerTier;
+            if (lowestLoserTier >= highestWinnerTier)
+            {
+                fightTier = lowestLoserTier;
+            }
+
+            return (FightTier)fightTier;
         }
+
+        public void Forfeit(string fighterName)
+        {
+            var fighter = GetFighterByName(fighterName);
+            if (fighter != null)
+            {
+                if (!fighter.IsTKO)
+                {
+                    fighter.FightStatus = FightStatus.Forfeited;
+                    PunishPlayerOnForfeit(fighter);
+                }
+                else
+                {
+                    Message.addError(Messages.forfeitAlreadyOut);
+                    SendFightMessage();
+                    return;
+                }
+            }
+            else
+            {
+                Message.AddInfo($"You are not participating in the match. OH, and that message should NEVER happen.");
+                SendFightMessage();
+                return;
+            }
+            SendFightMessage();
+            if (IsOver)
+            {
+                int tokensToGiveToWinners = (int)((int)Enum.Parse(typeof(TokensPerWin), GetHighestQualifyingFightTier(WinnerTeam).ToString()) * GameSettings.TokensForWinnerByForfeitMultiplier);
+                EndFight(tokensToGiveToWinners, 0);
+            }
+            else
+            {
+                OutputStatus();
+            }
+        }
+
+        public void CheckForDraw()
+        {
+            var neededDrawFlags = AlivePlayers.Count;
+            var drawFlags = 0;
+            foreach (var fighter in AlivePlayers)
+            {
+                if (fighter.WantsDraw)
+                {
+                    drawFlags++;
+                }
+            }
+            if (neededDrawFlags == drawFlags)
+            {
+                Message.AddInfo(Messages.CheckForDrawOK);
+                SendFightMessage();
+                int tokensToGive = CurrentTurn;
+                int tokensMax = (int)Enum.Parse(typeof(TokensPerWin), nameof(FightTier.Bronze));
+                if (tokensToGive > tokensMax)
+                {
+                    tokensToGive = tokensMax;
+                }
+                EndFight(0, tokensToGive, Team.White); //0 because there isn't a winning Team
+            }
+            else
+            {
+                Message.AddInfo(Messages.CheckForDrawWaiting);
+                SendFightMessage();
+            }
+        }
+
+        public void EndFight(int tokensToGiveToWinners, int tokensToGiveToLosers, Team? forceWinner = null)
+        {
+            HasEnded = true;
+            HasStarted = false;
+
+            if (!forceWinner.HasValue)
+            {
+                WinnerTeam = TeamsStillInGame[0];
+            }
+            else
+            {
+                WinnerTeam = forceWinner.Value;
+            }
+            if (WinnerTeam != Team.White)
+            {
+                Message.AddInfo(string.Format(Messages.endFightAnnounce, WinnerTeam));
+                Message.addHit("Finisher suggestion: " + FightFinishers.pick());
+                SendFightMessage();
+            }
+
+            var eloAverageOfWinners = 0;
+            var intOfWinners = 0;
+            var intOfLosers = 0;
+            var eloAverageOfLosers = 0;
+            int eloPointsChangeToWinners;
+            int eloPointsChangeToLosers;
+            foreach (var fighter in Fighters)
+            {
+                if (fighter.AssignedTeam == WinnerTeam)
+                {
+                    intOfWinners++;
+                    eloAverageOfWinners += fighter.User.Stats.eloRating;
+                }
+                else
+                {
+                    intOfLosers++;
+                    eloAverageOfLosers += fighter.User.Stats.eloRating;
+                }
+            }
+
+            eloAverageOfWinners = (int)Math.Floor((double)eloAverageOfWinners / intOfWinners);
+            eloAverageOfLosers = (int)Math.Floor((double)eloAverageOfLosers / intOfLosers);
+
+            var beforeEloAverageOfWinners = eloAverageOfWinners;
+            var beforeEloAverageOfLosers = eloAverageOfLosers;
+
+            CalculateELO(ref eloAverageOfWinners, ref eloAverageOfLosers);
+            eloPointsChangeToWinners = beforeEloAverageOfWinners - eloAverageOfWinners;
+            eloPointsChangeToLosers = beforeEloAverageOfLosers - eloAverageOfLosers;
+
+            foreach (var fighter in Fighters)
+            {
+                if (fighter.AssignedTeam == WinnerTeam)
+                {
+                    fighter.FightStatus = FightStatus.Won;
+                    Message.AddInfo($"Awarded {tokensToGiveToWinners} {GameSettings.CurrencyName} to {fighter.GetStylizedName()}");
+                    fighter.User.GiveTokens(tokensToGiveToWinners, TransactionType.FightReward, GameSettings.BotName);
+                    fighter.User.Stats.wins++;
+                    fighter.User.Stats.winsSeason++;
+                    fighter.User.Stats.eloRating += eloPointsChangeToWinners;
+                }
+                else
+                {
+                    if (WinnerTeam != Team.White)
+                    {
+                        fighter.FightStatus = FightStatus.Lost;
+                        fighter.User.Stats.losses++;
+                        fighter.User.Stats.lossesSeason++;
+                        fighter.User.Stats.eloRating += eloPointsChangeToLosers;
+                    }
+                    Message.AddInfo($"Awarded {tokensToGiveToLosers} {GameSettings.CurrencyName} to {fighter.GetStylizedName()}");
+                    fighter.User.GiveTokens(tokensToGiveToLosers, TransactionType.FightReward, GameSettings.BotName);
+                }
+                Message.AddInfo(fighter.CheckAchievements((TFight)this));
+            }
+
+            SendFightMessage();
+        }
+
+        static double ExpectationToWin(int playerOneRating, int playerTwoRating)
+        {
+            return 1 / (1 + Math.Pow(10, (playerTwoRating - playerOneRating) / 400.0));
+        }
+
+        static void CalculateELO(ref int winnerRating, ref int loserRating)
+        {
+            int eloK = 32;
+
+            int delta = (int)(eloK * (1 - ExpectationToWin(winnerRating, loserRating)));
+
+            winnerRating += delta;
+            loserRating -= delta;
+        }
+
+        public void ReorderFightersByInitiative(List<TFighterState> arrFightersSortedByInitiative)
+        {
+            var index = 0;
+            foreach (var fighter in arrFightersSortedByInitiative)
+            {
+                var indexToMoveInFront = GetFighterIndex(fighter.Name);
+                var temp = Fighters[index];
+                Fighters[index] = Fighters[indexToMoveInFront];
+                Fighters[indexToMoveInFront] = temp;
+                index++;
+            }
+        }
+
+        public List<TFighterState> AlivePlayers
+        {
+            get
+            {
+                var arrPlayers = new List<TFighterState>();
+                foreach (var player in Fighters)
+                {
+                    if (!player.IsTKO && player.IsInTheRing)
+                    {
+                        arrPlayers.Add(player);
+                    }
+                }
+                return arrPlayers;
+            }
+        }
+
+        public TFighterState GetFighterByName(string name)
+        {
+            TFighterState fighter = null;
+            foreach (var player in Fighters)
+            {
+                if (player.Name == name)
+                {
+                    fighter = player;
+                }
+            }
+            return fighter;
+        }
+
+        public int GetFighterIndex(string fighterName)
+        {
+            return Fighters.FindIndex(x => x.Name == fighterName);
+        }
+
+        public int GetFirstPlayerIDAliveInTeam(Team Teams, int afterIndex = 0)
+        {
+            var fullTeam = GetTeam(Teams);
+            var index = -1;
+            for (var i = afterIndex; i < fullTeam.Count; i++)
+            {
+                if (fullTeam[i] != null && !fullTeam[i].IsTKO && fullTeam[i].IsInTheRing)
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
+        public List<TFighterState> GetTeam(Team teamToSearch)
+        {
+            var teamList = new List<TFighterState>();
+            foreach (var player in Fighters)
+            {
+                if (player.AssignedTeam == teamToSearch)
+                {
+                    teamList.Add(player);
+                }
+            }
+            return teamList;
+        }
+
+        public int GetNumberOfPlayersInTeam(Team teamToSearch)
+        {
+            var fullTeamCount = GetTeam(teamToSearch);
+            return fullTeamCount.Count;
+        }
+
+        public List<Team> AllOccupiedTeamsList
+        {
+            get
+            {
+                List<Team> usedTeams = new List<Team>();
+                foreach (var player in Fighters)
+                {
+                    if (usedTeams.IndexOf(player.AssignedTeam) == -1)
+                    {
+                        usedTeams.Add(player.AssignedTeam);
+                    }
+                }
+                return usedTeams;
+            }
+        }
+
+        public List<Team> AllUsedTeams
+        {
+            get
+            {
+                List<Team> usedTeams = AllOccupiedTeamsList;
+
+                var teamIndex = 0;
+                while (usedTeams.Count < RequiredTeams)
+                {
+                    var teamToAdd = (Team)teamIndex;
+                    if (usedTeams.IndexOf(teamToAdd) == -1)
+                    {
+                        usedTeams.Add(teamToAdd);
+                    }
+                    teamIndex++;
+                }
+                return usedTeams;
+            }
+        }
+
+        public List<Team> TeamsStillInGame
+        {
+            get
+            {
+                List<Team> usedTeams = new List<Team>();
+                foreach (var player in AlivePlayers)
+                {
+                    if (usedTeams.IndexOf(player.AssignedTeam) == -1)
+                    {
+                        usedTeams.Add(player.AssignedTeam);
+                    }
+                }
+                return usedTeams;
+            }
+        }
+
+        public Team RandomTeam
+        {
+            get
+            {
+                return TeamsStillInGame[Utils.Utils.GetRandomInt(0, NumberOfTeamsInvolved)];
+            }
+        }
+
+        public int NumberOfTeamsInvolved
+        {
+            get
+            {
+                return TeamsStillInGame.Count;
+            }
+        }
+
+        public Dictionary<Team, int> NumberOfPlayersPerTeam
+        {
+            get
+            {
+                var count = new Dictionary<Team, int>();
+                foreach (var player in Fighters)
+                {
+                    if (!count.ContainsKey(player.AssignedTeam))
+                    {
+                        count.Add(player.AssignedTeam, 1);
+                    }
+                    else
+                    {
+                        count[player.AssignedTeam]++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        public int MaxPlayersPerTeam
+        {
+            get
+            { //returns 0 if there aren't any teams
+                var maxCount = 0;
+                foreach (var nb in NumberOfPlayersPerTeam)
+                {
+                    if (nb.Value > maxCount)
+                    {
+                        maxCount = nb.Value;
+                    }
+                }
+                return maxCount;
+            }
+        }
+
+        public bool IsEveryoneReady
+        {
+            get
+            {
+                var isEveryoneReady = true;
+                foreach (var fighter in Fighters)
+                {
+                    if (!fighter.IsReady)
+                    {
+                        isEveryoneReady = false;
+                    }
+                }
+                return isEveryoneReady;
+            }
+        }
+
+        public Team FirstAvailableTeam
+        {
+            get
+            {
+                Team teamToUse = Team.Blue;
+                var arrPlayersCount = new Dictionary<Team, int>();
+                var usedTeams = AllUsedTeams;
+                foreach (var teamId in usedTeams)
+                {
+                    arrPlayersCount.Add(teamId, GetNumberOfPlayersInTeam(teamId));
+                }
+
+                var mostPlayersInTeam = arrPlayersCount.Values.Max();
+                var leastPlayersInTeam = arrPlayersCount.Values.Min();
+                var firstEmptiestTeam = arrPlayersCount.FirstOrDefault(x => x.Value == leastPlayersInTeam);
+
+                if (mostPlayersInTeam == leastPlayersInTeam || mostPlayersInTeam == int.MinValue || leastPlayersInTeam == int.MaxValue)
+                {
+                    teamToUse = Team.Blue;
+                }
+                else
+                {
+                    teamToUse = firstEmptiestTeam.Key;
+                }
+
+                return teamToUse;
+            }
+        }
+
+        public TFighterState RandomFighter
+        {
+            get
+            {
+                return AlivePlayers[Utils.Utils.GetRandomInt(0, AlivePlayers.Count)];
+            }
+        }
+
+        public TFighterState GetRandomFighterNotInTeam(Team team)
+        {
+            var tries = 0;
+            TFighterState fighter = null;
+            while (tries < 99 && (fighter == null || fighter.AssignedTeam == Team.White || fighter.AssignedTeam == team))
+            {
+                fighter = RandomFighter;
+                tries++;
+            }
+            return fighter;
+        }
+
+        //Misc. shortcuts
+        public int FighterCount
+        {
+            get
+            {
+                return Fighters.Count;
+            }
+        }
+
+        public int AliveFighterCount
+        {
+            get
+            {
+                return AlivePlayers.Count;
+            }
+        }
+
+        public abstract void PunishPlayerOnForfeit(TFighterState fighter);
+
     }
-
-    public abstract void punishPlayerOnForfeit(TFighterState fighter);
-    public abstract void save();
-
-}
-
-public enum FightStatus
-{
-    Idle = -2,
-    Initialized = -1,
-    Lost = 0,
-    Won = 1,
-    Playing = 2,
-    Forfeited = 3,
-    Joined = 4,
-    Ready = 5,
-    Draw = 6
 }

@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common;
+using RendezvousWrestling.Common.Fight;
+using RendezvousWrestling.Common.Constants;
 
 public class BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : IModifierParameters
     where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
@@ -25,16 +30,16 @@ public class BaseModifierParameter<TAchievement, TAchievementManager, TActionFac
     where TModifierType : BaseModifierType, new()
     where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
 {
-    public int tier { get; set; }
+    public int Tier { get; set; }
     public int type { get; set; }
-    public string name { get; set; }
-    public bool areDamageMultipliers { get; set; } = false;
-    public int diceRoll { get; set; }
-    public int escapeRoll { get; set; }
-    public int uses { get; set; }
-    public Trigger triggeringEvent { get; set; }
-    public TriggerMoment timeToTrigger { get; set; }
-    public List<string> idParentActions { get; set; }
+    public string Name { get; set; }
+    public bool AreDamageMultipliers { get; set; } = false;
+    public int DiceRoll { get; set; }
+    public int EscapeRoll { get; set; }
+    public int Uses { get; set; }
+    public TriggerEvent TriggeringEvent { get; set; }
+    public TriggerMoment TimeToTrigger { get; set; }
+    public List<string> IdParentActions { get; set; }
 
     public BaseModifierParameter()
     {
