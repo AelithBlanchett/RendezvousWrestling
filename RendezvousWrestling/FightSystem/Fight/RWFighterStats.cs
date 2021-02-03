@@ -5,10 +5,11 @@ using RendezvousWrestling.FightSystem.Modifiers;
 using RendezvousWrestling.FightSystem.Utils;
 using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.FightSystem.Actions;
+using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.FightSystem.Fight
 {
-    public class RWFighterStats : BaseFighterStats<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+    public class RWFighterStats : BaseFighterStats<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>
     {
 
         public int BrawlAtksCount { get; set; }

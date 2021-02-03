@@ -9,10 +9,12 @@ using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.FightSystem.Fight;
 using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.FightSystem.Constants;
+using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.FightSystem.Actions
 {
-    public class RWActiveAction : BaseActiveAction<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+    public class RWActiveAction : BaseActiveAction<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>
     {
 
         public List<int> HpDamageToDefs { get; set; } = new List<int>();
@@ -304,9 +306,9 @@ namespace RendezvousWrestling.FightSystem.Actions
             {
                 var scoreRequired = 0;
 
-                if (Tier != -1)
+                if (ActionTier != Tier.None)
                 {
-                    var name = Enum.GetName(typeof(Tiers), (Tiers)Tier);
+                    var name = Enum.GetName(typeof(Tier), ActionTier);
                     var score = (int)Enum.Parse(typeof(TierDifficulty), name);
                     scoreRequired += AddRequiredScoreWithExplanation(score, "TIER");
                 }
@@ -328,17 +330,17 @@ namespace RendezvousWrestling.FightSystem.Actions
                         scoreRequired += AddRequiredScoreWithExplanation((int)Math.Floor(Defender.Focus / 10f) - 1, "FPZERO");
                     }
 
-                    if (Defender.StunnedTier >= (int)Tiers.Light)
+                    if (Defender.StunnedTier >= (int)RendezvousWrestling.Configuration.Tier.Light)
                     {
                         switch (Defender.StunnedTier)
                         {
-                            case (int)Tiers.Light:
+                            case (int)RendezvousWrestling.Configuration.Tier.Light:
                                 scoreRequired += AddRequiredScoreWithExplanation(-2, "L-STUN");
                                 break;
-                            case (int)Tiers.Medium:
+                            case (int)RendezvousWrestling.Configuration.Tier.Medium:
                                 scoreRequired += AddRequiredScoreWithExplanation(-4, "M-STUN");
                                 break;
-                            case (int)Tiers.Heavy:
+                            case (int)RendezvousWrestling.Configuration.Tier.Heavy:
                                 scoreRequired += AddRequiredScoreWithExplanation(-6, "H-STUN");
                                 break;
                         }
@@ -351,7 +353,7 @@ namespace RendezvousWrestling.FightSystem.Actions
 
         public override void OnMiss()
         {
-            var name = Enum.GetName(typeof(Tiers), (Tiers)Tier);
+            var name = Enum.GetName(typeof(Tier), (Tier)ActionTier);
             Attacker.HitFP((int)Enum.Parse(typeof(FocusDamageOnMiss), name));
         }
 

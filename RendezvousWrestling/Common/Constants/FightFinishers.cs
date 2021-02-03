@@ -1,25 +1,20 @@
-
+using RendezvousWrestling.Common.Configuration;
 using System;
-using System.Linq;
 
-public class FightFinishers
+namespace RendezvousWrestling.Common.Constants
 {
-
-    public static string[] AvailableFinishers = {
-        "Tombstone Piledriver into the mats",
-        "Make the loser lick the mats",
-        "Smother"
-    };
-
-    public static string[] getAll()
+    public class FightFinishers
     {
-        return FightFinishers.AvailableFinishers;
-    }
 
-    public static string pick()
-    {
-        var finishers = FightFinishers.getAll();
-        return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Length)];
+        public static string[] GetAll()
+        {
+            return GameSettings.AvailableFinishers;
+        }
+
+        public static string Pick()
+        {
+            var finishers = GetAll();
+            return finishers[(int)Math.Floor(new Random().NextDouble() * finishers.Length)];
+        }
     }
 }
-

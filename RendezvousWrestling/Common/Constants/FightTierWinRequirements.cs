@@ -1,6 +1,9 @@
-public enum FightTierWinRequirements
+namespace RendezvousWrestling.Common.Constants
 {
-    Bronze = 0,
-    Silver = 10,
-    Gold = 30
+    public enum FightTierWinRequirements
+    {
+        Bronze = 0,
+        Silver = 10,
+        Gold = 30
+    }
 }

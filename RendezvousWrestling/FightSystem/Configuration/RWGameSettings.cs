@@ -1,3 +1,5 @@
+using RendezvousWrestling.Common.Configuration;
+
 namespace RendezvousWrestling.FightSystem.Configuration
 {
     public class RWGameSettings : GameSettings

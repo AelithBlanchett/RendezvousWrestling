@@ -1,4 +1,4 @@
-namespace RendezvousWrestling.Common.Constants
+namespace RendezvousWrestling.Configuration
 {
     public enum FightType
     {

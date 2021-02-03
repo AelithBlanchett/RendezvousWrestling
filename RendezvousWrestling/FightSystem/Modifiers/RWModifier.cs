@@ -2,7 +2,6 @@ using RendezvousWrestling.FightSystem.Achievements;
 using RendezvousWrestling.FightSystem.Features;
 using RendezvousWrestling.FightSystem.Utils;
 using RendezvousWrestling.Common.DataContext;
-using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.FightSystem.Fight;
 using RendezvousWrestling.FightSystem.Actions;
 using RendezvousWrestling.Common.Modifiers;
@@ -10,7 +9,7 @@ using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.FightSystem.Modifiers
 {
-    public class RWModifier : BaseModifier<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>, IModifierParameters
+    public class RWModifier : BaseModifier<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>, IModifierParameters
     {
         public RWModifier() : base()
         {

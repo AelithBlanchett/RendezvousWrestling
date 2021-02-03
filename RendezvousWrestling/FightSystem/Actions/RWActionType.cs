@@ -10,7 +10,7 @@ namespace RendezvousWrestling.FightSystem.Features
     {
         public static RWActionType Pass { get; } = new RWActionType(1000, typeof(ActionPass));
 
-        private static ICollection<RWActionType> _rwFeatures = new List<RWActionType>()
+        private static readonly ICollection<RWActionType> _rwFeatures = new List<RWActionType>()
         {
             Pass
         };

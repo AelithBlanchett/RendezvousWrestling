@@ -11,7 +11,7 @@ namespace RendezvousWrestling.FightSystem.Features
         public static RWFeatureType BondageBunny { get; } = new RWFeatureType(1000, typeof(BondageBunnyFeature));
         public static RWFeatureType DomSubLover { get; } = new RWFeatureType(1001, typeof(BondageBunnyFeature));
 
-        private static ICollection<RWFeatureType> _rwFeatures = new List<RWFeatureType>()
+        private static readonly ICollection<RWFeatureType> _rwFeatures = new List<RWFeatureType>()
         {
             BondageBunny,
             DomSubLover

@@ -4,42 +4,45 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Configuration;
 using RendezvousWrestling.Common.Constants;
 using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.Common.Actions
 {
-    public abstract class BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser> : BaseAction
-        where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+    public abstract class BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseAction
+        where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionType : BaseActionType, new()
-        where TActiveAction : BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TDataContext : BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TEntityMapper : BaseEntityMapper<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TFeature : BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TFeatureFactory : BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TFeatureParameters : BaseFeatureParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TActiveAction : BaseActiveAction<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TDataContext : BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TEntityMapper : BaseEntityMapper<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TFeature : BaseFeature<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureFactory : BaseFeatureFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TFeatureParameters : BaseFeatureParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TFeatureType : BaseFeatureType, new()
-        where TFight : BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TFighterState : BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TFighterStats : BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TFightingGame : BaseFightingGame<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TModifier : BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
-        where TModifierParameters : BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TFight : BaseFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TFighterState : BaseFighterState<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TFighterStats : BaseFighterStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TFightingGame : BaseFightingGame<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TModifier : BaseModifier<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TModifierFactory : BaseModifierFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
+        where TModifierParameters : BaseModifierParameter<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TModifierType : BaseModifierType, new()
-        where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierParameters, TModifierType, TUser>, new()
+        where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
     {
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        public int Tier { get; set; }
+        public Tier ActionTier { get; set; }
 
         [NotMapped]
         public TActionType Type { get; set; }
@@ -131,12 +134,12 @@ namespace RendezvousWrestling.Common.Actions
         public void Activate(TFight fight,
                                 TFighterState attacker,
                                 List<TFighterState> defenders,
-                                int tier)
+                                Tier actionTier)
         {
             Fight = fight;
             Attacker = attacker;
             Defenders = defenders;
-            Tier = tier;
+            ActionTier = actionTier;
             AtTurn = Fight.CurrentTurn;
             DiceRollRawValue = 0;
             DiceRollBonusFromStat = 0;
@@ -163,7 +166,7 @@ namespace RendezvousWrestling.Common.Actions
                 }
                 else
                 {
-                    throw new Exception(Messages.ErrorTooManyDefendersForThisCall);
+                    throw new Exception(BaseMessages.ErrorTooManyDefendersForThisCall);
                 }
             }
         }
@@ -247,15 +250,15 @@ namespace RendezvousWrestling.Common.Actions
         {
             foreach (var defender in Defenders)
             {
-                if (Tier == GameSettings.TierRequiredToBreakHold && Attacker.IsInHoldAppliedBy(defender.Name))
+                if (ActionTier == GameSettings.TierRequiredToBreakHold && Attacker.IsInHoldAppliedBy(defender.Name))
                 {
                     Attacker.ReleaseHoldsAppliedBy(defender.Name);
-                    Fight.Message.addHit(string.Format(Messages.ForcedHoldRelease, Attacker.GetStylizedName(), defender.GetStylizedName()));
+                    Fight.Message.addHit(string.Format(BaseMessages.ForcedHoldRelease, Attacker.GetStylizedName(), defender.GetStylizedName()));
                 }
-                else if (Tier == GameSettings.TierRequiredToBreakHold && defender.IsApplyingHold())
+                else if (ActionTier == GameSettings.TierRequiredToBreakHold && defender.IsApplyingHold())
                 {
                     defender.ReleaseHoldsApplied();
-                    Fight.Message.addHit(string.Format(Messages.ForcedHoldRelease, Attacker.GetStylizedName(), defender.GetStylizedName()));
+                    Fight.Message.addHit(string.Format(BaseMessages.ForcedHoldRelease, Attacker.GetStylizedName(), defender.GetStylizedName()));
                 }
             }
         }
@@ -264,73 +267,73 @@ namespace RendezvousWrestling.Common.Actions
         {
             if (SingleTarget && !UsableOnSelf && Defenders.Count > 1)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.tooManyTargets));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.tooManyTargets));
             }
             if (RequiresBeingAlive && Attacker.IsTKO)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.playerOutOfFight));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.playerOutOfFight));
             }
             if (RequiresBeingDead && !Attacker.IsTKO)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.playerStillInFight));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.playerStillInFight));
             }
             if (RequiresBeingInRing && !Attacker.IsInTheRing)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.playerOutOfRing));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.playerOutOfRing));
             }
             if (RequiresBeingOffRing && Attacker.IsInTheRing)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.playerOnTheRing));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.playerOnTheRing));
             }
             if (RequiresBeingInHold && !Attacker.IsInHold())
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.mustBeStuckInHold));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.mustBeStuckInHold));
             }
             if (RequiresNotBeingInHold && Attacker.IsInHold())
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.mustNotBeStuckInHold));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.mustNotBeStuckInHold));
             }
             if (TargetMustBeAlive && Defenders.Any(x => x.IsTKO == true))
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetOutOfFight));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetOutOfFight));
             }
             if (TargetMustBeDead && Defenders.Any(x => x.IsTKO == false))
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetNotOutOfFight));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetNotOutOfFight));
             }
             if (TargetMustBeInRing && Defenders.Any(x => x.IsInTheRing == false))
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetOutOfRing));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetOutOfRing));
             }
             if (TargetMustBeOffRing && Defenders.Any(x => x.IsInTheRing == true))
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetStillInRing));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetStillInRing));
             }
             if (TargetMustBeInRange && !Attacker.IsInRange(Defenders as List<TFighterState>))
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeInRange));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetMustBeInRange));
             }
             if (TargetMustBeOffRange && Attacker.IsInRange(Defenders as List<TFighterState>))
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeOffRange));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetMustBeOffRange));
             }
             if (TargetMustBeInHold && Defenders.Where(x => x.IsInHold()).Count() != Defenders.Count)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustBeInHold));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetMustBeInHold));
             }
             if (TargetMustNotBeInHold && Defenders.Where(x => !x.IsInHold()).Count() != Defenders.Count)
             {
-                throw new Exception(string.Format(Messages.cantAttackExplanation, Messages.targetMustNotBeInHold));
+                throw new Exception(string.Format(BaseMessages.cantAttackExplanation, BaseMessages.targetMustNotBeInHold));
             }
             if (!UsableOnSelf && !(UsableOnAllies && UsableOnEnemies))
             {
                 if (!UsableOnAllies && Defenders.Any(x => x.AssignedTeam == Attacker.AssignedTeam))
                 {
-                    throw new Exception(Messages.doActionTargetIsSameTeam);
+                    throw new Exception(BaseMessages.doActionTargetIsSameTeam);
                 }
                 if (!UsableOnEnemies && Defenders.Any(x => x.AssignedTeam != Attacker.AssignedTeam))
                 {
-                    throw new Exception(Messages.doActionTargetIsNotSameTeam);
+                    throw new Exception(BaseMessages.doActionTargetIsNotSameTeam);
                 }
             }
         }
@@ -352,13 +355,13 @@ namespace RendezvousWrestling.Common.Actions
 
         public void DisplayHitMessage()
         {
-            string message = Explanation != null ? string.Format(Explanation, Attacker.GetStylizedName()) : Messages.HitMessage;
+            string message = Explanation != null ? string.Format(Explanation, Attacker.GetStylizedName()) : BaseMessages.HitMessage;
             Fight.Message.addHit(message);
         }
 
         public void DisplayMissMessage()
         {
-            Fight.Message.addHit(Messages.MissMessage);
+            Fight.Message.addHit(BaseMessages.MissMessage);
         }
 
         public void TriggerBeforeEvent()
@@ -396,11 +399,6 @@ namespace RendezvousWrestling.Common.Actions
                     Defender.TriggerFeatures(TriggerMoment.After, TriggerEvent.GrapplingHold, GetFeatureParameter(Fight, Defender, Attacker, (TActiveAction)this));
                 }
             }
-        }
-
-        public void Save()
-        {
-            throw new NotImplementedException();
         }
     }
 }

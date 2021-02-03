@@ -9,7 +9,7 @@ using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.FightSystem.Fight
 {
-    public class RWFight : BaseFight<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+    public class RWFight : BaseFight<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>
     {
 
         public RWFight() : base()
@@ -39,12 +39,12 @@ namespace RendezvousWrestling.FightSystem.Fight
 
         public override void PunishPlayerOnForfeit(RWFighterState fighter)
         {
-            Message.addHit(string.Format(Messages.forfeitItemApply, fighter.GetStylizedName(), fighter.MaxBondageItemsOnSelf.ToString()));
+            Message.addHit(string.Format(BaseMessages.forfeitItemApply, fighter.GetStylizedName(), fighter.MaxBondageItemsOnSelf.ToString()));
             for (var i = 0; i < fighter.MaxBondageItemsOnSelf; i++)
             {
-                //fighter.modifiers.Add(RWModifierFactory.getModifier(ModifierType.Bondage, this, fighter, null)); //TODO
+                fighter.ReceivedModifiers.Add(ModifierFactory.Build(RWModifierType.Bondage, this, fighter, null));
             }
-            Message.addHit(string.Format(Messages.forfeitTooManyItems, fighter.GetStylizedName()));
+            Message.addHit(string.Format(BaseMessages.forfeitTooManyItems, fighter.GetStylizedName()));
             fighter.TriggerPermanentOutsideRing();
         }
 

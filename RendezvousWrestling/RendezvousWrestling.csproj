@@ -26,9 +26,10 @@
     <Compile Include="FightSystem\Actions\RWActiveAction.cs" />
     <Compile Include="FightSystem\Actions\RWActionFactory.cs" />
     <Compile Include="FightSystem\Actions\RWActionType.cs" />
+    <Compile Include="FightSystem\Configuration\RWMessages.cs" />
     <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
-    <Compile Include="FightSystem\Constants\Stats.cs" />
-    <Compile Include="FightSystem\Constants\Tiers.cs" />
+    <Compile Include="FightSystem\Constants\RWStats.cs" />
+    <Compile Include="FightSystem\Configuration\TierDifficulty.cs" />
     <Compile Include="FightSystem\DataContext\RWDataContext.cs" />
     <Compile Include="FightSystem\Features\Enabled\BondageBunnyFeature.cs" />
     <Compile Include="FightSystem\Features\RWFeatureFactory.cs" />
@@ -50,7 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="FightSystem\Configuration\RWGameSettings.json" />
     <Content Include="FightSystem\Features\features.json" />
     <Content Include="FightSystem\Modifiers\modifiers.json" />
   </ItemGroup>

@@ -9,10 +9,15 @@ using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Constants;
 using RendezvousWrestling.FightSystem.Configuration;
 using RendezvousWrestling.FightSystem.Actions;
+using RendezvousWrestling.Common.Configuration;
+using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Configuration;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RendezvousWrestling.FightSystem.Fight
 {
-    public class RWFighterState : BaseFighterState<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierParameters, RWModifierType, RWUser>
+    public class RWFighterState : BaseFighterState<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>
     {
         public int Hp { get; set; } = 0;
         public int Lust { get; set; } = 0;
@@ -220,9 +225,9 @@ namespace RendezvousWrestling.FightSystem.Fight
         public string StatsString => $"{User.Power},{User.Sensuality},{User.Toughness},{User.Endurance},{User.Dexterity},{User.Willpower}";
 
         //fight is "mistakenly" set as optional to be compatible with the super.init
-        public override void Initialize()
+        public override void Initialize(RWFight fight, RWUser user)
         {
-            base.Initialize();
+            base.Initialize(fight, user);
             StartingToughness = User.Toughness;
             StartingEndurance = User.Endurance;
             StartingWillpower = User.Willpower;
@@ -246,7 +251,7 @@ namespace RendezvousWrestling.FightSystem.Fight
         public override string ValidateStats()
         {
             var statsInString = StatsString.Split(",");
-            return Parser.checkIfValidStats(statsInString, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
+            return Parser.CheckIfValidStats(statsInString, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
         }
 
         public int CurrentPower
@@ -594,29 +599,19 @@ namespace RendezvousWrestling.FightSystem.Fight
         {
             get
             {
-                switch (Fight.FightType)
+                return Fight.FightType switch
                 {
-                    case FightType.Classic:
-                    case FightType.Tag:
-                        return
-                        IsSexuallyExhausted()
-                        || IsDead()
-                        || IsBroken()
-                        || IsCompletelyBound();
-                    case FightType.LastManStanding:
-                        return IsDead();
-                    case FightType.SexFight:
-                        return IsSexuallyExhausted();
-                    case FightType.Humiliation:
-                        return IsBroken() || IsCompletelyBound();
-                    case FightType.Bondage:
-                        return IsCompletelyBound();
-                    case FightType.Submission:
-                        return IsDead();
-                    default:
-                        return false;
-                }
-
+                    FightType.Classic or FightType.Tag => IsSexuallyExhausted()
+                                           || IsDead()
+                                           || IsBroken()
+                                           || IsCompletelyBound(),
+                    FightType.LastManStanding => IsDead(),
+                    FightType.SexFight => IsSexuallyExhausted(),
+                    FightType.Humiliation => IsBroken() || IsCompletelyBound(),
+                    FightType.Bondage => IsCompletelyBound(),
+                    FightType.Submission => IsDead(),
+                    _ => false,
+                };
             }
         }
 
