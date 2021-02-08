@@ -31,6 +31,10 @@ namespace RendezvousWrestling.Common.Actions
 
         public bool RequiresBeingOffRing { get; set; }
 
+        public bool RequiresTier { get; set; }
+
+        public bool RequiresCustomTarget { get; set; }
+
 
         public bool TargetMustBeAlive { get; set; }
 
@@ -75,6 +79,8 @@ namespace RendezvousWrestling.Common.Actions
                     bool requiresBeingDead,
                     bool requiresBeingInRing,
                     bool requiresBeingOffRing,
+                    bool requiresTier,
+                    bool requiresCustomTarget,
                     bool targetMustBeAlive,
                     bool targetMustBeDead,
                     bool targetMustBeInRing,
@@ -101,6 +107,8 @@ namespace RendezvousWrestling.Common.Actions
                     requiresBeingDead,
                     requiresBeingInRing,
                     requiresBeingOffRing,
+                    requiresTier,
+                    requiresCustomTarget,
                     targetMustBeAlive,
                     targetMustBeDead,
                     targetMustBeInRing,
@@ -131,6 +139,8 @@ namespace RendezvousWrestling.Common.Actions
                     bool requiresBeingDead,
                     bool requiresBeingInRing,
                     bool requiresBeingOffRing,
+                    bool requiresTier,
+                    bool requiresCustomTarget,
                     bool targetMustBeAlive,
                     bool targetMustBeDead,
                     bool targetMustBeInRing,
@@ -162,6 +172,8 @@ namespace RendezvousWrestling.Common.Actions
             TargetMustBeInRange = targetMustBeInRange;
             TargetMustBeOffRange = targetMustBeOffRange;
             RequiresBeingOffRing = requiresBeingOffRing;
+            RequiresTier = requiresTier;
+            RequiresCustomTarget = requiresCustomTarget;
             TargetMustBeOffRing = targetMustBeOffRing;
             RequiresBeingInHold = requiresBeingInHold;
             RequiresNotBeingInHold = requiresNotBeingInHold;

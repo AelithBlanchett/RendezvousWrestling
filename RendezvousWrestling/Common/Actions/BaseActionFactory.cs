@@ -38,7 +38,7 @@ namespace RendezvousWrestling.Common.Actions
         {
             var action = (TActiveAction)Activator.CreateInstance(actionType.MatchingType);
             action.Activate(fight, attacker, defenders, tier);
-            return null;
+            return action;
         }
     }
 }

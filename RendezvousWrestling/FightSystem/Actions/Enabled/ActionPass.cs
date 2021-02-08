@@ -18,6 +18,8 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
                 false, //requiresBeingDead
                 true,  //requiresBeingInRing
                 false, //requiresBeingOffRing
+                false,  //requiresTier
+                false, //requiresCustomTarget
                 false,  //targetMustBeAlive
                 false, //targetMustBeDead
                 false, //targetMustBeInRing

@@ -26,6 +26,8 @@
     <Compile Include="FightSystem\Actions\RWActiveAction.cs" />
     <Compile Include="FightSystem\Actions\RWActionFactory.cs" />
     <Compile Include="FightSystem\Actions\RWActionType.cs" />
+    <Compile Include="FightSystem\Bot\TestCommand.cs" />
+    <Compile Include="FightSystem\Bot\PassCommand.cs" />
     <Compile Include="FightSystem\Configuration\RWMessages.cs" />
     <Compile Include="FightSystem\Configuration\RWGameSettings.cs" />
     <Compile Include="FightSystem\Constants\RWStats.cs" />

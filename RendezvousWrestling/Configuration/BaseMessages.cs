@@ -65,7 +65,7 @@ namespace RendezvousWrestling.Common.Constants
         public static string ForcedHoldRelease = "{0} forced {1} to release their hold with this heavy blow!";
         public static string changeMinTeamsInvolvedInFightOK = "int of teams involved in the fight updated!";
         public static string changeMinTeamsInvolvedInFightFail = "The int of teams should be superior or equal than 2.";
-        public static string setDiceLess = "The fight is now %susing the dice.";
+        public static string setDiceLess = "The fight is now {0}using the dice.";
         public static string setDiceLessFail = "Couldn't drop the dice for this fight, it is already started, or it's already over.";
         public static string SetFightLength = "The fight's pace has been set to {0}";
         public static string setFightLengthFail = "Couldn't change the pace for this fight, it is already started, or it's already over.";
@@ -128,7 +128,7 @@ namespace RendezvousWrestling.Common.Constants
         public static string forfeitAlreadyOut = "You are already out of the match. No need to give up.";
 
         public static string tapoutMessage = "{0} couldn't handle it anymore! They SUBMIT!";
-        public static string tapoutTooEarly = "You can't tap out right now. Submitting is only allowed after the %sth turn.";
+        public static string tapoutTooEarly = "You can't tap out right now. Submitting is only allowed after the {0}th turn.";
 
         public static string finishFailMessage = "{0} failed their finisher!";
         public static string finishMessage = "{0} couldn't fight against that! They're out!";

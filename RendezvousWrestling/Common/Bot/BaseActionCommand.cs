@@ -1,20 +1,20 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Features;
+using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RendezvousWrestling.Common.Achievements;
-using RendezvousWrestling.Common.Actions;
-using RendezvousWrestling.Common.Fight;
-using RendezvousWrestling.Common.Constants;
-using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class FightTypeCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public abstract class BaseActionCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -37,24 +37,16 @@ namespace RendezvousWrestling.Common.Bot
         where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
 
     {
-        public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
-        {
-            if (!Enum.TryParse(typeof(FightType), string.Join(" ", args), out var parsedFD))
-            {
-                Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight type not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightType)))}. Example: !fighttype Sexfight[/color]", channel);
-                return;
-            }
-
-            TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
-
-            if (fighter != null)
-            {
-                Plugin.Fight.SetFightType(Enum.GetName(typeof(FightType), parsedFD));
-            }
-            else
-            {
-                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
-            }
-        }
+        //public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
+        //{
+        //    try
+        //    {
+        //        this.Plugin.Fight.PrepareAction(characterCalling, null, string.Join(" ", args));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        this.Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, [ex.Message, ex.StackTrace]), characterCalling);
+        //    }
+        //}
     }
 }

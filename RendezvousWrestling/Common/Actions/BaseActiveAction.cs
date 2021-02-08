@@ -84,6 +84,8 @@ namespace RendezvousWrestling.Common.Actions
                     bool requiresBeingDead,
                     bool requiresBeingInRing,
                     bool requiresBeingOffRing,
+                    bool requiresTier,
+                    bool requiresCustomTarget,
                     bool targetMustBeAlive,
                     bool targetMustBeDead,
                     bool targetMustBeInRing,
@@ -109,6 +111,8 @@ namespace RendezvousWrestling.Common.Actions
                     requiresBeingDead,
                     requiresBeingInRing,
                     requiresBeingOffRing,
+                    requiresTier,
+                    requiresCustomTarget,
                     targetMustBeAlive,
                     targetMustBeDead,
                     targetMustBeInRing,
@@ -156,7 +160,7 @@ namespace RendezvousWrestling.Common.Actions
         {
             get
             {
-                if (Defenders == null)
+                if (Defenders == null || Defenders.Count == 0)
                 {
                     return null;
                 }

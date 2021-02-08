@@ -642,7 +642,7 @@ namespace RendezvousWrestling.Common.Fight
             }
         }
 
-        public void PrepareAction(string attacker, TActionType actionType, bool tierRequired, bool isCustomTargetInsteadOfTier, string args)
+        public void PrepareAction(string attacker, TActionType actionType, string args)
         {
             var tier = -1;
             if (!IsMatchInProgress())
@@ -660,13 +660,16 @@ namespace RendezvousWrestling.Common.Fight
                 throw new Exception(BaseMessages.doActionNotActorsTurn);
             }
 
-            
-            if (tierRequired && (!int.TryParse(args.ToLower(), out tier) || tier == -1 || !Enum.IsDefined(typeof(Tier), tier)))
+            //This is used to check a few things
+            var mockupAction = ActionFactory.Build(actionType, (TFight)this, CurrentPlayer, CurrentTarget, (Tier)tier);
+
+
+            if (mockupAction.RequiresTier && (!int.TryParse(args.ToLower(), out tier) || tier == -1 || !Enum.IsDefined(typeof(Tier), tier)))
             {
                 throw new Exception($"The tier is required and neither Light, Medium or Heavy was specified. Example: !action Medium");
             }
 
-            if (isCustomTargetInsteadOfTier)
+            if (mockupAction.RequiresCustomTarget)
             {
                 TFighterState customTarget = GetFighterByName(args);
                 if (customTarget != null)
@@ -675,7 +678,7 @@ namespace RendezvousWrestling.Common.Fight
                 }
                 else
                 {
-                    throw new Exception("The character to tag with is required and wasn't found.");
+                    throw new Exception("The target character must be passed to the command.");
                 }
             }
 
@@ -684,8 +687,7 @@ namespace RendezvousWrestling.Common.Fight
                 throw new Exception("You aren't participating in this fight.");
             }
 
-            //Might need to disable this for self-targetted actions?
-            if (CurrentTarget == null || CurrentTarget.Count == 0)
+            if ((CurrentTarget == null || CurrentTarget.Count == 0) && !mockupAction.UsableOnSelf)
             {
                 if (Fighters.Where(x => x.AssignedTeam != CurrentPlayer.AssignedTeam && x.IsInTheRing && !x.IsTKO).Count() == 1)
                 {
@@ -698,13 +700,19 @@ namespace RendezvousWrestling.Common.Fight
             }
 
             WaitingForAction = false;
-            var action = DoAction(actionType, CurrentPlayer, CurrentTarget, (Tier)tier);
+
+            var action = ActionFactory.Build(actionType, (TFight)this, CurrentPlayer, CurrentTarget, (Tier)tier);
+
+            action = DoAction(action);
+
             var allInvolvedActors = new List<TFighterState>
             {
                 action.Attacker
             };
             allInvolvedActors.AddRange(action.Defenders);
+
             DisplayDeathMessagesIfNeedBe(allInvolvedActors);
+
             if (action.KeepActorsTurn && action.Missed == false)
             {
                 Message.addHint($"[b]This is still your turn {action.Attacker.GetStylizedName()}![/b]");
@@ -721,9 +729,8 @@ namespace RendezvousWrestling.Common.Fight
             }
         }
 
-        public TActiveAction DoAction(TActionType actionType, TFighterState attacker, List<TFighterState> defenders, Tier actionTier)
+        public TActiveAction DoAction(TActiveAction action)
         {
-            var action = ActionFactory.Build(actionType, (TFight)this, attacker, defenders, actionTier);
             action.Execute();
             PastActions.Add(action);
             return action;
