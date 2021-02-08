@@ -1,6 +1,6 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
@@ -12,7 +12,7 @@ using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class UseDiceCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class HideMyStats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -37,19 +37,19 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
-            {
-                var flag = !(args.Any(x => x.ToLower() == "no" || x.ToLower() == "false"));
-                Plugin.Fight.SetDiceLess(flag);
-                return;
-            }
-
             TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
-
             if (fighter != null)
             {
-                var flag = !(args.Any(x => x.ToLower() == "no" || x.ToLower() == "false"));
-                Plugin.Fight.SetDiceLess(flag);
+                fighter.AreStatsPrivate = false;
+                try
+                {
+                    Plugin.DataContext.SaveChanges();
+                    Plugin.FChatClient.SendPrivateMessage("[color=green]You stats are now private.[/color]", characterCalling);
+                }
+                catch (Exception ex)
+                {
+                    Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, ex.Message, ex.StackTrace), characterCalling);
+                }
             }
             else
             {

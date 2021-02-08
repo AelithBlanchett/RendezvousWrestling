@@ -1,16 +1,19 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
-using System.Collections.Generic;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
+using System.Collections.Generic;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
+using RendezvousWrestling.Common.Constants;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class ImpersonateCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class Stats<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -33,12 +36,17 @@ namespace RendezvousWrestling.Common.Bot
         where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
 
     {
-
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.FChatClient.IsUserMaster(characterCalling))
+            TUser fighter = Plugin.DataContext.Users.Include(x => x.Features).Include(x => x.Stats).Include(x => x.Achievements).FirstOrDefault(x => x.Id == characterCalling);
+
+            if (fighter != null)
             {
-                Plugin.DebugImpersonatedCharacter = string.Join(" ", args);
+                Plugin.FChatClient.SendPrivateMessage(fighter.OutputStats(), fighter.Id);
+            }
+            else
+            {
+                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
             }
         }
     }

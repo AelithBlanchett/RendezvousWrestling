@@ -1,6 +1,7 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
@@ -12,7 +13,7 @@ using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class TargetCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class Forfeit<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -41,12 +42,19 @@ namespace RendezvousWrestling.Common.Bot
             {
                 return;
             }
+            if (args.Any() && !Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
+            {
+                Plugin.FChatClient.SendPrivateMessage("[color=red]You're not an operator for this channel. You can't force someone to forfeit.[/color]", characterCalling);
+                return;
+            }
+            if (!args.Any())
+            {
+                args = new string[] { characterCalling };
+            }
+
             try
             {
-                if (Plugin.Fight.GetFighterByName(characterCalling) != null)
-                {
-                    Plugin.Fight.AssignTarget(characterCalling, string.Join(" ", args));
-                }
+                Plugin.Fight.Forfeit(string.Join(" ", args));
             }
             catch (Exception ex)
             {

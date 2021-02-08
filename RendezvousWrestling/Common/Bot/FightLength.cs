@@ -13,7 +13,7 @@ using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class JoinCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class FightLength<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -38,33 +38,21 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.Fight == null || Plugin.Fight.HasEnded)
+            if (!Enum.TryParse(typeof(FightLength), args.First(), out var parsedFD))
             {
-                Plugin.Fight = new TFight();
-                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
+                Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight length not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightLength)))}. Example: !fightlength Long[/color]", channel);
+                return;
             }
 
-            object parsedTeamObject = Team.White;
+            TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
 
-            Team chosenTeam;
-            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), out parsedTeamObject))
+            if (fighter != null)
             {
-                Plugin.FChatClient.SendPrivateMessage("[color=red]" + "This team doesn't exist." + "[/color]", channel);
-                return;
+                Plugin.Fight.SetFightLength((FightLength)parsedFD);
             }
             else
             {
-                chosenTeam = (Team)parsedTeamObject;
-            }
-
-            try
-            {
-                var assignedTeam = Plugin.Fight.Join(characterCalling, chosenTeam);
-                Plugin.FChatClient.SendMessageInChannel($"[color=green]{characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
-            }
-            catch (Exception ex)
-            {
-                Plugin.FChatClient.SendPrivateMessage($"[color=red]{ex.Message}[/color]", channel);
+                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
             }
         }
     }

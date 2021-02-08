@@ -1,16 +1,16 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
+using System.Collections.Generic;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
-using System.Collections.Generic;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class PauseCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class ResetFight<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -35,16 +35,20 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.FChatClient.IsUserMaster(characterCalling) && Plugin.IsInFight(characterCalling, true))
+            if (Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
-                Plugin.DataContext.SaveChanges();
+                if (Plugin.Fight != null && !string.IsNullOrEmpty(Plugin.Fight.Id))
+                {
+                    Plugin.Fight.IsDeleted = true;
+                    Plugin.DataContext.SaveChanges();
+                }
                 Plugin.Fight = new TFight();
                 Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
-                Plugin.FChatClient.SendMessageInChannel($"Successfully saved and stored the match for later. The ring is available now!", channel);
+                Plugin.FChatClient.SendMessageInChannel("The fight has been ended.", channel);
             }
             else
             {
-                Plugin.FChatClient.SendPrivateMessage($"[color=red]You're not an admin![/color]", characterCalling);
+                Plugin.FChatClient.SendPrivateMessage("[color=red]You're not an operator for this channel.[/color]", characterCalling);
             }
         }
     }

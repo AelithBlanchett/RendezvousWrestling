@@ -1,19 +1,19 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
-using System.Collections.Generic;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Constants;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class StatsCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class Join<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -38,15 +38,33 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            TUser fighter = Plugin.DataContext.Users.Include(x => x.Features).Include(x => x.Stats).Include(x => x.Achievements).FirstOrDefault(x => x.Id == characterCalling);
-
-            if (fighter != null)
+            if (Plugin.Fight == null || Plugin.Fight.HasEnded)
             {
-                Plugin.FChatClient.SendPrivateMessage(fighter.OutputStats(), fighter.Id);
+                Plugin.Fight = new TFight();
+                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
+            }
+
+            object parsedTeamObject = Team.White;
+
+            Team chosenTeam;
+            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), out parsedTeamObject))
+            {
+                Plugin.FChatClient.SendPrivateMessage("[color=red]" + "This team doesn't exist." + "[/color]", channel);
+                return;
             }
             else
             {
-                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
+                chosenTeam = (Team)parsedTeamObject;
+            }
+
+            try
+            {
+                var assignedTeam = Plugin.Fight.Join(characterCalling, chosenTeam);
+                Plugin.FChatClient.SendMessageInChannel($"[color=green]{characterCalling} stepped into the ring for the [color={Enum.GetName(typeof(Team), assignedTeam)}]{Enum.GetName(typeof(Team), assignedTeam)}[/color] team! Waiting for everyone to be !ready.[/color]", channel);
+            }
+            catch (Exception ex)
+            {
+                Plugin.FChatClient.SendPrivateMessage($"[color=red]{ex.Message}[/color]", channel);
             }
         }
     }

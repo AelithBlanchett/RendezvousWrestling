@@ -1,19 +1,16 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
-using RendezvousWrestling.Common.Features;
-using RendezvousWrestling.Common.Modifiers;
-using RendezvousWrestling.Common.Utils;
-using RendezvousWrestling.Common.DataContext;
-using System;
-using System.Collections.Generic;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.DataContext;
+using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Fight;
-using RendezvousWrestling.Common.Configuration;
-using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.Common.Modifiers;
+using RendezvousWrestling.Common.Utils;
+using System.Collections.Generic;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class RestatCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class DebugMode<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -38,51 +35,10 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            var parserPassed = Parser.CheckIfValidStats(args, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
-            if (parserPassed != "")
+            if (Plugin.FChatClient.IsUserMaster(characterCalling) && Plugin.Fight.HasStarted)
             {
-                Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
-                return;
-            }
-
-            TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
-
-            if (fighter != null)
-            {
-                if (fighter.CanPayAmount(GameSettings.RestatCostInTokens))
-                {
-                    try
-                    {
-                        var arrParam = new List<int>() { };
-
-                        foreach (var nbr in args)
-                        {
-                            arrParam.Add(int.Parse(nbr));
-                        }
-
-                        var cost = GameSettings.RestatCostInTokens;
-                        fighter.RemoveTokens(cost, TransactionType.Restat);
-                        fighter.Restat(arrParam);
-                        Plugin.DataContext.SaveChanges();
-                        Plugin.FChatClient.SendPrivateMessage(BaseMessages.statChangeSuccessful, fighter.Id);
-                    }
-                    catch (Exception ex)
-                    {
-                        Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, ex.Message, ex.StackTrace), fighter.Id);
-                    }
-
-                }
-                else
-                {
-                    Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.errorNotEnoughMoney, GameSettings.RestatCostInTokens.ToString()), characterCalling);
-                }
-
-
-
-            }
-            else
-            {
-                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
+                Plugin.Fight.Debug = !Plugin.Fight.Debug;
+                Plugin.FChatClient.SendPrivateMessage($"Debug mode is now set to {Plugin.Fight.Debug}", characterCalling);
             }
         }
     }

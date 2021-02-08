@@ -1,6 +1,5 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
 using System.Collections.Generic;
-using System.Linq;
 using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
@@ -8,10 +7,13 @@ using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
+using RendezvousWrestling.Common.Constants;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class SetDiceScoreCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class StatsOf<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -36,10 +38,15 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.FChatClient.IsUserMaster(characterCalling) && Plugin.Fight.HasStarted)
+            TUser fighter = Plugin.DataContext.Users.Include(x => x.Features).Include(x => x.Stats).Include(x => x.Achievements).FirstOrDefault(x => x.Id == characterCalling);
+
+            if (fighter != null && (fighter.Id == characterCalling || (fighter.Id == characterCalling && !fighter.AreStatsPrivate) || Plugin.FChatClient.IsUserAdmin(characterCalling, channel)))
             {
-                Plugin.Fight.ForcedDiceRoll = int.Parse(args.ToList().FirstOrDefault());
-                Plugin.FChatClient.SendPrivateMessage($"Dice score is now automatically set to {Plugin.Fight.Debug}", characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(fighter.OutputStats(), characterCalling);
+            }
+            else
+            {
+                Plugin.FChatClient.SendPrivateMessage(BaseMessages.errorStatsPrivate, characterCalling);
             }
         }
     }

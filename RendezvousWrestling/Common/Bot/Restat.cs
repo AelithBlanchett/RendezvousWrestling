@@ -1,20 +1,19 @@
 ﻿using FChatSharpLib.Entities.Plugin.Commands;
-using RendezvousWrestling.Common.Achievements;
-using RendezvousWrestling.Common.Actions;
-using RendezvousWrestling.Common.Configuration;
-using RendezvousWrestling.Common.Constants;
-using RendezvousWrestling.Common.DataContext;
 using RendezvousWrestling.Common.Features;
-using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
+using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using RendezvousWrestling.Common.Achievements;
+using RendezvousWrestling.Common.Actions;
+using RendezvousWrestling.Common.Fight;
+using RendezvousWrestling.Common.Configuration;
+using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class RegisterCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class Restat<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -39,40 +38,51 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
+            var parserPassed = Parser.CheckIfValidStats(args, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
+            if (parserPassed != "")
+            {
+                Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
+                return;
+            }
+
             TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
 
-            if (fighter == null)
+            if (fighter != null)
             {
-                var parserPassed = Parser.CheckIfValidStats(args, GameSettings.IntOfRequiredStatPoints, GameSettings.IntOfDifferentStats, GameSettings.MinStatLimit, GameSettings.MaxStatLimit);
-                if (parserPassed != "")
+                if (fighter.CanPayAmount(GameSettings.RestatCostInTokens))
                 {
-                    Plugin.FChatClient.SendPrivateMessage($"[color=red]{parserPassed}[/color]", characterCalling);
-                    return;
-                }
-                var arrParam = new List<int>() { };
+                    try
+                    {
+                        var arrParam = new List<int>() { };
 
-                foreach (var nbr in args)
+                        foreach (var nbr in args)
+                        {
+                            arrParam.Add(int.Parse(nbr));
+                        }
+
+                        var cost = GameSettings.RestatCostInTokens;
+                        fighter.RemoveTokens(cost, TransactionType.Restat);
+                        fighter.Restat(arrParam);
+                        Plugin.DataContext.SaveChanges();
+                        Plugin.FChatClient.SendPrivateMessage(BaseMessages.statChangeSuccessful, fighter.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, ex.Message, ex.StackTrace), fighter.Id);
+                    }
+
+                }
+                else
                 {
-                    arrParam.Add(int.Parse(nbr));
+                    Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.errorNotEnoughMoney, GameSettings.RestatCostInTokens.ToString()), characterCalling);
                 }
 
-                try
-                {
-                    var newFighter = new TUser();
-                    newFighter.Initialize(characterCalling);
-                    newFighter.Restat(arrParam);
-                    Plugin.DataContext.Users.Add(newFighter);
-                    Plugin.DataContext.SaveChanges();
-                    Plugin.FChatClient.SendPrivateMessage(BaseMessages.registerWelcomeMessage, characterCalling);
-                }
-                catch (Exception ex)
-                {
-                    Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, ex.Message, ex.StackTrace), characterCalling);
-                }
+
+
             }
             else
             {
-                Plugin.FChatClient.SendPrivateMessage(BaseMessages.errorAlreadyRegistered, characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
             }
         }
     }

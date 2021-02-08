@@ -665,7 +665,7 @@ namespace RendezvousWrestling.FightSystem.Fight
             var turnsFocusLine = $"  [color=orange]turns {(User.HasFeature(RWFeatureType.DomSubLover) ? "being too submissive" : "without focus")}: {ConsecutiveTurnsWithoutFocus}|{ RWGameSettings.MaxTurnsWithoutFocus}[/color]";
             var bondageLine = $"  [color=purple]bondage items {NumBondageItemsOnSelf}|{ RWGameSettings.MaxBondageItemsOnSelf}[/color] ";
             var modifiersLine = $"  [color=cyan]affected by: {ActiveModifiersAsString}[/color] ";
-            var targetLine = $"  [color=red]target(s): " + (TargetsAsString != null && TargetsAsString.Count > 0 ? $"{ string.Join(", ", TargetsAsString)}" : "None set yet! (!targets charactername)") + "[/color]";
+            var targetLine = $"  [color=red]target(s): " + (TargetsAsString != null && TargetsAsString.Count > 0 ? $"{ string.Join(", ", TargetsAsString)}" : "None set yet! (!target charactername)") + "[/color]";
 
             return $"{nameLine.PadLeft(50, '-')} {hpLine} {lpLine} {livesLine} {focusLine} {turnsFocusLine} {bondageLine} {(ActiveModifiersAsString.Length > 0 ? modifiersLine : "")} {targetLine}";
         }

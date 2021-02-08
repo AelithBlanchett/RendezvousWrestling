@@ -3,7 +3,6 @@ using RendezvousWrestling.Common.Features;
 using RendezvousWrestling.Common.Modifiers;
 using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
-using System;
 using System.Collections.Generic;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
@@ -12,7 +11,7 @@ using RendezvousWrestling.Common.Constants;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class ReadyCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class Leave<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -37,28 +36,33 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.Fight.HasStarted)
-            {
-                Plugin.FChatClient.SendMessageInChannel(BaseMessages.errorFightAlreadyInProgress, channel);
-                return;
-            }
             if (Plugin.Fight == null || Plugin.Fight.HasEnded)
             {
-                Plugin.Fight = new TFight();
-                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
+                Plugin.FChatClient.SendMessageInChannel("[color=red]There is no fight in progress. You must either do !forfeit or !draw to leave the fight.[/color]", channel);
+                return;
+            }
+            if (Plugin.Fight.HasStarted)
+            {
+                Plugin.FChatClient.SendMessageInChannel("[color=red]There is already a fight in progress. You must either do !forfeit or !draw to leave the fight.[/color]", channel);
+                return;
             }
 
-            try
+            TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
+
+            if (fighter != null)
             {
-                bool result = Plugin.Fight.SetFighterReady(characterCalling);
-                if (!result)
+                if (Plugin.Fight.Leave(characterCalling))
                 { //else, the match starts!
-                    Plugin.FChatClient.SendMessageInChannel(BaseMessages.errorAlreadyReady, channel);
+                    Plugin.FChatClient.SendMessageInChannel("[color=green]You are now out of the fight.[/color]", channel);
+                }
+                else
+                {
+                    Plugin.FChatClient.SendMessageInChannel("[color=red]You have already left the fight.[/color]", channel);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, ex.Message, ex.StackTrace), characterCalling);
+                Plugin.FChatClient.SendMessageInChannel(BaseMessages.ErrorNotRegistered, channel);
             }
         }
     }

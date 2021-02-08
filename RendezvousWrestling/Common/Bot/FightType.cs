@@ -5,14 +5,16 @@ using RendezvousWrestling.Common.Utils;
 using RendezvousWrestling.Common.DataContext;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.Common.Bot
 {
-    public class UndrawCommand<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
+    public class FightType<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : BaseCommand<TFightingGame>
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -37,17 +39,21 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (!Plugin.IsInFight(characterCalling, true))
+            if (!Enum.TryParse(typeof(FightType), string.Join(" ", args), out var parsedFD))
             {
+                Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight type not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightType)))}. Example: !fighttype Sexfight[/color]", channel);
                 return;
             }
-            try
+
+            TUser fighter = Plugin.DataContext.Users.Find(characterCalling);
+
+            if (fighter != null)
             {
-                Plugin.Fight.UnrequestDraw(characterCalling);
+                Plugin.Fight.SetFightType(Enum.GetName(typeof(FightType), parsedFD));
             }
-            catch (Exception ex)
+            else
             {
-                Plugin.FChatClient.SendPrivateMessage(string.Format(BaseMessages.commandErrorWithStack, ex.Message, ex.StackTrace), characterCalling);
+                Plugin.FChatClient.SendPrivateMessage(BaseMessages.ErrorNotRegistered, characterCalling);
             }
         }
     }
