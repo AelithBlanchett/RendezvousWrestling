@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace RendezvousWrestling.Common.Utils
 {
-    public abstract class BaseEntityType
+    public abstract class BaseEntityType<T> where T : BaseEntityType<T>
     {
         //public static BaseFeatureType Author { get; } = new BaseFeatureType(0, typeof(TestBase));
 
@@ -22,14 +22,14 @@ namespace RendezvousWrestling.Common.Utils
             MatchingType = type;
         }
 
-        public abstract ICollection<BaseEntityType> List { get; }
+        public abstract ICollection<T> List { get; }
 
-        public BaseEntityType FromString(string modifierTypeString)
+        public T FromString(string modifierTypeString)
         {
             return List.Single(r => string.Equals(r.MatchingType.Name, modifierTypeString, StringComparison.OrdinalIgnoreCase));
         }
 
-        public BaseEntityType FromValue(int value)
+        public T FromValue(int value)
         {
             return List.Single(r => r.Value == value);
         }

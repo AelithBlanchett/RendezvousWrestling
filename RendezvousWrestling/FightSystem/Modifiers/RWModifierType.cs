@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace RendezvousWrestling.FightSystem.Modifiers
 {
-    public class RWModifierType : BaseModifierType
+    public class RWModifierType : BaseModifierType<RWModifierType>
     {
         public static RWModifierType Bondage { get; } = new RWModifierType(1000, typeof(RWBondageModifier));
 
@@ -15,7 +15,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
             Bondage
         };
 
-        public override ICollection<BaseEntityType> List { get => (ICollection<BaseEntityType>)_rwModifiers; }
+        public override ICollection<RWModifierType> List { get => _rwModifiers; }
 
         public RWModifierType()
         {

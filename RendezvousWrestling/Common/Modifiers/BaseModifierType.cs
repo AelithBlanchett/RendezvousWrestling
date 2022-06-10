@@ -3,7 +3,7 @@ using System;
 
 namespace RendezvousWrestling.Common.Modifiers
 {
-    public abstract class BaseModifierType : BaseEntityType
+    public abstract class BaseModifierType<T> : BaseEntityType<T> where T : BaseModifierType<T>
     {
         public BaseModifierType()
         {

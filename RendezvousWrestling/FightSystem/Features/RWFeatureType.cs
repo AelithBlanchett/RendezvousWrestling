@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace RendezvousWrestling.FightSystem.Features
 {
-    public class RWFeatureType : BaseFeatureType
+    public class RWFeatureType : BaseFeatureType<RWFeatureType>
     {
         public static RWFeatureType BondageBunny { get; } = new RWFeatureType(1000, typeof(BondageBunnyFeature));
         public static RWFeatureType DomSubLover { get; } = new RWFeatureType(1001, typeof(BondageBunnyFeature));
@@ -17,7 +17,7 @@ namespace RendezvousWrestling.FightSystem.Features
             DomSubLover
         };
 
-        public override ICollection<BaseEntityType> List { get => (ICollection<BaseEntityType>)_rwFeatures; }
+        public override ICollection<RWFeatureType> List { get => _rwFeatures; }
 
         public RWFeatureType() : base()
         {

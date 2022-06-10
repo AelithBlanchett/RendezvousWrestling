@@ -3,7 +3,7 @@ using System;
 
 namespace RendezvousWrestling.Common.Features
 {
-    public abstract class BaseFeatureType : BaseEntityType
+    public abstract class BaseFeatureType<T> : BaseEntityType<T> where T : BaseFeatureType<T>
     {
         public BaseFeatureType()
         {
