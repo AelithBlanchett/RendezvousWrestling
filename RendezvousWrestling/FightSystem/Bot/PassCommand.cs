@@ -16,13 +16,14 @@ using RendezvousWrestling.FightSystem.Fight;
 using RendezvousWrestling.FightSystem;
 using RendezvousWrestling.FightSystem.Modifiers;
 using System;
+using System.Threading.Tasks;
 
 namespace RendezvousWrestling.Common.Bot
 {
     public class PassCommand : BaseActionCommand<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>
 
     {
-        public override void ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
+        public override async Task ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
             try
             {
