@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30621.155
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RendezvousWrestling", "RendezvousWrestling\RendezvousWrestling.csproj", "{EB3106BB-3EBA-4D19-8B21-631DE36EAF94}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RendezvousWrestling.Tests", "RendezvousWrestling.Tests\RendezvousWrestling.Tests.csproj", "{DE528284-040E-49C7-82EF-1B3C3E34A5C4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FChatSharpLib", "..\FChatSharpLib\FChatSharpLib\FChatSharpLib.csproj", "{907683B4-96B6-4B98-BDB6-4CF70D1CFADD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{DE528284-040E-49C7-82EF-1B3C3E34A5C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE528284-040E-49C7-82EF-1B3C3E34A5C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE528284-040E-49C7-82EF-1B3C3E34A5C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{907683B4-96B6-4B98-BDB6-4CF70D1CFADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{907683B4-96B6-4B98-BDB6-4CF70D1CFADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{907683B4-96B6-4B98-BDB6-4CF70D1CFADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{907683B4-96B6-4B98-BDB6-4CF70D1CFADD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,8 +19,8 @@
 //        var availableTiers = Utils.getEnumList(Tiers);
 //        availableTiers.shift();
 
-public  "MyFirstFighterThatDoesntExist", channel: data.channel, message: "!ready"}//        IMsgEvent firstCharData = { character {get; set;}
-public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!ready"}//        IMsgEvent secondCharData = { character {get; set;}
+//public  "MyFirstFighterThatDoesntExist", channel: data.channel, message: "!ready"}//        IMsgEvent firstCharData = { character {get; set;}
+//public  "MySecondFighterThatDoesntExist", channel: data.channel, message: "!ready"}//        IMsgEvent secondCharData = { character {get; set;}
 
 
 

@@ -1,10 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Fakes\FakeAction.cs" />
+    <Compile Remove="Fakes\FakeActionFactory.cs" />
+    <Compile Remove="Fakes\FakeActiveAction.cs" />
+    <Compile Remove="Fakes\FakeFight.cs" />
+    <Compile Remove="UnitTest1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Fakes\FakeAction.cs" />
+    <None Include="Fakes\FakeActionFactory.cs" />
+    <None Include="Fakes\FakeActiveAction.cs" />
+    <None Include="Fakes\FakeFight.cs" />
+    <None Include="UnitTest1.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />

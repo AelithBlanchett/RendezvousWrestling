@@ -1,4 +1,6 @@
-﻿namespace RendezvousWrestling
+﻿using RendezvousWrestling.FightSystem;
+
+namespace RendezvousWrestling
 {
     class Program
     {
