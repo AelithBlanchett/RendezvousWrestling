@@ -35,16 +35,21 @@ namespace RendezvousWrestling.Common.Achievements
         where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
     {
 
-        public ICollection<TAchievement> EnabledAchievements { get; set; } = new List<TAchievement>();
+        private ICollection<TAchievement> EnabledAchievements { get; set; } = new List<TAchievement>();
 
-        public ICollection<TAchievement> DisabledAchievements { get; set; } = new List<TAchievement>();
+        private ICollection<TAchievement> DisabledAchievements { get; set; } = new List<TAchievement>();
 
-        public ICollection<TAchievement> GetAll()
+        public virtual ICollection<TAchievement> GetAllEnabledAchievements()
+        {
+            return EnabledAchievements;
+        }
+
+        public ICollection<TAchievement> GetAllAchievements()
         {
             return EnabledAchievements.Union(DisabledAchievements).ToList();
         }
 
-        public TAchievement Get(string name)
+        public TAchievement GetByName(string name)
         {
             return EnabledAchievements.FirstOrDefault(x => x.Name == name);
         }
@@ -52,7 +57,7 @@ namespace RendezvousWrestling.Common.Achievements
         public List<string> CheckAll(TUser fighter, TFighterState activeFighter, TFight fight = null)
         {
             var addedInfo = new List<string>();
-            var achievements = EnabledAchievements;
+            var achievements = GetAllEnabledAchievements();
 
             foreach (var achievement in achievements)
             {
