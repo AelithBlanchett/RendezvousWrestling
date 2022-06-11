@@ -1,9 +1,10 @@
 ﻿using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.Configuration;
 using System.Collections.Generic;
 
 internal interface IModifierParameters
 {
-    public int Tier { get; set; }
+    public Tier Tier { get; set; }
     public string Name { get; set; }
     public bool AreDamageMultipliers { get; set; }
     public int DiceRoll { get; set; }

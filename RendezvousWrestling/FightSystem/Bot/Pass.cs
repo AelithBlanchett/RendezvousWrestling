@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 namespace RendezvousWrestling.Common.Bot
 {
     public class Pass : BaseActionCommand<RWAchievement, RWAchievementManager, RWActionFactory, RWActionType, RWActiveAction, RWDataContext, RWEntityMapper, RWFeature, RWFeatureFactory, RWFeatureParameter, RWFeatureType, RWFight, RWFighterState, RWFighterStats, RendezVousWrestlingGame, RWModifier, RWModifierFactory, RWModifierParameters, RWModifierType, RWUser>
-
     {
 
     }

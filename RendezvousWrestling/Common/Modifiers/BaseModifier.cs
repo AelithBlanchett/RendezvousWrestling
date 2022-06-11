@@ -9,6 +9,7 @@ using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.Common.Modifiers
 {
@@ -40,18 +41,19 @@ namespace RendezvousWrestling.Common.Modifiers
         public string Id { get; set; }
 
         //Parameters
-        public int Tier { get; set; }
-        [NotMapped]
-        public TModifierType Type { get; set; }
-        public string Name { get; set; }
-        public bool AreDamageMultipliers { get; set; } = false;
-        public int DiceRoll { get; set; }
-        public int EscapeRoll { get; set; }
-        public int Uses { get; set; }
-        public TriggerEvent TriggeringEvent { get; set; }
-        public TriggerMoment TimeToTrigger { get; set; }
+        public Tier Tier { get; set; }
         public List<string> IdParentActions { get; set; }
 
+
+        [NotMapped]
+        public virtual TModifierType Type { get; set; }
+        public virtual string Name { get; set; }
+        public virtual bool AreDamageMultipliers { get; set; } = false;
+        public virtual int DiceRoll { get; set; }
+        public virtual int EscapeRoll { get; set; }
+        public virtual int Uses { get; set; }
+        public virtual TriggerEvent TriggeringEvent { get; set; }
+        public virtual TriggerMoment TimeToTrigger { get; set; }
 
         [ForeignKey("Fight")]
         public string FightId { get; set; }

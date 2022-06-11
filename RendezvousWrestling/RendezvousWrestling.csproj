@@ -7,55 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="FightSystem\Achievements\Achievements.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionBondage.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionBrawl.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionDegradation.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionEscape.cs" />
     <Compile Remove="FightSystem\Actions\Disabled\ActionExplanation.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionFinisher.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionForcedWorship.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionHighRisk.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionHumHold.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionItemPickup.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionMasturbate.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionReleaseHold.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionRest.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionRiskyLewd.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionSelfDebase.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionSexHold.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionSextoyPickup.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionStrapToy.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionStun.cs" />
     <Compile Remove="FightSystem\Actions\Disabled\ActionSubHold.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionSubmit.cs" />
-    <Compile Remove="FightSystem\Actions\Disabled\ActionTag.cs" />
     <Compile Remove="FightSystem\Actions\Disabled\ActionTease.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="FightSystem\Achievements\Achievements.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionBondage.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionBrawl.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionDegradation.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionEscape.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionFinisher.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionForcedWorship.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionHighRisk.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionHumHold.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionItemPickup.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionMasturbate.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionReleaseHold.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionRest.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionRiskyLewd.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionSelfDebase.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionSexHold.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionSextoyPickup.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionStrapToy.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionStun.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionSubHold.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionSubmit.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionTag.cs" />
-    <None Include="FightSystem\Actions\Disabled\ActionTease.cs" />
     <Content Include="FightSystem\Features\features.json" />
     <Content Include="FightSystem\Modifiers\modifiers.json" />
   </ItemGroup>
@@ -92,6 +50,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FightSystem\Actions\Disabled\" />
   </ItemGroup>
 
 </Project>

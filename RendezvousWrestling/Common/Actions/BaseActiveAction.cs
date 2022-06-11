@@ -135,7 +135,7 @@ namespace RendezvousWrestling.Common.Actions
 
 
 
-        public void Activate(TFight fight,
+        public virtual void Activate(TFight fight,
                                 TFighterState attacker,
                                 List<TFighterState> defenders,
                                 Tier actionTier)
@@ -174,7 +174,7 @@ namespace RendezvousWrestling.Common.Actions
                 }
             }
         }
-        public void Execute()
+        public virtual void Execute()
         {
             CheckRequirements();
             TriggerBeforeEvent();
@@ -199,7 +199,7 @@ namespace RendezvousWrestling.Common.Actions
 
         public abstract void ApplyDamage();
 
-        public int Roll()
+        public virtual int Roll()
         {
             DiceRollRawValue = Attacker.Roll(1);
             DiceRollBonusFromStat = AddBonusesToRollFromStats();
@@ -208,7 +208,7 @@ namespace RendezvousWrestling.Common.Actions
             return DiceScore;
         }
 
-        public int AddBonusesToRollFromStats()
+        public virtual int AddBonusesToRollFromStats()
         {
             return 0;
         }
@@ -233,7 +233,7 @@ namespace RendezvousWrestling.Common.Actions
 
         public abstract int SpecificRequiredDiceScore { get; }
 
-        public int AddRequiredScoreWithExplanation(int value, string reason)
+        public virtual int AddRequiredScoreWithExplanation(int value, string reason)
         {
             if (value != 0)
             {
@@ -242,7 +242,7 @@ namespace RendezvousWrestling.Common.Actions
             return value;
         }
 
-        public void GenerateRollExplanation()
+        public virtual void GenerateRollExplanation()
         {
             Fight.Message.addHint($"Rolled: { DiceScore} [sub] (RLL: {DiceRollRawValue} + STAT:{DiceRollBonusFromStat})[/sub]");
             Fight.Message.addHint($"Required roll: {DiceRequiredRoll}[sub] ({DifficultyExplanation})[/sub]");
@@ -250,7 +250,7 @@ namespace RendezvousWrestling.Common.Actions
 
         }
 
-        public void ReleaseHoldsIfNeeded()
+        public virtual void ReleaseHoldsIfNeeded()
         {
             foreach (var defender in Defenders)
             {
@@ -267,7 +267,7 @@ namespace RendezvousWrestling.Common.Actions
             }
         }
 
-        public void CheckRequirements()
+        public virtual void CheckRequirements()
         {
             if (SingleTarget && !UsableOnSelf && Defenders.Count > 1)
             {
@@ -342,7 +342,7 @@ namespace RendezvousWrestling.Common.Actions
             }
         }
 
-        public void AnnounceAction()
+        public virtual void AnnounceAction()
         {
             if (Defenders.Count > 0)
             {
@@ -357,18 +357,18 @@ namespace RendezvousWrestling.Common.Actions
 
         public abstract void OnMiss();
 
-        public void DisplayHitMessage()
+        public virtual void DisplayHitMessage()
         {
             string message = Explanation != null ? string.Format(Explanation, Attacker.GetStylizedName()) : BaseMessages.HitMessage;
             Fight.Message.addHit(message);
         }
 
-        public void DisplayMissMessage()
+        public virtual void DisplayMissMessage()
         {
             Fight.Message.addHit(BaseMessages.MissMessage);
         }
 
-        public void TriggerBeforeEvent()
+        public virtual void TriggerBeforeEvent()
         {
             Attacker.TriggerMods(TriggerMoment.Before, Trigger);
             Attacker.TriggerFeatures(TriggerMoment.Before, Trigger, GetFeatureParameter(Fight, Attacker, Defender, (TActiveAction)this));
@@ -378,14 +378,14 @@ namespace RendezvousWrestling.Common.Actions
             }
         }
 
-        public TFeatureParameters GetFeatureParameter(TFight fight = null, TFighterState fighter = null, TFighterState target = null, TActiveAction action = null)
+        public virtual TFeatureParameters GetFeatureParameter(TFight fight = null, TFighterState fighter = null, TFighterState target = null, TActiveAction action = null)
         {
             var parameters = new TFeatureParameters();
             parameters.Initialize(fight, fighter, target, action);
             return parameters;
         }
 
-        public void TriggerAfterEvent()
+        public virtual void TriggerAfterEvent()
         {
             Attacker.TriggerMods(TriggerMoment.After, Trigger);
             Attacker.TriggerFeatures(TriggerMoment.After, Trigger, GetFeatureParameter(Fight, Attacker, Defender, (TActiveAction)this));

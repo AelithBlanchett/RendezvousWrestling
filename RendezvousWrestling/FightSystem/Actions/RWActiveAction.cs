@@ -281,7 +281,7 @@ namespace RendezvousWrestling.FightSystem.Actions
             }
         }
 
-        public int AttackFormula(FightTier tier, int targetDef, int roll, int actorAtk)
+        public int AttackFormula(Tier tier, int targetDef, int roll, int actorAtk)
         {
             int statDiff = 0;
             if (actorAtk - targetDef > 0)
@@ -289,19 +289,28 @@ namespace RendezvousWrestling.FightSystem.Actions
                 statDiff = (int)Math.Ceiling((actorAtk - targetDef) / 10m);
             }
 
-            int diceBonus = 0; 
-            //TODO FIX BELOW
-            //var calculatedBonus = Math.Floor((roll - TierDifficulty[Tiers[tier]]) / 2);
-            //if (calculatedBonus > 0)
-            //{
-            //    diceBonus = calculatedBonus;
-            //}
+            int diceBonus = 0;
+            var calculatedBonus = (int)Math.Floor((roll - GetIntValueForEnumByTier(typeof(TierDifficulty), tier)) / 2m);
+            if (calculatedBonus > 0)
+            {
+                diceBonus = calculatedBonus;
+            }
 
-            // this.diceScoreBaseDamage = parseInt(BaseDamage[Tiers[tier]]);
+            DiceScoreBaseDamage = GetIntValueForEnumByTier(typeof(BaseDamage), tier);
             DiceScoreStatDifference = statDiff;
             DiceScoreBonusPoints = diceBonus;
 
             return DiceScoreBaseDamage + DiceScoreStatDifference + DiceScoreBonusPoints;
+        }
+
+        public int GetIntValueForEnumByTier(Type enumType, Tier tier)
+        {
+            return (int)Enum.Parse(enumType, Enum.GetName(typeof(Tier), tier));
+        }
+
+        public int GetDecValueForEnumByTier(Type enumType, Tier tier)
+        {
+            return (int)Enum.Parse(enumType, Enum.GetName(typeof(Tier), tier));
         }
 
         public override int SpecificRequiredDiceScore

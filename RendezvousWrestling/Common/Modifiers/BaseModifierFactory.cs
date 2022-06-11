@@ -34,6 +34,7 @@ namespace RendezvousWrestling.Common.Modifiers
 
         public TModifier Build(TModifierType modifierType, TFight fight, TFighterState receiver, TFighterState applier = null, TModifierParameters inputParameters = null)
         {
+            //TODO: Load values from configuration file
             var modifier = (TModifier)Activator.CreateInstance(modifierType.MatchingType);
             modifier.Activate(fight, receiver, applier, inputParameters);
             return modifier;

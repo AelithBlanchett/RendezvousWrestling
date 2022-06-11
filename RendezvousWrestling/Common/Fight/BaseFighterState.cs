@@ -261,9 +261,9 @@ namespace RendezvousWrestling.Common.Fight
                 {
                     if (mod.IsStun)
                     {
-                        if (stunTier < mod.Tier)
+                        if (stunTier < (int)mod.Tier)
                         {
-                            stunTier = mod.Tier;
+                            stunTier = (int)mod.Tier;
                         }
                     }
                 }
@@ -301,9 +301,9 @@ namespace RendezvousWrestling.Common.Fight
                 {
                     if (mod.IsHold)
                     {
-                        if (tier < mod.Tier)
+                        if (tier < (int)mod.Tier)
                         {
-                            tier = mod.Tier;
+                            tier = (int)mod.Tier;
                         }
                     }
                 }
@@ -360,7 +360,7 @@ namespace RendezvousWrestling.Common.Fight
                 {
                     if (mod.Receiver.Name == Name && mod.IsHold)
                     {
-                        tier = mod.Tier;
+                        tier = (int)mod.Tier;
                     }
                 }
                 return tier;

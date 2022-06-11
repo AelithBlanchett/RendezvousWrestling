@@ -6,6 +6,7 @@ using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Constants;
+using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.Common.Modifiers
 {
@@ -31,7 +32,7 @@ namespace RendezvousWrestling.Common.Modifiers
             where TModifierType : BaseModifierType<TModifierType>, new()
             where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
     {
-        public int Tier { get; set; }
+        public Tier Tier { get; set; }
         public int Type { get; set; }
         public string Name { get; set; }
         public bool AreDamageMultipliers { get; set; } = false;
