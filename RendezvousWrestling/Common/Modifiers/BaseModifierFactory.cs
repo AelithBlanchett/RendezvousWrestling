@@ -36,6 +36,7 @@ namespace RendezvousWrestling.Common.Modifiers
         {
             //TODO: Load values from configuration file
             var modifier = (TModifier)Activator.CreateInstance(modifierType.MatchingType);
+            modifier.Initialize(modifierType, "Unnamed Modifier");
             modifier.Activate(fight, receiver, applier, inputParameters);
             return modifier;
         }

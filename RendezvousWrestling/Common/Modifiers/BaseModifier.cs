@@ -72,12 +72,7 @@ namespace RendezvousWrestling.Common.Modifiers
 
         }
 
-        public BaseModifier(TModifierType modifierType, string name, TriggerMoment timeToTrigger, TriggerEvent triggeringEvent)
-        {
-            Initialize(modifierType, name, timeToTrigger, triggeringEvent);
-        }
-
-        public void Initialize(TModifierType modifierType, string name, TriggerMoment timeToTrigger, TriggerEvent triggeringEvent)
+        public virtual void Initialize(TModifierType modifierType, string name, TriggerMoment timeToTrigger = TriggerMoment.Never, TriggerEvent triggeringEvent = TriggerEvent.None)
         {
             Id = Guid.NewGuid().ToString();
             Type = modifierType;
