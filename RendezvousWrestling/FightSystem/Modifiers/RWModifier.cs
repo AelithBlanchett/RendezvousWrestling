@@ -16,12 +16,6 @@ namespace RendezvousWrestling.FightSystem.Modifiers
 
         }
 
-        public RWModifier(RWModifierType modifierType, string name, TriggerMoment timeToTrigger, TriggerEvent triggeringEvent) :
-            base(modifierType, name, timeToTrigger, triggeringEvent)
-        {
-
-        }
-
         public int HpDamage { get; set; }
         public int LustDamage { get; set; }
         public int FocusDamage { get; set; }
@@ -34,37 +28,37 @@ namespace RendezvousWrestling.FightSystem.Modifiers
             var messageAboutModifier = "";
             if (HpDamage > 0)
             {
-                var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarDamage, triggeringEvent);
+                var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarDamage, triggeringEvent);
                 messageAboutModifier += $" losing {HpDamage} HP,";
                 Receiver.HitHP(HpDamage, flagTriggerMods);
             }
             if (LustDamage > 0)
             {
-                var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarDamage, triggeringEvent);
+                var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarDamage, triggeringEvent);
                 messageAboutModifier += $" losing {LustDamage} LP,";
                 Receiver.HitLP(LustDamage, flagTriggerMods);
             }
             if (FocusDamage > 0)
             {
-                var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarDamage, triggeringEvent);
+                var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarDamage, triggeringEvent);
                 messageAboutModifier += $" losing {FocusDamage} FP,";
                 Receiver.HitFP(FocusDamage, flagTriggerMods);
             }
             if (HpHeal > 0)
             {
-                var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarHealing, triggeringEvent);
+                var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarHealing, triggeringEvent);
                 messageAboutModifier += $" gaining {HpHeal} HP,";
                 Receiver.HealHP(HpHeal, flagTriggerMods);
             }
             if (LustHeal > 0)
             {
-                var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarHealing, triggeringEvent);
+                var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarHealing, triggeringEvent);
                 messageAboutModifier += $" gaining {LustHeal} LP,";
                 Receiver.HealLP(LustHeal, flagTriggerMods);
             }
             if (FocusHeal > 0)
             {
-                var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarHealing, triggeringEvent);
+                var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarHealing, triggeringEvent);
                 messageAboutModifier += $" gaining {FocusHeal} FP,";
                 Receiver.HealFP(FocusHeal, flagTriggerMods);
             }
@@ -96,7 +90,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
                 }
                 else
                 {
-                    var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarDamage, triggeringEvent);
+                    var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarDamage, triggeringEvent);
                     messageAboutModifier += $" losing {HpDamage} HP,";
                     Receiver.HitHP(HpDamage, flagTriggerMods);
                 }
@@ -110,7 +104,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
                 }
                 else
                 {
-                    var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarDamage, triggeringEvent);
+                    var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarDamage, triggeringEvent);
                     messageAboutModifier += $" losing {LustDamage} LP,";
                     Receiver.HitLP(LustDamage, flagTriggerMods);
                 }
@@ -124,7 +118,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
                 }
                 else
                 {
-                    var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarDamage, triggeringEvent);
+                    var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarDamage, triggeringEvent);
                     messageAboutModifier += $" losing {FocusDamage} LP,";
                     Receiver.HitFP(FocusDamage, flagTriggerMods);
                 }
@@ -138,7 +132,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
                 }
                 else
                 {
-                    var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarHealing, triggeringEvent);
+                    var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.MainBarHealing, triggeringEvent);
                     messageAboutModifier += $" gaining {HpHeal} HP,";
                     Receiver.HealHP(HpHeal, flagTriggerMods);
                 }
@@ -152,7 +146,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
                 }
                 else
                 {
-                    var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarHealing, triggeringEvent);
+                    var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarHealing, triggeringEvent);
                     messageAboutModifier += $" gaining {LustHeal} LP,";
                     Receiver.HealLP(LustHeal, flagTriggerMods);
                 }
@@ -166,7 +160,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
                 }
                 else
                 {
-                    var flagTriggerMods = !Common.Utils.Utils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarHealing, triggeringEvent);
+                    var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.UtilitaryBarHealing, triggeringEvent);
                     messageAboutModifier += $" gaining {FocusHeal} LP,";
                     Receiver.HealFP(FocusHeal, flagTriggerMods);
                 }

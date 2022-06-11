@@ -155,7 +155,7 @@ namespace RendezvousWrestling.Common.Modifiers
         {
             string messageAboutModifier = "";
 
-            if (Utils.Utils.WillTriggerForEvent(TimeToTrigger, moment, TriggeringEvent, triggeringEvent))
+            if (Utils.GlobalUtils.WillTriggerForEvent(TimeToTrigger, moment, TriggeringEvent, triggeringEvent))
             {
                 Uses--;
                 messageAboutModifier = $"{Receiver.GetStylizedName()} is affected by the {Name}, ";

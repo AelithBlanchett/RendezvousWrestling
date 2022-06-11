@@ -237,7 +237,7 @@ namespace RendezvousWrestling.Common.Actions
         {
             if (value != 0)
             {
-                DifficultyExplanation = $"{ DifficultyExplanation} { reason}:{ Utils.Utils.GetSignedNumber(value)}";
+                DifficultyExplanation = $"{ DifficultyExplanation} { reason}:{ Utils.GlobalUtils.GetSignedNumber(value)}";
             }
             return value;
         }

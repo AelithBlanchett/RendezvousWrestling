@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RendezvousWrestling.Common.Utils
 {
-    public class Utils
+    public class GlobalUtils
     {
 
         public static string GetSignedNumber(double theNumber)

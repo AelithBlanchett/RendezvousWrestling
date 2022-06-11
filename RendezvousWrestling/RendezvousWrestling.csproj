@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <None Include="FightSystem\Achievements\Achievements.cs" />
-    <Content Include="FightSystem\Features\features.json" />
   </ItemGroup>
 
   <ItemGroup>

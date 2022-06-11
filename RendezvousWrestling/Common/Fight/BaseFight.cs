@@ -318,7 +318,7 @@ namespace RendezvousWrestling.Common.Fight
             Message.AddInfo(string.Format(BaseMessages.startMatchAnnounce, Id));
             CurrentTurn = 1;
             HasStarted = true;
-            Fighters = Utils.Utils.ShuffleArray(Fighters); //random order for teams
+            Fighters = Utils.GlobalUtils.ShuffleArray(Fighters); //random order for teams
 
             Message.AddInfo(string.Format(BaseMessages.startMatchStageAnnounce, Stage));
 
@@ -1101,7 +1101,7 @@ namespace RendezvousWrestling.Common.Fight
         {
             get
             {
-                return TeamsStillInGame[Utils.Utils.GetRandomInt(0, NumberOfTeamsInvolved)];
+                return TeamsStillInGame[Utils.GlobalUtils.GetRandomInt(0, NumberOfTeamsInvolved)];
             }
         }
 
@@ -1198,7 +1198,7 @@ namespace RendezvousWrestling.Common.Fight
         {
             get
             {
-                return AlivePlayers[Utils.Utils.GetRandomInt(0, AlivePlayers.Count)];
+                return AlivePlayers[Utils.GlobalUtils.GetRandomInt(0, AlivePlayers.Count)];
             }
         }
 
