@@ -42,7 +42,7 @@ namespace RendezvousWrestling.FightSystem.Fight
             Message.addHit(string.Format(BaseMessages.forfeitItemApply, fighter.GetStylizedName(), fighter.MaxBondageItemsOnSelf.ToString()));
             for (var i = 0; i < fighter.MaxBondageItemsOnSelf; i++)
             {
-                fighter.ReceivedModifiers.Add(ModifierFactory.Build(RWModifierType.Bondage, this, fighter, null));
+                fighter.AddModifier(ModifierFactory.Build(RWModifierType.Bondage, this, fighter, null));
             }
             Message.addHit(string.Format(BaseMessages.forfeitTooManyItems, fighter.GetStylizedName()));
             fighter.TriggerPermanentOutsideRing();

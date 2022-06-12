@@ -51,14 +51,27 @@ namespace RendezvousWrestling.Common
 
         public void Initialize()
         {
+            ResetFight();
+            DataContext = new TDataContext();
+        }
+
+        public void ResetFight()
+        {
             Fight = new TFight();
             Fight.Activate((TFightingGame)this, FChatClient, Channel);
-            DataContext = new TDataContext();
+        }
+
+        public void ResetFightIfNeeded()
+        {
+            if (Fight == null || Fight.HasEnded)
+            {
+                ResetFight();
+            }
         }
 
         public bool IsInFight(string character, bool displayIfNotInFight = false, bool displayIfInFight = false)
         {
-            if (IsFightGoingOn(character, false, false) || Fight.Fighters != null && Fight.Fighters.FindIndex(x => x.Name == character) == -1)
+            if (!IsFightGoingOn(character, false, false) || Fight.Fighters == null || Fight.Fighters.FindIndex(x => x.Name == character) == -1)
             {
                 if (displayIfNotInFight)
                 {

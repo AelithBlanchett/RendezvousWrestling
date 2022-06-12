@@ -228,7 +228,7 @@ namespace RendezvousWrestling.Common.Fight
             {
                 if (GetFighterByName(fighterName) == null)
                 { 
-                    TUser user = FightingGame.DataContext.Users.Include(x => x.Features).Include(x => x.Stats).FirstOrDefault(x => x.Id == fighterName);
+                    TUser user = FightingGame.DataContext.Users.Include(x => x.Features).Include(x => x.Stats).Include(x => x.Achievements).FirstOrDefault(x => x.Id == fighterName);
 
                     if (user == null)
                     {
@@ -324,13 +324,20 @@ namespace RendezvousWrestling.Common.Fight
 
             for (var i = 0; i < MaxPlayersPerTeam; i++)
             { //Prints as much names as there are Team
-                var fullStringVS = "[b]";
+                var fullStringVS = "";
                 foreach (var j in TeamsStillInGame)
                 {
                     var theFighter = GetTeam(j)[i];
                     if (theFighter != null)
                     {
-                        fullStringVS = $"{theFighter.GetStylizedName()} VS {fullStringVS}";
+                        if(fullStringVS.Length == 0)
+                        {
+                            fullStringVS = $"[b]{theFighter.GetStylizedName()}";
+                        }
+                        else
+                        {
+                            fullStringVS = $"{fullStringVS} VS {theFighter.GetStylizedName()}";
+                        }
                     }
                 }
                 fullStringVS = $"{fullStringVS}[/b]";
@@ -607,6 +614,12 @@ namespace RendezvousWrestling.Common.Fight
             foreach (var player in AlivePlayers)
             {
                 player.LastDiceRoll = player.Roll(10, triggeringEvent);
+#if DEBUG
+                if(player.Name == "Aelith Blanchette")
+                {
+                    player.LastDiceRoll += 100;
+                }
+#endif
                 arrSortedFightersByInitiative.Add(player);
                 Message.addHint(string.Format(BaseMessages.rollAllDiceEchoRoll, player.GetStylizedName(), player.LastDiceRoll.ToString()));
             }
@@ -644,7 +657,7 @@ namespace RendezvousWrestling.Common.Fight
 
         public void PrepareAction(string attacker, TActionType actionType, string args)
         {
-            var tier = -1;
+            Tier tier = Tier.None;
             if (!IsMatchInProgress())
             {
                 throw new Exception("There isn't any fight going on.");
@@ -661,10 +674,11 @@ namespace RendezvousWrestling.Common.Fight
             }
 
             //This is used to check a few things
-            var mockupAction = ActionFactory.Build(actionType, (TFight)this, CurrentPlayer, CurrentTarget, (Tier)tier);
+            var mockupAction = ActionFactory.Build(actionType, (TFight)this, CurrentPlayer, CurrentTarget, tier);
 
+            var isAbleToParseTier = Enum.TryParse<Tier>(args.ToLower(), true, out tier);
 
-            if (mockupAction.RequiresTier && (!int.TryParse(args.ToLower(), out tier) || tier == -1 || !Enum.IsDefined(typeof(Tier), tier)))
+            if (mockupAction.RequiresTier && (!isAbleToParseTier || tier == Tier.None))
             {
                 throw new Exception($"The tier is required and neither Light, Medium or Heavy was specified. Example: !action Medium");
             }
@@ -678,7 +692,7 @@ namespace RendezvousWrestling.Common.Fight
                 }
                 else
                 {
-                    throw new Exception("The target character must be passed to the command.");
+                    throw new Exception("A valid target character must be passed to the command.");
                 }
             }
 
@@ -701,9 +715,21 @@ namespace RendezvousWrestling.Common.Fight
 
             WaitingForAction = false;
 
-            var action = ActionFactory.Build(actionType, (TFight)this, CurrentPlayer, CurrentTarget, (Tier)tier);
+            TActiveAction action;
 
-            action = DoAction(action);
+            try
+            {
+                action = ActionFactory.Build(actionType, (TFight)this, CurrentPlayer, CurrentTarget, (Tier)tier);
+                action = DoAction(action);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                WaitingForAction = true;
+            }     
 
             var allInvolvedActors = new List<TFighterState>
             {
@@ -856,7 +882,7 @@ namespace RendezvousWrestling.Common.Fight
             {
                 Message.AddInfo(BaseMessages.CheckForDrawOK);
                 SendFightMessage();
-                int tokensToGive = CurrentTurn;
+                int tokensToGive = (int)Math.Floor(CurrentTurn / 2m);
                 int tokensMax = (int)Enum.Parse(typeof(TokensPerWin), nameof(FightTier.Bronze));
                 if (tokensToGive > tokensMax)
                 {
@@ -948,6 +974,8 @@ namespace RendezvousWrestling.Common.Fight
             }
 
             SendFightMessage();
+
+            FightingGame.ResetFightIfNeeded();
         }
 
         static double ExpectationToWin(int playerOneRating, int playerTwoRating)

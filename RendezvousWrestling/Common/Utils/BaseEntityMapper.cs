@@ -42,8 +42,12 @@ namespace RendezvousWrestling.Common.Utils
                 {
                     _mapperConfiguration = new MapperConfiguration(cfg =>
                     {
-                        cfg.CreateMap<TModifier, TModifierParameters>().ReverseMap();
-                        cfg.CreateMap<TFeature, TFeatureParameters>().ReverseMap();
+                        cfg.CreateMap<int, TModifierType>().ConvertUsing(typeof(BaseEntityTypeConverter<TModifierType>));
+                        cfg.CreateMap<int, TFeatureType>().ConvertUsing(typeof(BaseEntityTypeConverter<TFeatureType>));
+                        cfg.CreateMap<TModifierParameters, TModifier>()
+                            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null && srcMember != default && (!int.TryParse(srcMember.ToString(), out var useless) || useless != 0)));
+                        cfg.CreateMap<TFeatureParameters, TFeature>()
+                            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null && srcMember != default && (!int.TryParse(srcMember.ToString(), out var useless) || useless != 0)));
                     });
                 }
                 return _mapperConfiguration;

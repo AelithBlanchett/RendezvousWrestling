@@ -11,11 +11,11 @@ namespace RendezvousWrestling.FightSystem.Configuration
         public static int MaxTurnsWithoutFocus { get; set; } = 6;
 
         public static int InitialintOfTurnsForHold { get; set; } = 5;
-        public static int HoldDamageMultiplier { get; set; } = 0;
+        public static decimal HoldDamageMultiplier { get; set; } = 0.5m;
 
-        public static int HpPercentageToHealOnRest { get; set; } = 0;
-        public static int LpPercentageToHealOnRest { get; set; } = 0;
-        public static int FpPercentageToHealOnRest { get; set; } = 0;
+        public static decimal HpPercentageToHealOnRest { get; set; } = 0.3m;
+        public static decimal LpPercentageToHealOnRest { get; set; } = 0.3m;
+        public static decimal FpPercentageToHealOnRest { get; set; } = 0.3m;
 
         public static int ForcedWorshipLPMultiplier { get; set; } = 4;
 
@@ -24,7 +24,7 @@ namespace RendezvousWrestling.FightSystem.Configuration
         public static decimal StunHPDamageMultiplier { get; set; } = 0.33m;
         public static int DicePenaltyMultiplierWhileStunned { get; set; } = 2;
 
-        public static int PassFpDamage { get; set; } = 1;
+        public static int PassFpDamage { get; set; } = 10;
 
         public static int FpHealOnNextTurn { get; set; } = 2;
 

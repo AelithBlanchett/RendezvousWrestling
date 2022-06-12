@@ -64,7 +64,7 @@ namespace RendezvousWrestling.Common.Actions
         public int DiceRequiredRoll { get; set; }
         public bool Missed { get; set; } = false;
 
-        public List<TModifier> AppliedModifiers { get; set; } = new List<TModifier>();
+        public List<TModifier> AppliedModifiers { get; protected set; } = new List<TModifier>();
 
         public string TemporaryIdAttacker { get; set; }
         public string[] TemporaryIdDefenders { get; set; }
@@ -193,6 +193,7 @@ namespace RendezvousWrestling.Common.Actions
                 DisplayMissMessage();
                 OnMiss();
             }
+            GenerateDamageExplanation();
             TriggerAfterEvent();
             ApplyDamage();
         }
@@ -246,8 +247,14 @@ namespace RendezvousWrestling.Common.Actions
         {
             Fight.Message.addHint($"Rolled: { DiceScore} [sub] (RLL: {DiceRollRawValue} + STAT:{DiceRollBonusFromStat})[/sub]");
             Fight.Message.addHint($"Required roll: {DiceRequiredRoll}[sub] ({DifficultyExplanation})[/sub]");
-            Fight.Message.addHint($"Damage calculation detail: [sub](BSE:{DiceScoreBaseDamage} + STA:{DiceScoreStatDifference} + OVR:{DiceScoreBonusPoints})[/sub]");
+        }
 
+        public virtual void GenerateDamageExplanation()
+        {
+            if (DiceScoreBaseDamage + DiceScoreStatDifference + DiceScoreBonusPoints != 0)
+            {
+                Fight.Message.addHint($"Damage calculation detail: [sub](BSE:{DiceScoreBaseDamage} + STA:{DiceScoreStatDifference} + OVR:{DiceScoreBonusPoints})[/sub]");
+            }
         }
 
         public virtual void ReleaseHoldsIfNeeded()
@@ -359,7 +366,7 @@ namespace RendezvousWrestling.Common.Actions
 
         public virtual void DisplayHitMessage()
         {
-            string message = Explanation != null ? string.Format(Explanation, Attacker.GetStylizedName()) : BaseMessages.HitMessage;
+            string message = !string.IsNullOrWhiteSpace(Explanation) ? string.Format(Explanation, Attacker.GetStylizedName()) : BaseMessages.HitMessage;
             Fight.Message.addHit(message);
         }
 
@@ -403,6 +410,11 @@ namespace RendezvousWrestling.Common.Actions
                     Defender.TriggerFeatures(TriggerMoment.After, TriggerEvent.GrapplingHold, GetFeatureParameter(Fight, Defender, Attacker, (TActiveAction)this));
                 }
             }
+        }
+
+        public virtual void AddModifier(TModifier modifier)
+        {
+            AppliedModifiers.Add(modifier);
         }
     }
 }

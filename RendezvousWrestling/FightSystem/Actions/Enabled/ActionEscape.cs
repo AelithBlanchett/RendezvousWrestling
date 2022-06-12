@@ -15,22 +15,22 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
                 RWActionType.Escape,
                 nameof(ActionType.Escape), //Name
                 false, //isHold
-            false,  //requiresRoll
-            false, //keepActorsTurn
-            false,  //singleTarget
+            true,  //requiresRoll
+            true, //keepActorsTurn
+            true,  //singleTarget
             true,  //requiresBeingAlive
             false, //requiresBeingDead
             true,  //requiresBeingInRing
             false, //requiresBeingOffRing
-                true,  //requiresTier
+                false,  //requiresTier
                 false, //requiresCustomTarget
-            false,  //targetMustBeAlive
+            true,  //targetMustBeAlive
             false, //targetMustBeDead
-            false, //targetMustBeInRing
+            true, //targetMustBeInRing
             false,  //targetMustBeOffRing
-            false, //targetMustBeInRange
+            true, //targetMustBeInRange
             false, //targetMustBeOffRange
-            false, //requiresBeingInHold,
+            true, //requiresBeingInHold,
             false, //requiresNotBeingInHold,
             false, //targetMustBeInHold,
             false, //targetMustNotBeInHold,

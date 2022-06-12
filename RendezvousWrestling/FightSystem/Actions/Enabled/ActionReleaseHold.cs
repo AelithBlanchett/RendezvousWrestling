@@ -16,13 +16,13 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
                 nameof(ActionType.ReleaseHold), //Name
                 false, //isHold
             false,  //requiresRoll
-            false, //keepActorsTurn
+            true, //keepActorsTurn
             false,  //singleTarget
             true,  //requiresBeingAlive
             false, //requiresBeingDead
             true,  //requiresBeingInRing
             false, //requiresBeingOffRing
-                true,  //requiresTier
+                false,  //requiresTier
                 false, //requiresCustomTarget
             false,  //targetMustBeAlive
             false, //targetMustBeDead

@@ -22,5 +22,14 @@ namespace RendezvousWrestling.FightSystem
             PluginOptions = pluginOptions;
             Run();
         }
+
+        public override void Run()
+        {
+            base.ExecuteCommand("Aelith Blanchette", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+            base.ExecuteCommand("A", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+            base.ExecuteCommand("Aelith Blanchette", "riskylewd", new List<string>() { "light" }, PluginOptions.Value.Channels[0]);
+            //base.ExecuteCommand("Aelith Blanchette", "impersonate", new List<string>() { "A" }, PluginOptions.Value.Channels[0]);
+            base.Run();
+        }
     }
 }

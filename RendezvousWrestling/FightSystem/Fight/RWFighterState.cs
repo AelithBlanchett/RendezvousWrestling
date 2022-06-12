@@ -49,6 +49,39 @@ namespace RendezvousWrestling.FightSystem.Fight
         public int HeartsHealLastRound { get; set; } = 0;
         public int OrgasmsHealLastRound { get; set; } = 0;
 
+        private string HpAsBars
+        {
+            get
+            {
+                var numberOfBars = 10;
+                var hpPerBar = 1m * HpPerHeart / numberOfBars;
+                var numberOfFullBars = (int)Math.Ceiling(Hp / hpPerBar * 1m);
+                return "".PadRight(numberOfBars - numberOfFullBars, '▱').PadLeft(numberOfBars, '▰');
+            }
+        }
+
+        private string LpAsBars
+        {
+            get
+            {
+                var numberOfBars = 10;
+                var lpPerBar = 1m * LustPerOrgasm / numberOfBars;
+                var numberOfFullBars = (int)Math.Ceiling(Lust / lpPerBar * 1m);
+                return "".PadLeft(numberOfFullBars, '▰').PadRight(numberOfBars, '▱');
+            }
+        }
+
+        private string FpAsBars
+        {
+            get
+            {
+                var numberOfBars = 10;
+                var fpPerBar = 1m * MaxFocus / numberOfBars;
+                var numberOfFullBars = (int)Math.Ceiling(Focus / fpPerBar * 1m);
+                return "".PadRight(numberOfBars - numberOfFullBars, '▱').PadLeft(numberOfBars, '▰');
+            }
+        }
+
         public RWFighterState() : base()
         {
 
@@ -643,7 +676,7 @@ namespace RendezvousWrestling.FightSystem.Fight
             get
             {
                 var bondageModCount = 0;
-                foreach (var mod in Modifiers)
+                foreach (var mod in ReceivedModifiers)
                 {
                     if (mod.Type == RWModifierType.Bondage)
                     {
@@ -658,16 +691,19 @@ namespace RendezvousWrestling.FightSystem.Fight
         {
             //this.User.hasFeature(RWFeatureType.Bondage) >>>>> this.User.hasFeature(RWFeatureType.DomSubLover)
             var nameLine = $"{GetStylizedName()}:";
-            var hpLine = $"  [color=yellow]hit points: {Hp}{(HpDamageLastRound > 0 || HpHealLastRound > 0 ? $"{(-HpDamageLastRound + HpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-HpDamageLastRound + HpHealLastRound)})[/color]" : "")}|{HpPerHeart}[/color] ";
-            var lpLine = $"  [color=pink]lust points: {Lust}{(LpDamageLastRound > 0 || LpHealLastRound > 0 ? $"{ (-LpDamageLastRound + LpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(LpDamageLastRound - LpHealLastRound)})[/color]" : "")}|{ LustPerOrgasm}[/color] ";
+            //var hpLine = $"  [color=yellow]hit points: {Hp}{(HpDamageLastRound > 0 || HpHealLastRound > 0 ? $"{(-HpDamageLastRound + HpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-HpDamageLastRound + HpHealLastRound)})[/color]" : "")}|{HpPerHeart}[/color] ";
+            var hpLineBars = $"  [color=yellow]hit points: {HpAsBars}{(HpDamageLastRound > 0 || HpHealLastRound > 0 ? $"{(-HpDamageLastRound + HpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-HpDamageLastRound + HpHealLastRound)})[/color]" : "")}[/color] ";
+            //var lpLine = $"  [color=pink]lust points: {Lust}{(LpDamageLastRound > 0 || LpHealLastRound > 0 ? $"{ (-LpDamageLastRound + LpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(LpDamageLastRound - LpHealLastRound)})[/color]" : "")}|{ LustPerOrgasm}[/color] ";
+            var lpLineBars = $"  [color=pink]lust points: {LpAsBars}{(LpDamageLastRound > 0 || LpHealLastRound > 0 ? $"{ (-LpDamageLastRound + LpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(LpDamageLastRound - LpHealLastRound)})[/color]" : "")}[/color] ";
             var livesLine = $"  [color=red]lives: {RemainingLivesBarDisplay}{(OrgasmsDamageLastRound > 0 || OrgasmsHealLastRound > 0 ? $"{ (-OrgasmsDamageLastRound + OrgasmsHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-OrgasmsDamageLastRound + OrgasmsHealLastRound)} orgasm(s))[/color]" : "")}{ (HeartsDamageLastRound > 0 || HeartsHealLastRound > 0 ? $"{ (-HeartsDamageLastRound + HeartsHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({ RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-HeartsDamageLastRound + HeartsHealLastRound)} heart(s))[/color]" : "")} ({LivesRemaining}|{MaxLives})[/color] ";
-            var focusLine = $"  [color=orange]{(User.HasFeature(RWFeatureType.DomSubLover) ? "submissiveness" : "focus")}:[/color] [b][color={ (Focus <= 0 ? "red" : "orange")}]{Focus}[/color][/b]{((FpDamageLastRound > 0 || FpHealLastRound > 0) && FpDamageLastRound - FpHealLastRound != 0 ? $"{ (-FpDamageLastRound + FpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-FpDamageLastRound + FpHealLastRound)})[/color]" : "")}|[color=green]{MaxFocus}[/color]";
+            //var focusLine = $"  [color=orange]{(User.HasFeature(RWFeatureType.DomSubLover) ? "submissiveness" : "focus")}:[/color] [b][color={ (Focus <= 0 ? "red" : "orange")}]{Focus}[/color][/b]{((FpDamageLastRound > 0 || FpHealLastRound > 0) && FpDamageLastRound - FpHealLastRound != 0 ? $"{ (-FpDamageLastRound + FpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-FpDamageLastRound + FpHealLastRound)})[/color]" : "")}|[color=green]{MaxFocus}[/color]";
+            var focusLineBars = $"  [color=orange]{(User.HasFeature(RWFeatureType.DomSubLover) ? "submissiveness" : "focus")}:[/color] [b][color={ (Focus <= 0 ? "red" : "orange")}]{FpAsBars}[/color][/b]{((FpDamageLastRound > 0 || FpHealLastRound > 0) && FpDamageLastRound - FpHealLastRound != 0 ? $"{ (-FpDamageLastRound + FpHealLastRound < 0 ? "[color=red]" : "[color=green]")} ({RendezvousWrestling.Common.Utils.GlobalUtils.GetSignedNumber(-FpDamageLastRound + FpHealLastRound)})[/color]" : "")}";
             var turnsFocusLine = $"  [color=orange]turns {(User.HasFeature(RWFeatureType.DomSubLover) ? "being too submissive" : "without focus")}: {ConsecutiveTurnsWithoutFocus}|{ RWGameSettings.MaxTurnsWithoutFocus}[/color]";
             var bondageLine = $"  [color=purple]bondage items {NumBondageItemsOnSelf}|{ RWGameSettings.MaxBondageItemsOnSelf}[/color] ";
             var modifiersLine = $"  [color=cyan]affected by: {ActiveModifiersAsString}[/color] ";
-            var targetLine = $"  [color=red]target(s): " + (TargetsAsString != null && TargetsAsString.Count > 0 ? $"{ string.Join(", ", TargetsAsString)}" : "None set yet! (!target charactername)") + "[/color]";
+            var targetLine = $"  [color=red]target(s): " + (TargetsAsString != null && TargetsAsString.Count > 0 ? $"{ string.Join(", ", TargetsAsString)}" : "∅ (!target charactername)") + "[/color]";
 
-            return $"{nameLine.PadLeft(50, '-')} {hpLine} {lpLine} {livesLine} {focusLine} {turnsFocusLine} {bondageLine} {(ActiveModifiersAsString.Length > 0 ? modifiersLine : "")} {targetLine}";
+            return $"{nameLine.PadLeft(50, '-')} {hpLineBars} {lpLineBars} {livesLine} {focusLineBars}\n{"".PadLeft(50, '.')}{turnsFocusLine} {bondageLine} {(ActiveModifiersAsString.Length > 0 ? modifiersLine : "")} {targetLine}";
         }
     }
 }

@@ -22,7 +22,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             false, //requiresBeingDead
             true,  //requiresBeingInRing
             false, //requiresBeingOffRing
-                false,  //requiresTier
+                true,  //requiresTier
                 false, //requiresCustomTarget
             true,  //targetMustBeAlive
             false, //targetMustBeDead
@@ -56,7 +56,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             var nbOfTurnsWearingToy = (int)ActionTier + 1;
             var lpDamage = GetIntValueForEnumByTier(typeof(StrapToyLPDamagePerTurn), ActionTier);
             var strapToyModifier = Fight.ModifierFactory.Build(RWModifierType.StrapToy, this.Fight, this.Defender, null, new RWModifierParameters() { FocusDamage = this.FpDamageToDef, LustDamage = lpDamage, Tier = ActionTier, DiceRoll = GetIntValueForEnumByTier(typeof(StrapToyDiceRollPenalty), ActionTier), Uses = nbOfTurnsWearingToy});
-            this.AppliedModifiers.Add(strapToyModifier);
+            AddModifier(strapToyModifier);
             this.Fight.Message.addHit("The sextoy started vibrating!");
         }
     }

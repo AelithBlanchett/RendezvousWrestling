@@ -31,7 +31,7 @@ public class FightMessage : IMessage
 
     public string getAction()
     {
-        return "Action :[color=yellow]" + string.Join("\n", Action) + "[/color]";
+        return "Action: [color=yellow]" + string.Join("\n", Action) + "[/color]";
     }
 
     public string getHit()

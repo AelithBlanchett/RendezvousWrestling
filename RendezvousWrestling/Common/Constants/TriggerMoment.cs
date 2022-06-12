@@ -1,5 +1,8 @@
+using System;
+
 namespace RendezvousWrestling.Common.Constants
 {
+    [Flags]
     public enum TriggerMoment
     {
         Never = -1,

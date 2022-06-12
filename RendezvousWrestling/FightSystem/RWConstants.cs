@@ -120,16 +120,16 @@ public enum StrapToyDiceRollPenalty
 
 public class FailedHighRiskMultipliers
 {
-    public static readonly decimal Light = 0.6m;
-    public static readonly decimal Medium = 0.5m;
-    public static readonly decimal Heavy = 0.4m;
+    public static decimal Light => 0.6m;
+    public static decimal Medium => 0.5m;
+    public static decimal Heavy => 0.4m;
 }
 
 public class HighRiskMultipliers
 {
-    public static readonly decimal Light = 1.3m;
-    public static readonly decimal Medium = 1.5m;
-    public static readonly decimal Heavy = 1.8m;
+    public static decimal Light => 1.3m;
+    public static decimal Medium => 1.5m;
+    public static decimal Heavy => 1.8m;
 }
 
 public enum MasturbateLpDamage

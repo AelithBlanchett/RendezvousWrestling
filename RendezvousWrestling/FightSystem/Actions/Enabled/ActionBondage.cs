@@ -34,9 +34,9 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             false, //requiresNotBeingInHold,
             true, //targetMustBeInHold,
             false, //targetMustNotBeInHold,
-            true, //usableOnSelf
+            false, //usableOnSelf
             false,  //usableOnAllies
-            false, //usableOnEnemies
+            true, //usableOnEnemies
                 TriggerEvent.SpecialAttack,
                 ActionExplanation.Bondage)
         {
@@ -70,7 +70,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             this.FpDamageToDef += GetIntValueForEnumByTier(typeof(FocusDamageOnHit), Tier.Heavy);
 
             var bdModifier = Fight.ModifierFactory.Build(RWModifierType.Bondage, this.Fight, this.Defender, this.Attacker);
-            this.AppliedModifiers.Add(bdModifier);
+            AddModifier(bdModifier);
         }
     }
 }

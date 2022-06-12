@@ -32,4 +32,8 @@
     <ProjectReference Include="..\RendezvousWrestling\RendezvousWrestling.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FightingSystem\" />
+  </ItemGroup>
+
 </Project>

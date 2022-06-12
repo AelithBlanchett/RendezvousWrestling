@@ -51,9 +51,9 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             var holdModifier = Fight.ModifierFactory.Build(RWModifierType.SubHold, this.Fight, this.Defender, this.Attacker, new RWModifierParameters() { Tier = ActionTier, HpDamage = hpDamage });
             var brawlBonusAttacker = Fight.ModifierFactory.Build(RWModifierType.SubHoldBrawlBonus, this.Fight, this.Attacker, null, new RWModifierParameters() { IdParentActions = new List<string>() { holdModifier.Id } });
             var brawlBonusDefender = Fight.ModifierFactory.Build(RWModifierType.SubHoldBrawlBonus, this.Fight, this.Defender, null, new RWModifierParameters() { IdParentActions = new List<string>() { holdModifier.Id } });
-            this.AppliedModifiers.Add(holdModifier);
-            this.AppliedModifiers.Add(brawlBonusAttacker);
-            this.AppliedModifiers.Add(brawlBonusDefender);
+            AddModifier(holdModifier);
+            AddModifier(brawlBonusAttacker);
+            AddModifier(brawlBonusDefender);
     }
 
         public override int AddBonusesToRollFromStats()

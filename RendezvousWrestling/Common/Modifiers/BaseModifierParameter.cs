@@ -33,7 +33,6 @@ namespace RendezvousWrestling.Common.Modifiers
             where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
     {
         public Tier Tier { get; set; }
-        public int Type { get; set; }
         public string Name { get; set; }
         public bool AreDamageMultipliers { get; set; } = false;
         public int DiceRoll { get; set; }

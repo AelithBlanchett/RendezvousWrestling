@@ -10,6 +10,7 @@ using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
 using RendezvousWrestling.Common.Constants;
 using RendezvousWrestling.Configuration;
+using System.Linq;
 
 namespace RendezvousWrestling.Common.Modifiers
 {
@@ -100,21 +101,18 @@ namespace RendezvousWrestling.Common.Modifiers
 
         public void Remove()
         {
-            var indexModReceiver = Receiver.Modifiers.FindIndex(x => x.Id == Id);
-            if (indexModReceiver != -1)
+            if (Receiver.Modifiers.Any(x => x.Id == Id))
             {
-                Receiver.Modifiers.RemoveAt(indexModReceiver);
+                Receiver.RemoveMod(Id);
             }
 
             if (Applier != null)
             {
-                var indexModApplier = Applier.Modifiers.FindIndex(x => x.Id == Id);
-                if (indexModApplier != -1)
+                if (Applier.Modifiers.Any(x => x.Id == Id))
                 {
-                    Applier.Modifiers.RemoveAt(indexModApplier);
+                    Applier.RemoveMod(Id);
                 }
             }
-
 
             foreach (var mod in Receiver.Modifiers)
             {
@@ -158,7 +156,7 @@ namespace RendezvousWrestling.Common.Modifiers
             if (Utils.GlobalUtils.WillTriggerForEvent(TimeToTrigger, moment, TriggeringEvent, triggeringEvent))
             {
                 Uses--;
-                messageAboutModifier = $"{Receiver.GetStylizedName()} is affected by the {Name}, ";
+                messageAboutModifier = $"{Receiver.GetStylizedName()} is affected by the {Name},";
                 if (objFightAction == null) //not sure about this one
                 {
                     messageAboutModifier += ApplyModifierOnReceiver(moment, triggeringEvent);

@@ -50,10 +50,10 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
             var focusDamage = GetIntValueForEnumByTier(typeof(FocusDamageOnHit), ActionTier);
             var holdModifier = Fight.ModifierFactory.Build(RWModifierType.HumHold, this.Fight, this.Defender, this.Attacker, new RWModifierParameters() { Tier = ActionTier, FocusDamage = focusDamage });
-            this.AppliedModifiers.Add(holdModifier);
+            AddModifier(holdModifier);
 
             var humiliationModifier = Fight.ModifierFactory.Build(RWModifierType.DegradationMalus, this.Fight, this.Defender, this.Attacker, new RWModifierParameters() { IdParentActions = new List<string>() { holdModifier.Id } });            
-            this.AppliedModifiers.Add(humiliationModifier);
+            AddModifier(humiliationModifier);
     }
 
         public override int AddBonusesToRollFromStats()

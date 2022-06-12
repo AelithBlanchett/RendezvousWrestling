@@ -50,7 +50,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             this.HpDamageToDef = (int)Math.Floor(this.AttackFormula(this.ActionTier, (int)Math.Floor(this.Attacker.CurrentPower * 1m), this.Defender.CurrentToughness, this.DiceScore) * RWGameSettings.StunHPDamageMultiplier);
             var requiredDiceRoll = -(((int)this.ActionTier + 1) * RWGameSettings.DicePenaltyMultiplierWhileStunned);
             var stunModifier = Fight.ModifierFactory.Build(RWModifierType.Stun, this.Fight, this.Defender, this.Attacker, new RWModifierParameters() { Tier = ActionTier, DiceRoll = requiredDiceRoll });
-            this.AppliedModifiers.Add(stunModifier);
+            AddModifier(stunModifier);
             this.Fight.Message.addHit("STUNNED!");
         }
 

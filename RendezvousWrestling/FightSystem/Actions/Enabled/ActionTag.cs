@@ -57,7 +57,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             var turnsToWait = (GameSettings.TurnsToWaitBetweenTwoTags * this.Fight.AlivePlayers.Count(x => x.AssignedTeam == this.Attacker.AssignedTeam)) - turnsSinceLastTag;
             if (turnsToWait > 0)
             {
-                throw new Exception($"[b][color = red]You can't tag yet. Turns left: ${turnsToWait}[/color][/b]");
+                throw new Exception($"[b][color = red]You can't tag yet. Turns left: {turnsToWait}[/color][/b]");
             }
             if (!this.Defenders[0].CanMoveFromOrOffRing)
             {

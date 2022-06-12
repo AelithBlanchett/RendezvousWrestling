@@ -39,16 +39,12 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override async Task ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.Fight == null || Plugin.Fight.HasEnded)
-            {
-                Plugin.Fight = new TFight();
-                Plugin.Fight.Activate(Plugin, Plugin.FChatClient, channel);
-            }
+            Plugin.ResetFightIfNeeded();
 
             object parsedTeamObject = Team.White;
 
             Team chosenTeam;
-            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), out parsedTeamObject))
+            if (args.Any() && !Enum.TryParse(typeof(Team), string.Join(" ", args), true, out parsedTeamObject))
             {
                 Plugin.FChatClient.SendPrivateMessage("[color=red]" + "This team doesn't exist." + "[/color]", channel);
                 return;

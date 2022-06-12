@@ -62,7 +62,7 @@ namespace RendezvousWrestling.FightSystem.Fight
                 $"[b][color=brown]Willpower[/color][/b]: {Willpower}      [b][color=orange]Tokens[/color][/b]: {Tokens}         [b][color=orange]Total spent[/color][/b]: { TokensSpent }\n" +
                 $"[b][color=red]Features[/color][/b]: [b]{FeaturesAsString }[/b]\n" +
                 $"[b][color=yellow]Achievements[/color][/b]: [sub]{AchievementsList }[/sub]\n" +
-                $"[b][color=white]Fun stats[/color][/b]: [sub]Avg.roll: {Stats.AverageDiceRoll}, Fav.tag partner: {(Stats.FavoriteTagPartner != null && Stats.FavoriteTagPartner != "" ? Stats.FavoriteTagPartner : "None!")}, Moves done: {Stats.ActionsCount}, Nemesis: {Stats.Nemesis}[/sub]";
+                $"[b][color=white]Fun stats[/color][/b]: [sub]Avg.roll: {Stats.AverageDiceRoll}, Fav.tag partner: {(!string.IsNullOrWhiteSpace(Stats.FavoriteTagPartner) ? Stats.FavoriteTagPartner : "None!")}, Moves done: {Stats.ActionsCount}, Nemesis: {Stats.Nemesis}[/sub]";
         }
 
     }

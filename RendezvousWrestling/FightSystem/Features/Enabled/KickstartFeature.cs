@@ -23,7 +23,7 @@ namespace RendezvousWrestling.FightSystem.Features.Enabled
                 if (parameters.Fighter != null)
                 {
                     var modifier = parameters.Fight.ModifierFactory.Build(RWModifierType.ItemPickupBonus, parameters.Fight, parameters.Fighter, null, new RWModifierParameters() { Uses = 1 });
-                    parameters.Fighter.Modifiers.Add(modifier);
+                    parameters.Fighter.AddModifier(modifier);
                     return $"multiplying their damage by {HpDamageMultiplier}!";
                 }
             }

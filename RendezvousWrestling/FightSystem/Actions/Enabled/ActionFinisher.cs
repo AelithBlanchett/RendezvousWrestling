@@ -53,9 +53,9 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
         public override void CheckRequirements()
         {
             base.CheckRequirements();
-            if ((this.Defender.LivesRemaining <= 1 || this.Defender.ConsecutiveTurnsWithoutFocus == RWGameSettings.MaxTurnsWithoutFocus - 2))
+            if ((this.Defender.LivesRemaining > 1 && this.Defender.ConsecutiveTurnsWithoutFocus < RWGameSettings.MaxTurnsWithoutFocus - 2))
             {
-                throw new Exception($"You can't finish your opponent right now. They must have only one life left, or it must at least be their ${RWGameSettings.MaxTurnsWithoutFocus - 2}th turn without focus.");
+                throw new Exception($"You can't finish your opponent right now. They must have only one life left, or it must at least be their {RWGameSettings.MaxTurnsWithoutFocus - 2}th turn without focus.");
             }
         }
 

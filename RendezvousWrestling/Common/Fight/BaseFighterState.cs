@@ -62,11 +62,11 @@ namespace RendezvousWrestling.Common.Fight
         public TUser User { get; set; }
 
         [NotMapped]
-        public List<TModifier> Modifiers
+        public IReadOnlyList<TModifier> Modifiers
         {
             get
             {
-                return ReceivedModifiers.Union(AppliedModifiers).ToList();
+                return ReceivedModifiers.Union(AppliedModifiers).DistinctBy(x => x.Id).ToList();
             }
         }
 
@@ -182,23 +182,43 @@ namespace RendezvousWrestling.Common.Fight
         public bool TriggerMods(TriggerMoment moment, TriggerEvent @triggeringEvent, TFeatureParameters objFightAction = null)
         {
             bool atLeastOneModWasActivated = false;
-            foreach (var mod in Modifiers)
+            foreach (var mod in ReceivedModifiers.ToList())
             {
                 var message = mod.Trigger(moment, @triggeringEvent, objFightAction);
                 if (message.Length > 0)
                 {
-                    Fight.Message.addSpecial(message);
                     atLeastOneModWasActivated = true;
                 }
             }
             return atLeastOneModWasActivated;
         }
 
+        public void AddModifier(TModifier modifier, bool isInitialAdd = true)
+        {
+            if(modifier.Applier == this)
+            {
+                AppliedModifiers.Add(modifier);
+                if(modifier.Receiver != null && isInitialAdd)
+                {
+                    modifier.Receiver.AddModifier(modifier, false);
+                }
+            }
+
+            if(modifier.Receiver == this)
+            {
+                ReceivedModifiers.Add(modifier);
+                if (modifier.Applier != null && isInitialAdd)
+                {
+                    modifier.Applier.AddModifier(modifier, false);
+                }
+            }
+        }
 
         public void RemoveMod(string idMod)
         {
             //removes a mod idMod, and also its children. If a children has two parent Ids, then it doesn't remove the mod.
-            var index = Modifiers.RemoveAll(x => x.Id == idMod);
+            var receivedModifiersDeleted = ReceivedModifiers.RemoveAll(x => x.Id == idMod);
+            var appliedModifiersDeleted = AppliedModifiers.RemoveAll(x => x.Id == idMod);
         }
 
         public FightLength FightDuration
@@ -356,9 +376,9 @@ namespace RendezvousWrestling.Common.Fight
             get
             {
                 var tier = -1;
-                foreach (var mod in Modifiers)
+                foreach (var mod in ReceivedModifiers)
                 {
-                    if (mod.Receiver.Name == Name && mod.IsHold)
+                    if (mod.IsHold)
                     {
                         tier = (int)mod.Tier;
                     }
@@ -380,7 +400,7 @@ namespace RendezvousWrestling.Common.Fight
 
         public void ReleaseHoldsAppliedBy(string fighterName)
         {
-            foreach (var mod in ReceivedModifiers)
+            foreach (var mod in ReceivedModifiers.ToList())
             {
                 if (mod.IsHold && mod.Applier?.Name == fighterName)
                 {
@@ -391,7 +411,7 @@ namespace RendezvousWrestling.Common.Fight
 
         public void ReleaseAllHolds()
         {
-            foreach (var mod in ReceivedModifiers)
+            foreach (var mod in ReceivedModifiers.ToList())
             {
                 if (mod.IsHold)
                 {
@@ -404,7 +424,7 @@ namespace RendezvousWrestling.Common.Fight
         {
             get
             {
-                return string.Join(", ", Modifiers.Select(x => x.Name));
+                return string.Join(", ", ReceivedModifiers.Select(x => $"{x.Name} ({x.Uses}t)"));
             }
         }
 

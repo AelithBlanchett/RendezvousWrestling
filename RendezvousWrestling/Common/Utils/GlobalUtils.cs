@@ -41,13 +41,22 @@ namespace RendezvousWrestling.Common.Utils
         {
             var canPass = false;
 
-            if (((int)checkedEvent & (int)searchedEvent) == 0)
+            //if (checkedMoment.HasFlag(searchedMoment))
+            //{
+            //    if (checkedEvent.HasFlag(searchedEvent))
+            //    {
+            //        canPass = true;
+            //    }
+            //}
+
+            if (((int)checkedEvent & (int)searchedEvent) != 0)
             {
-                if (((int)checkedMoment & (int)searchedMoment) == 0)
+                if (((int)checkedMoment & (int)searchedMoment) != 0)
                 {
                     canPass = true;
                 }
             }
+
             return canPass;
         }
     }

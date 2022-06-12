@@ -49,7 +49,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             this.FpDamageToDef += GetIntValueForEnumByTier(typeof(FocusDamageOnHit), Tier.Light);
 
             var itemPickupModifier = Fight.ModifierFactory.Build(RWModifierType.ItemPickupBonus, this.Fight, this.Attacker, null);
-            this.AppliedModifiers.Add(itemPickupModifier);
+            AddModifier(itemPickupModifier);
         }
     }
 }

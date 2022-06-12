@@ -11,6 +11,7 @@ using RendezvousWrestling.FightSystem.Fight;
 using RendezvousWrestling.Common.Constants;
 using RendezvousWrestling.FightSystem.Constants;
 using RendezvousWrestling.Configuration;
+using System.Reflection;
 
 namespace RendezvousWrestling.FightSystem.Actions
 {
@@ -308,9 +309,17 @@ namespace RendezvousWrestling.FightSystem.Actions
             return (int)Enum.Parse(enumType, Enum.GetName(typeof(Tier), tier));
         }
 
-        public int GetDecValueForEnumByTier(Type enumType, Tier tier)
+        public decimal GetDecValueForEnumByTier(Type enumType, Tier tier)
         {
-            return (int)Enum.Parse(enumType, Enum.GetName(typeof(Tier), tier));
+            var tierName = Enum.GetName(typeof(Tier), tier);
+            if (enumType.IsEnum)
+            {
+                return (int)Enum.Parse(enumType, tierName);
+            }
+            else
+            {
+                return (decimal)enumType.GetProperty(tierName, BindingFlags.Public | BindingFlags.Static).GetValue(null);
+            }
         }
 
         public override int SpecificRequiredDiceScore
@@ -468,11 +477,11 @@ namespace RendezvousWrestling.FightSystem.Actions
                     foreach (var defender in Defenders)
                     {
                         //START
-                        var existantHoldForDefender = Defender.Modifiers.First(x => x.IsHold);
+                        var existantHoldForDefender = Defender.ReceivedModifiers.FirstOrDefault(x => x.IsHold);
                         if (existantHoldForDefender != null)
                         {
                             var idOfFormerHold = existantHoldForDefender.Id;
-                            foreach (var mod in Defender.Modifiers)
+                            foreach (var mod in Defender.ReceivedModifiers.ToList())
                             {
                                 //we updated the children and parent's damage and turns
                                 if (mod.Id == idOfFormerHold)
@@ -490,14 +499,16 @@ namespace RendezvousWrestling.FightSystem.Actions
                                     mod.Uses += AppliedModifiers[indexOfNewHold].Uses;
                                 }
                             }
-                            foreach (var mod in Attacker.Modifiers)
-                            {
-                                //upDateTime the bonus appliedModifiers length
-                                if (mod.IdParentActions != null && mod.IdParentActions.IndexOf(idOfFormerHold) != -1)
-                                {
-                                    mod.Uses += AppliedModifiers[indexOfNewHold].Uses;
-                                }
-                            }
+                            //TODO Restore this if needed, but since we're dealing with references, probably don't need
+                            //foreach (var mod in Attacker.AppliedModifiers)
+                            //{
+                            //    //upDateTime the bonus appliedModifiers length
+                            //    if (mod.IdParentActions != null && mod.IdParentActions.IndexOf(idOfFormerHold) != -1)
+                            //    {
+                                    
+                            //        mod.Uses += AppliedModifiers[indexOfNewHold].Uses;
+                            //    }
+                            //}
 
                             Fight.Message.addSpecial($"[b][color=red]Hold Stacking![/color][/b] {Defender.GetStylizedName()} will have to suffer this hold for {AppliedModifiers[indexOfNewHold].Uses} more turns, and will also suffer a bit more, as it has added" +
                                              $"{ (AppliedModifiers[indexOfNewHold].HpDamage > 0 ? " -" + AppliedModifiers[indexOfNewHold].HpDamage + " HP per turn " : "")}" +
@@ -510,11 +521,11 @@ namespace RendezvousWrestling.FightSystem.Actions
                             {
                                 if (mod.Receiver.Name == Defender.Name)
                                 {
-                                    Defender.Modifiers.Add(mod);
+                                    Defender.AddModifier(mod);
                                 }
                                 else if (mod.Receiver.Name == Attacker.Name)
                                 {
-                                    Attacker.Modifiers.Add(mod);
+                                    Attacker.AddModifier(mod);
                                 }
                             }
                         }
@@ -528,11 +539,11 @@ namespace RendezvousWrestling.FightSystem.Actions
                     {
                         if (mod.Receiver == Attacker)
                         {
-                            Attacker.Modifiers.Add(mod);
+                            Attacker.AddModifier(mod);
                         }
                         else if (Defenders.FindIndex(x => x.Name == mod.Receiver.Name) != -1)
                         {
-                            Defenders.First(x => x.Name == mod.Receiver.Name).Modifiers.Add(mod);
+                            Defenders.First(x => x.Name == mod.Receiver.Name).AddModifier(mod);
                         }
                     }
                 }

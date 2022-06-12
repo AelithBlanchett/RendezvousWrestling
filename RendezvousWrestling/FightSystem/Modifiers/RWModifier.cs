@@ -35,7 +35,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
             if (LustDamage > 0)
             {
                 var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarDamage, triggeringEvent);
-                messageAboutModifier += $" losing {LustDamage} LP,";
+                messageAboutModifier += $" gaining {LustDamage} LP,";
                 Receiver.HitLP(LustDamage, flagTriggerMods);
             }
             if (FocusDamage > 0)
@@ -53,7 +53,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers
             if (LustHeal > 0)
             {
                 var flagTriggerMods = !Common.Utils.GlobalUtils.WillTriggerForEvent(TriggerMoment.Any, TriggerMoment.Any, TriggerEvent.SecondaryBarHealing, triggeringEvent);
-                messageAboutModifier += $" gaining {LustHeal} LP,";
+                messageAboutModifier += $" losing {LustHeal} LP,";
                 Receiver.HealLP(LustHeal, flagTriggerMods);
             }
             if (FocusHeal > 0)

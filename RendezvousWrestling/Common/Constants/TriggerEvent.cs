@@ -1,5 +1,8 @@
+using System;
+
 namespace RendezvousWrestling.Common.Constants
 {
+    [Flags]
     public enum TriggerEvent
     {
         MainBarDamage = 1 << 0,

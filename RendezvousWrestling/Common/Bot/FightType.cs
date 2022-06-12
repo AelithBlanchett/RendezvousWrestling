@@ -40,7 +40,7 @@ namespace RendezvousWrestling.Common.Bot
     {
         public override async Task ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (!Enum.TryParse(typeof(FightType), string.Join(" ", args), out var parsedFD))
+            if (!Enum.TryParse(typeof(FightType), string.Join(" ", args), true, out var parsedFD))
             {
                 Plugin.FChatClient.SendMessageInChannel($"[color=red]Specified fight type not found. Available types: {string.Join(", ", Enum.GetNames(typeof(FightType)))}. Example: !fighttype Sexfight[/color]", channel);
                 return;

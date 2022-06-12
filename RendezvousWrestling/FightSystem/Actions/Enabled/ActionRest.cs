@@ -42,9 +42,9 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
         public override void OnHit()
         {
-            this.HpHealToAtk += this.Attacker.HpPerHeart * RWGameSettings.HpPercentageToHealOnRest;
-            this.LpHealToAtk += this.Attacker.LustPerOrgasm * RWGameSettings.LpPercentageToHealOnRest;
-            this.FpHealToAtk += this.Attacker.MaxFocus * RWGameSettings.FpPercentageToHealOnRest;
+            this.HpHealToAtk += (int)(this.Attacker.HpPerHeart * RWGameSettings.HpPercentageToHealOnRest);
+            this.LpHealToAtk += (int)(this.Attacker.LustPerOrgasm * RWGameSettings.LpPercentageToHealOnRest);
+            this.FpHealToAtk += (int)(this.Attacker.MaxFocus * RWGameSettings.FpPercentageToHealOnRest);
         }
 
         public override int AddBonusesToRollFromStats()

@@ -53,9 +53,9 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
             var lustBonusAttacker = Fight.ModifierFactory.Build(RWModifierType.SexHoldLustBonus, this.Fight, this.Attacker, null, new RWModifierParameters() { IdParentActions = new List<string>() { holdModifier.Id } });
             var lustBonusDefender = Fight.ModifierFactory.Build(RWModifierType.SexHoldLustBonus, this.Fight, this.Defender, null, new RWModifierParameters() { IdParentActions = new List<string>() { holdModifier.Id } });
 
-            this.AppliedModifiers.Add(holdModifier);
-            this.AppliedModifiers.Add(lustBonusAttacker);
-            this.AppliedModifiers.Add(lustBonusDefender);
+            AddModifier(holdModifier);
+            AddModifier(lustBonusAttacker);
+            AddModifier(lustBonusDefender);
     }
 
         public override int AddBonusesToRollFromStats()
