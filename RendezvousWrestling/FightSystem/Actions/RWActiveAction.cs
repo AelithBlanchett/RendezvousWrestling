@@ -282,7 +282,7 @@ namespace RendezvousWrestling.FightSystem.Actions
             }
         }
 
-        public int AttackFormula(Tier tier, int targetDef, int roll, int actorAtk)
+        public int AttackFormula(Tier tier, int actorAtk, int targetDef, int roll)
         {
             int statDiff = 0;
             if (actorAtk - targetDef > 0)
@@ -341,11 +341,11 @@ namespace RendezvousWrestling.FightSystem.Actions
                 if (SingleTarget && Defender != null)
                 {
                     scoreRequired += AddRequiredScoreWithExplanation(-(int)(Action.Globals.difficultyIncreasePerBondageItem * Defender.NumBondageItemsOnSelf), "BDG");
-                    scoreRequired += AddRequiredScoreWithExplanation((int)Math.Floor((Defender.CurrentDexterity - Attacker.CurrentDexterity) / 15f), "DEXDIFF");
+                    scoreRequired += AddRequiredScoreWithExplanation((int)Math.Floor((Defender.CurrentDexterity - Attacker.CurrentDexterity) / 25f), "DEXDIFF");
 
                     if (Defender.Focus >= 0)
                     {
-                        scoreRequired += AddRequiredScoreWithExplanation((int)Math.Floor((Defender.Focus - Attacker.Focus) / 15f), "FPDIFF");
+                        scoreRequired += AddRequiredScoreWithExplanation((int)Math.Floor((Defender.Focus - Attacker.Focus) / 25f), "FPDIFF");
                     }
                     if (Defender.Focus < 0)
                     {

@@ -89,9 +89,6 @@ namespace RendezvousWrestling.Common.Modifiers
             Fight = fight;
 
             new TEntityMapper().Mapper.Map(inputParameters, this, typeof(TModifierParameters), typeof(TModifier));
-
-            AreDamageMultipliers = false;
-            DiceRoll = 0;
         }
 
         public bool IsOver()

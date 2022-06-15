@@ -20,15 +20,24 @@ namespace RendezvousWrestling.FightSystem
         public RendezVousWrestlingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient) : base(pluginOptions, fChatClient)
         {
             PluginOptions = pluginOptions;
+            FChatClient.ChannelMessageReceived += FChatClient_ChannelMessageReceived;
             Run();
+        }
+
+        private bool hasInitializedDebug = false;
+        private void FChatClient_ChannelMessageReceived(object sender, FChatSharpLib.Entities.Events.Server.Message e)
+        {
+            if(!hasInitializedDebug && e.channel.ToLower() == PluginOptions.Value.Channels[0])
+            {
+                hasInitializedDebug = true;
+                base.ExecuteCommand("Aelith Blanchette", "impersonate", new List<string>() { "A" }, PluginOptions.Value.Channels[0]);
+            }
         }
 
         public override void Run()
         {
-            base.ExecuteCommand("Aelith Blanchette", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
-            base.ExecuteCommand("A", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
-            base.ExecuteCommand("Aelith Blanchette", "riskylewd", new List<string>() { "light" }, PluginOptions.Value.Channels[0]);
-            //base.ExecuteCommand("Aelith Blanchette", "impersonate", new List<string>() { "A" }, PluginOptions.Value.Channels[0]);
+            base.ExecuteCommand("Mayank", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+            base.ExecuteCommand("Ma Yang", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
             base.Run();
         }
     }

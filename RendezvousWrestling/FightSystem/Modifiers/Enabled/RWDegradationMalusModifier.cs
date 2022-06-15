@@ -13,7 +13,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers.Enabled
         {
             base.Initialize(modifierType, RWModifierNames.DegradationMalus, TriggerMoment.Before, TriggerEvent.SpecialAttack);
             FocusDamage = 10;
-            Uses = 5;
+            Uses = 1;
         }
     }
 }

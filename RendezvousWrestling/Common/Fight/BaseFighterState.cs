@@ -11,6 +11,7 @@ using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Constants;
 using RendezvousWrestling.Common.Configuration;
+using RendezvousWrestling.Configuration;
 
 namespace RendezvousWrestling.Common.Fight
 {
@@ -371,16 +372,16 @@ namespace RendezvousWrestling.Common.Fight
             return isTrue;
         }
 
-        public int IsInHoldOfTier
+        public Tier TierOfHighestReceivedHold
         {
             get
             {
-                var tier = -1;
+                Tier tier = Tier.None;
                 foreach (var mod in ReceivedModifiers)
                 {
-                    if (mod.IsHold)
+                    if (mod.IsHold && (int)mod.Tier > (int)tier)
                     {
-                        tier = (int)mod.Tier;
+                        tier = mod.Tier;
                     }
                 }
                 return tier;

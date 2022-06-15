@@ -34,7 +34,7 @@ public class Dice
     {
         var tmpMods = this.tmpMods;
 
-        foreach (var mod in tmpMods)
+        foreach (var mod in tmpMods.ToList())
         {
             if (--mod.Times == 0)
             {

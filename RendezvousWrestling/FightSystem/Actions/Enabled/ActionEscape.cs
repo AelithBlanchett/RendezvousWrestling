@@ -43,6 +43,15 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
         }
 
+        public override int RequiredDiceScore
+        {
+            get
+            {
+                ActionTier = Defender.TierOfHighestReceivedHold;
+                return base.SpecificRequiredDiceScore;
+            }
+        }
+
         public override void OnHit()
         {
             this.Attacker.ReleaseAllHolds();

@@ -38,7 +38,7 @@ namespace RendezvousWrestling.Common.Bot
 
         public override async Task ExecuteCommand(string characterCalling, IEnumerable<string> args, string channel)
         {
-            if (Plugin.FChatClient.IsUserMaster(characterCalling))
+            if (Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
                 var command = args.First();
                 Plugin.ExecuteCommand(Plugin.DebugImpersonatedCharacter, command, args.Skip(1), channel);

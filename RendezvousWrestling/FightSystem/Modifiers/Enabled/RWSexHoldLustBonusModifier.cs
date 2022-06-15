@@ -13,7 +13,7 @@ namespace RendezvousWrestling.FightSystem.Modifiers.Enabled
         {
             base.Initialize(modifierType, RWModifierNames.SexHoldLustBonus, TriggerMoment.Before, TriggerEvent.MagicalAttack);
             DiceRoll = 3;
-            Uses = 5;
+            Uses = 1;
         }
     }
 }
