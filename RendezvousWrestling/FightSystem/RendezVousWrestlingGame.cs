@@ -36,8 +36,8 @@ namespace RendezvousWrestling.FightSystem
 
         public override void Run()
         {
-            base.ExecuteCommand("Mayank", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
-            base.ExecuteCommand("Ma Yang", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+            //base.ExecuteCommand("Mayank", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+            //base.ExecuteCommand("Ma Yang", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
             base.Run();
         }
     }

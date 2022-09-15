@@ -74,7 +74,7 @@ namespace RendezvousWrestling
 
                     services.AddSingleton<RemoteEvents>();
                     services.AddSingleton<RemoteBotController>();
-                    services.Configure<RendezvousWrestlingPluginOptions>(options => config.Bind(options));
+                    services.Configure<RendezvousWrestlingPluginOptions>(options => hostContext.Configuration.GetSection("Options").Bind(options));
                 });
 
         public static IConfiguration LoadConfiguration()
