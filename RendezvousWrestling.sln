@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RendezvousWrestling", "Rend
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RendezvousWrestling.Tests", "RendezvousWrestling.Tests\RendezvousWrestling.Tests.csproj", "{DE528284-040E-49C7-82EF-1B3C3E34A5C4}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{9389E2B8-8357-44A2-864C-07761DB2FD71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DE528284-040E-49C7-82EF-1B3C3E34A5C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE528284-040E-49C7-82EF-1B3C3E34A5C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE528284-040E-49C7-82EF-1B3C3E34A5C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9389E2B8-8357-44A2-864C-07761DB2FD71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9389E2B8-8357-44A2-864C-07761DB2FD71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9389E2B8-8357-44A2-864C-07761DB2FD71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9389E2B8-8357-44A2-864C-07761DB2FD71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

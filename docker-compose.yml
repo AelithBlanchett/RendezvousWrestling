@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  rendezvouswrestling:
+    image: ${DOCKER_REGISTRY-}rendezvouswrestling
+    build:
+      context: .
+      dockerfile: RendezvousWrestling/Dockerfile
