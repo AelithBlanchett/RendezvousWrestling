@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: RendezvousWrestling/Dockerfile
     environment:
-      - Options__Channels=${Options__Channels}
+      - Options__Channels__0=${Options__Channels__0}
       - RabbitMQ__Hostname=${RabbitMQ__Hostname}
       - RabbitMQ__Port=${RabbitMQ__Port}
       - RabbitMQ__UserName=${RabbitMQ__UserName}
