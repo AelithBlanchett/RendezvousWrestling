@@ -8,7 +8,6 @@ services:
       dockerfile: RendezvousWrestling/Dockerfile
     environment:
       - Options__Channels=${Options__Channels}
-      - MySQL__Hostname=${Options__Channels}
       - RabbitMQ__Hostname=${RabbitMQ__Hostname}
       - RabbitMQ__Port=${RabbitMQ__Port}
       - RabbitMQ__UserName=${RabbitMQ__UserName}
