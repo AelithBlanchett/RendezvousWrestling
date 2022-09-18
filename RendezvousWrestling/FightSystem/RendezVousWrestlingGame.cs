@@ -17,7 +17,7 @@ namespace RendezvousWrestling.FightSystem
     {
         public override IOptions<RendezvousWrestlingPluginOptions> PluginOptions { get; }
 
-        public RendezVousWrestlingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient) : base(pluginOptions, fChatClient)
+        public RendezVousWrestlingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient, RWDataContext dataContext) : base(pluginOptions, fChatClient, dataContext)
         {
             PluginOptions = pluginOptions;
             FChatClient.ChannelMessageReceived += FChatClient_ChannelMessageReceived;

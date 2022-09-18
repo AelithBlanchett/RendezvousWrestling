@@ -11,10 +11,11 @@ using System.Linq;
 using RendezvousWrestling.Common.Achievements;
 using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Fight;
+using Volo.Abp.DependencyInjection;
 
 namespace RendezvousWrestling.Common.DataContext
 {
-    public abstract class BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : DbContext
+    public abstract class BaseDataContext<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser> : DbContext, ITransientDependency
         where TAchievement : BaseAchievement<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TAchievementManager : AchievementManager<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
         where TActionFactory : BaseActionFactory<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
@@ -37,9 +38,13 @@ namespace RendezvousWrestling.Common.DataContext
         where TUser : BaseUser<TAchievement, TAchievementManager, TActionFactory, TActionType, TActiveAction, TDataContext, TEntityMapper, TFeature, TFeatureFactory, TFeatureParameters, TFeatureType, TFight, TFighterState, TFighterStats, TFightingGame, TModifier, TModifierFactory, TModifierParameters, TModifierType, TUser>, new()
     {
 
-        public IConfigurationRoot Configuration { get; } = new ConfigurationBuilder()
-          .AddJsonFile("appsettings.json", true, true)
-          .Build();
+        public IConfiguration Configuration { get; }
+
+        public BaseDataContext(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public DbSet<TFight> Fights { get; set; }
 
         public DbSet<TUser> Users { get; set; }

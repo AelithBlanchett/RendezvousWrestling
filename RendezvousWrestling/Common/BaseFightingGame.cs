@@ -43,16 +43,16 @@ namespace RendezvousWrestling.Common
 
         public virtual IOptions<BaseGameSettingsPluginOptions> PluginOptions { get; }
 
-        public BaseFightingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient) : base(pluginOptions, fChatClient)
+        public BaseFightingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient, TDataContext dataContext) : base(pluginOptions, fChatClient)
         {
             PluginOptions = pluginOptions;
+            DataContext = dataContext;
             Initialize();
         }
 
         public void Initialize()
         {
             ResetFight();
-            DataContext = new TDataContext();
         }
 
         public void ResetFight()
