@@ -1,4 +1,7 @@
+using Castle.Core.Logging;
 using FChatSharpLib;
+using FChatSharpLib.Entities.Plugin;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RendezvousWrestling.Common;
 using RendezvousWrestling.Common.DataContext;
@@ -17,7 +20,7 @@ namespace RendezvousWrestling.FightSystem
     {
         public override IOptions<RendezvousWrestlingPluginOptions> PluginOptions { get; }
 
-        public RendezVousWrestlingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient, RWDataContext dataContext) : base(pluginOptions, fChatClient, dataContext)
+        public RendezVousWrestlingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient, RWDataContext dataContext, ILogger<BasePlugin> logger) : base(pluginOptions, fChatClient, dataContext, logger)
         {
             PluginOptions = pluginOptions;
             FChatClient.ChannelMessageReceived += FChatClient_ChannelMessageReceived;
@@ -27,18 +30,18 @@ namespace RendezvousWrestling.FightSystem
         private bool hasInitializedDebug = false;
         private void FChatClient_ChannelMessageReceived(object sender, FChatSharpLib.Entities.Events.Server.Message e)
         {
-            if(!hasInitializedDebug && e.channel.ToLower() == PluginOptions.Value.Channels[0])
-            {
-                hasInitializedDebug = true;
-                base.ExecuteCommand("Aelith Blanchette", "impersonate", new List<string>() { "A" }, PluginOptions.Value.Channels[0]);
-            }
+            //if(!hasInitializedDebug && e.channel.ToLower() == PluginOptions.Value.Channels[0])
+            //{
+            //    hasInitializedDebug = true;
+            //    base.TryExecuteCommand("Aelith Blanchette", "impersonate", new List<string>() { "A" }, PluginOptions.Value.Channels[0]);
+            //}
         }
 
-        public override void Run()
-        {
-            //base.ExecuteCommand("Mayank", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
-            //base.ExecuteCommand("Ma Yang", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
-            base.Run();
-        }
+        //public override void Run()
+        //{
+        //    //base.ExecuteCommand("Mayank", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+        //    //base.ExecuteCommand("Ma Yang", "ready", new List<string>() { }, PluginOptions.Value.Channels[0]);
+        //    //base.Run();
+        //}
     }
 }

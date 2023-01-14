@@ -10,6 +10,7 @@ using RendezvousWrestling.Common.Fight;
 using Microsoft.Extensions.Options;
 using FChatSharpLib;
 using Volo.Abp.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace RendezvousWrestling.Common
 {
@@ -43,7 +44,7 @@ namespace RendezvousWrestling.Common
 
         public virtual IOptions<BaseGameSettingsPluginOptions> PluginOptions { get; }
 
-        public BaseFightingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient, TDataContext dataContext) : base(pluginOptions, fChatClient)
+        public BaseFightingGame(IOptions<RendezvousWrestlingPluginOptions> pluginOptions, RemoteBotController fChatClient, TDataContext dataContext, ILogger<BasePlugin> logger) : base(pluginOptions, fChatClient, logger)
         {
             PluginOptions = pluginOptions;
             DataContext = dataContext;

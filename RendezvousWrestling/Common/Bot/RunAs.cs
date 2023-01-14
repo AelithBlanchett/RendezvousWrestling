@@ -41,7 +41,7 @@ namespace RendezvousWrestling.Common.Bot
             if (Plugin.FChatClient.IsUserAdmin(characterCalling, channel))
             {
                 var command = args.First();
-                Plugin.ExecuteCommand(Plugin.DebugImpersonatedCharacter, command, args.Skip(1), channel);
+                await Plugin.TryExecuteCommand(Plugin.DebugImpersonatedCharacter, command, args.Skip(1), channel);
             }
         }
     }
