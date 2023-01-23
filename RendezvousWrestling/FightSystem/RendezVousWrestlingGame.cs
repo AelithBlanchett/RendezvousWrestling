@@ -24,7 +24,6 @@ namespace RendezvousWrestling.FightSystem
         {
             PluginOptions = pluginOptions;
             FChatClient.ChannelMessageReceived += FChatClient_ChannelMessageReceived;
-            Run();
         }
 
         private bool hasInitializedDebug = false;

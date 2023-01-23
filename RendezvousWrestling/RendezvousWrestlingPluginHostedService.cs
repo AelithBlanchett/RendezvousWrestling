@@ -26,7 +26,6 @@ namespace RendezvousWrestling
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _application.Initialize(_serviceProvider);
-            _examplePlugin.Run();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
