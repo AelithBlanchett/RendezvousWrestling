@@ -62,7 +62,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
         public override int AddBonusesToRollFromStats()
         {
-            return (int)Math.Ceiling(this.Attacker.CurrentSensuality / 10m);
+            return (int)Math.Ceiling(this.Attacker.CurrentSensuality / 20m);
         }
     }
 }

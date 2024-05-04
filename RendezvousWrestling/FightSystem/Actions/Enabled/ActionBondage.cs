@@ -1,3 +1,4 @@
+using RendezvousWrestling.Common.Actions;
 using RendezvousWrestling.Common.Constants;
 using RendezvousWrestling.Configuration;
 using RendezvousWrestling.FightSystem.Configuration;
@@ -43,25 +44,10 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
         }
 
+        public override int SpecificRequiredDiceScore => base.SpecificRequiredDiceScore + AddRequiredScoreWithExplanation(5, "BDG"); 
         public override int AddBonusesToRollFromStats()
         {
-            return base.AddBonusesToRollFromStats() + (int)Math.Ceiling(this.Attacker.CurrentSensuality / 10m);
-        }
-
-        public override int RequiredDiceScore
-        {
-            get
-            {
-                if (this.Defender.IsInHold())
-                {
-                    this.RequiresRoll = false;
-                }
-                if (this.Defender.User.HasFeature(RWFeatureType.BondageBunny))
-                {
-                    return RWGameSettings.RequiredScoreForBondageAgainstBondageBunny;
-                }
-                return base.RequiredDiceScore;
-            }
+            return base.AddBonusesToRollFromStats() + (int)Math.Ceiling(this.Attacker.CurrentSensuality / 20m);
         }
 
         public override void OnHit()

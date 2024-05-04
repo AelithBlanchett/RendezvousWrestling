@@ -351,7 +351,7 @@ namespace RendezvousWrestling.Common.Actions
 
         public virtual void AnnounceAction()
         {
-            if (Defenders.Count > 0)
+            if (Defenders.Count > 0 && !UsableOnSelf)
             {
                 Fight.Message.addAction($"{ Name} on { string.Join(",", Defenders.Select(x => x.GetStylizedName()))}");
             }

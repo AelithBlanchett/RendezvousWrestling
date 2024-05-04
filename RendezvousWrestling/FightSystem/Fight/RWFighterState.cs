@@ -131,9 +131,9 @@ namespace RendezvousWrestling.FightSystem.Fight
             get
             {
                 var hp = 130m;
-                if (CurrentToughness > 10)
+                if (((CurrentToughness + CurrentEndurance) / 2) > 10)
                 {
-                    hp += CurrentToughness - 10;
+                    hp += ((CurrentToughness + CurrentEndurance)/2) - 10;
                 }
                 switch (FightDuration)
                 {
@@ -161,9 +161,9 @@ namespace RendezvousWrestling.FightSystem.Fight
             get
             {
                 decimal lust = 130m;
-                if (CurrentEndurance > 10)
+                if (((CurrentEndurance + CurrentWillpower) / 2) > 10)
                 {
-                    lust += CurrentEndurance - 10;
+                    lust += ((CurrentEndurance + CurrentWillpower)/2) - 10;
                 }
                 switch (FightDuration)
                 {
@@ -223,9 +223,9 @@ namespace RendezvousWrestling.FightSystem.Fight
             get
             {
                 var resistance = 30;
-                if (CurrentWillpower > 10)
+                if (((CurrentWillpower + CurrentToughness) / 2) > 10)
                 {
-                    resistance += CurrentWillpower - 10;
+                    resistance += ((CurrentWillpower + CurrentToughness)/2) - 10;
                 }
                 return resistance;
             }

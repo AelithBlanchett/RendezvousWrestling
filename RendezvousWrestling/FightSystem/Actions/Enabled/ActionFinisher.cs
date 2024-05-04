@@ -45,7 +45,7 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
         public override int AddBonusesToRollFromStats()
         {
-            return base.AddBonusesToRollFromStats() + (int)Math.Ceiling(this.Attacker.CurrentWillpower / 10m);
+            return base.AddBonusesToRollFromStats() + (int)Math.Ceiling(this.Attacker.CurrentWillpower / 20m);
         }
 
         public override int SpecificRequiredDiceScore => base.SpecificRequiredDiceScore + AddRequiredScoreWithExplanation(6, "FIN"); //TODO: Check if we really need to call the base

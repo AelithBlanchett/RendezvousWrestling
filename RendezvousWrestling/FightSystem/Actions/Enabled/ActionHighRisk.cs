@@ -52,14 +52,14 @@ namespace RendezvousWrestling.FightSystem.Actions.Enabled
 
         public override int AddBonusesToRollFromStats()
         {
-            return (int)Math.Ceiling(this.Attacker.CurrentDexterity / 10m);
+            return (int)Math.Ceiling(this.Attacker.CurrentDexterity / 20m);
         }
 
         public override void OnMiss()
         {
             this.FpDamageToAtk += GetIntValueForEnumByTier(typeof(FocusDamageOnHit), ActionTier);
             this.FpHealToDef += GetIntValueForEnumByTier(typeof(FocusHealOnHit), ActionTier);
-            this.HpDamageToDef = (int)Math.Floor(this.AttackFormula(this.ActionTier, (int)Math.Floor(this.Attacker.CurrentPower * 1m), this.Attacker.CurrentToughness, 0) * GetDecValueForEnumByTier(typeof(HighRiskMultipliers), ActionTier) * GetDecValueForEnumByTier(typeof(FailedHighRiskMultipliers), ActionTier) * 1m);
+            this.HpDamageToAtk = (int)Math.Floor(this.AttackFormula(this.ActionTier, (int)Math.Floor(this.Attacker.CurrentPower * 1m), this.Attacker.CurrentToughness, 0) * GetDecValueForEnumByTier(typeof(HighRiskMultipliers), ActionTier) * GetDecValueForEnumByTier(typeof(FailedHighRiskMultipliers), ActionTier) * 1m);
             this.ApplyDamage();
         }
     }
